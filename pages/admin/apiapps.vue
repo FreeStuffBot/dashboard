@@ -1,0 +1,100 @@
+<template>
+  <div class="container">
+    <h1>
+      API Apps
+    </h1>
+
+    <h2>List:</h2>
+    <div
+      v-for="app of list"
+      :key="app.id"
+      class="app"
+    >
+      <img :src="app.avatar" alt="Icon">
+      <span class="name" v-text="`${app._id} • ${app.type}`" />
+      <div class="rest">
+        <span v-for="(line,i) of app.description.split('\n')" :key="i" v-text="line" />
+        <span>_____</span>
+        <br>
+        <span>Webhook URL: {{ app.webhook }}</span>
+        <span>Webhook Secret: {{ '*'.repeat(app.webhooksecret.length) }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import axios from 'axios'
+
+export default Vue.extend({
+  transition: 'slide-down',
+  data() {
+    return {
+      list: []
+    }
+  },
+  async fetch() {
+    const { data } = await axios.get('/admin/apiappsapi?anticache=' + Math.random())
+    this.list = await Promise.all(data.map(async (d: any) => ({
+      ...d,
+      avatar: (await axios.get('/admin/usersapi/' + d._id) as any)?.data?.avatar
+        || ((/^[0-9]/.test(d._id))
+          ? 'https://cdn.discordapp.com/embed/avatars/0.png'
+          : 'https://management.freestuffbot.xyz/_nuxt/assets/img/logo.png'
+        )
+    })))
+  },
+  fetchOnServer: false,
+  head() {
+    return {
+      title: 'FreeStuff Admin Panel'
+    }
+  }
+})
+</script>
+
+<style scoped lang="scss">
+@import '~/assets/style/all.scss';
+
+span {
+  color: white;
+  font-family: $font-regular;
+  font-size: 11pt;
+  display: block;
+}
+
+.app {
+  background-color: $bg-bright;
+  padding: $box-padding;
+  border-radius: $box-border-radius;
+  margin-bottom: $box-padding / 2;
+  display: grid;
+  grid-template: auto auto / auto 1fr;
+  grid-template-areas: "icon title" "icon rest";
+  column-gap: $box-padding;
+
+  img {
+    height: 32pt;
+    border-radius: 99pt;
+    grid-area: icon;
+  }
+
+  .name {
+    grid-area: title;
+    color: $color-major;
+    font-family: $font-major;
+    margin-bottom: 2pt;
+  }
+
+  .rest {
+    grid-area: rest;
+
+    * {
+      color: $color-sub;
+      font-family: $font-sub;
+    }
+  }
+}
+
+</style>

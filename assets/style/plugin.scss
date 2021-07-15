@@ -1,0 +1,48 @@
+@import './variables.scss';
+@import './easings.scss';
+
+/*
+ * PAGE TRANSITIONS
+ */
+
+.container {
+  transition: all .15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .15s;
+}
+.page-enter, .page-leave-active {
+  opacity: 0;
+}
+
+.slide-down-leave-active,
+.slide-up-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.slide-down-enter,
+.slide-up-leave-active {
+  opacity: 0;
+  transform: translateY(-10px);
+
+  .hovercp {
+    transform: translateY(50px);
+  }
+}
+
+// input animations
+
+.loading-animation-queued {
+  *[ia-margin] {
+    margin-bottom: $box-padding;
+    opacity: 0;
+  }
+}
+
+@for $i from 0 to 20 {
+  *[ia-margin="#{$i}"] {
+    transition: margin-bottom .4s $ease-out-cubic #{$i * 20ms}
+              , opacity .4s $ease-out-cubic #{$i * 20ms};
+  }
+}
