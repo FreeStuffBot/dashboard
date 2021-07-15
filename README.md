@@ -1,6 +1,6 @@
 # freestuff-manager
 
-> Webscraper and Management Dashboard for the FreeStuff Bot
+> Dashboard for the FreeStuff Bot
 
 ## Build Setup
 
