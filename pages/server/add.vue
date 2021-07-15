@@ -29,12 +29,18 @@ import Vue from 'vue'
 import axios from 'axios'
 
 export default Vue.extend({
+  transition: 'slide-down',
   data() {
     return {
       error: !this.$store.state.user.guilds,
       guilds: this.$store.state.user.guilds
         ?.filter((g: any) => !g.freestuff)
         .filter((g: any) => (g.permissions & (1 << 5)) !== 0 || (g.permissions & (1 << 3)) !== 0)
+    }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Add Server'
     }
   },
   methods: {
@@ -61,12 +67,6 @@ export default Vue.extend({
           }
         }, 1000)
       }
-    }
-  },
-  transition: 'slide-down',
-  head() {
-    return {
-      title: 'FreeStuff Add Server'
     }
   }
 })

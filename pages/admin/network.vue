@@ -67,7 +67,6 @@
 import Vue from 'vue'
 import io, { Socket } from 'socket.io-client'
 import ShardCard from '~/components/ShardCard.vue'
-import { Shard } from '~/backend/types'
 
 export default Vue.extend({
   components: { ShardCard },
@@ -94,7 +93,7 @@ export default Vue.extend({
         out += Math.abs(this.socketVisualState) === i ? 'O' : 'o'
       return out
     },
-    shardsStocked(): Shard[] {
+    shardsStocked(): any[] {
       const out = []
       for (let i = 0; i < this.shardCount; i++) {
         const found = (this as any).shards.find((s: any) => (s.task.id === 'assigned' && s.task.shardId === i))

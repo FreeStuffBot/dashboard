@@ -184,7 +184,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { GameData, GameFlag } from '../../backend/types'
+import { GameData, GameFlag } from '@freestuffbot/typings'
 
 
 interface InterfacedGameData extends GameData {
@@ -312,7 +312,7 @@ export default Vue.extend({
       })
     },
     async approve() { // eslint-disable-next-line camelcase
-      const guilds = await axios.get(`/content/guildamount/${this.game?.info.store}/${this.game?.info.org_price.euro}/${this.game?.info.org_price.dollar}/${this.game?.trash}`)
+      const guilds = await axios.get(`/content/guildamount/${this.game?.info.store}/${this.game?.info.org_price.euro}/${this.game?.info.org_price.usd}/${this.game?.trash}`)
       const doIt = document.querySelector('.page>*[error]')
         ? await Swal.fire({
           title: 'Are you sure the data is correct and the game is fitting?',

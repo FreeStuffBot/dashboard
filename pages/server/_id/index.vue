@@ -10,6 +10,7 @@ import Vue from 'vue'
 export default Vue.extend({
   components: {
   },
+  transition: 'slide-down',
   data() {
     return {
       guild: this.$store.state.user.guilds
@@ -17,7 +18,6 @@ export default Vue.extend({
         : undefined
     }
   },
-  transition: 'slide-down',
   head() {
     return {
       // @ts-ignore

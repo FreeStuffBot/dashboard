@@ -87,6 +87,20 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 export default Vue.extend({
+  transition: 'slide-down',
+  data() {
+    return {
+      data: undefined as any,
+      dataOrg: undefined as any,
+      dataEn: undefined as any,
+      dataDescriptions: undefined as any,
+      issues: {} as {[key: string]: string},
+      editor: {
+        cursor: 0,
+        rtl: false
+      }
+    }
+  },
   async fetch() {
     const data = (await axios.get(`/translate/language/${this.$route.params.lang}`)).data as { [key: string]: string }
     const dataEn = (await axios.get('/translate/language/en-US')).data as { [key: string]: string }
@@ -109,17 +123,9 @@ export default Vue.extend({
 
     this.findIssues()
   },
-  data() {
+  head() {
     return {
-      data: undefined as any,
-      dataOrg: undefined as any,
-      dataEn: undefined as any,
-      dataDescriptions: undefined as any,
-      issues: {} as {[key: string]: string},
-      editor: {
-        cursor: 0,
-        rtl: false
-      }
+      title: 'FreeStuff Translating'
     }
   },
   computed: {
@@ -221,13 +227,7 @@ export default Vue.extend({
       return issuesAt
     }
   },
-  fetchOnServer: false,
-  transition: 'slide-down',
-  head() {
-    return {
-      title: 'FreeStuff Translating'
-    }
-  }
+  fetchOnServer: false
 })
 </script>
 
