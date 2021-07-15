@@ -86,28 +86,25 @@ export default Vue.extend({
           Swal.fire({
             title: 'Fetching Information!',
             html: 'Please hold on...',
-            timerProgressBar: true,
-            onBeforeOpen: () => {
-              Swal.showLoading()
-            },
-            onOpen: async () => {
-              const game = await axios.post('/content/new/url', { url }, { timeout: 5 * 60 * 1000 })
-              if (game.data.error) {
-                Swal.fire({
-                  title: game.data.error,
-                  icon: 'error'
-                })
-              } else if (game.data._id) {
-                Swal.close()
-                this.$router.replace(`/content/${game.data._id}`)
-              } else {
-                Swal.fire({
-                  title: 'Failed to fetch data.',
-                  icon: 'error'
-                })
-              }
-            }
+            timerProgressBar: true
           })
+          Swal.showLoading()
+
+          const game = await axios.post('/content/new/url', { url }, { timeout: 5 * 60 * 1000 })
+          if (game.data.error) {
+            Swal.fire({
+              title: game.data.error,
+              icon: 'error'
+            })
+          } else if (game.data._id) {
+            Swal.close()
+            this.$router.replace(`/content/${game.data._id}`)
+          } else {
+            Swal.fire({
+              title: 'Failed to fetch data.',
+              icon: 'error'
+            })
+          }
         }
       }
       if (type === 'new_scratch') {
@@ -141,29 +138,26 @@ export default Vue.extend({
           Swal.fire({
             title: `Scraping ${this.lang[store]}...`,
             html: 'Please hold on...',
-            timerProgressBar: true,
-            onBeforeOpen: () => {
-              Swal.showLoading()
-            },
-            onOpen: async () => {
-              const res = await axios.post('/content/scrape/' + store, { }, { timeout: 5 * 60 * 1000 })
-              if (res.data.success) {
-                Swal.close()
-                Swal.fire({
-                  title: 'Success!',
-                  text: 'Found something, take a look!',
-                  icon: 'success'
-                })
-                this.$fetch()
-              } else {
-                Swal.fire({
-                  title: 'Failed to fetch data.',
-                  text: `Here's why:\n${res.data.error}`,
-                  icon: 'error'
-                })
-              }
-            }
+            timerProgressBar: true
           })
+          Swal.showLoading()
+
+          const res = await axios.post('/content/scrape/' + store, { }, { timeout: 5 * 60 * 1000 })
+          if (res.data.success) {
+            Swal.close()
+            Swal.fire({
+              title: 'Success!',
+              text: 'Found something, take a look!',
+              icon: 'success'
+            })
+            this.$fetch()
+          } else {
+            Swal.fire({
+              title: 'Failed to fetch data.',
+              text: `Here's why:\n${res.data.error}`,
+              icon: 'error'
+            })
+          }
         }
       }
     },

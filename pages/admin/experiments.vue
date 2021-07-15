@@ -73,10 +73,6 @@ export default Vue.extend({
             (document.getElementById('swal-input1') as HTMLInputElement).value,
             (document.getElementById('swal-input2') as HTMLInputElement).value
           ]
-        },
-        onOpen() {
-          // eslint-disable-next-line no-unused-expressions
-          document.getElementById('swal-input1')?.focus()
         }
       })
 

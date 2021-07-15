@@ -128,10 +128,6 @@ export default Vue.extend({
             (document.getElementById('swal-input2') as HTMLInputElement).value,
             (document.getElementById('swal-input3') as HTMLInputElement).value.split(/(?: *, *)|(?: +,? *)|(?: *,? +)/)
           ]
-        },
-        onOpen() {
-          // eslint-disable-next-line no-unused-expressions
-          document.getElementById('swal-input1')?.focus()
         }
       })
 
@@ -165,10 +161,6 @@ export default Vue.extend({
             (document.getElementById('swal-input2') as HTMLInputElement).value.split(/(?: *, *)|(?: +,? *)|(?: *,? +)/),
             (document.getElementById('swal-input3') as HTMLInputElement).value.toLowerCase() === 'yes'
           ]
-        },
-        onOpen() {
-          // eslint-disable-next-line no-unused-expressions
-          document.getElementById('swal-input1')?.focus()
         }
       })
 

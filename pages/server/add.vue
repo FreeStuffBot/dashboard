@@ -54,10 +54,10 @@ export default Vue.extend({
         'width=500,height=700,location=no,toolbar=no,menuvar=no,status=no,left=-1000,top=-1000'
       )
       if (w) {
-        let interval: NodeJS.Timeout | null = null
+        let interval: any = null
         interval = setInterval(() => {
           if (!w || w.closed) {
-            clearInterval(interval as NodeJS.Timeout)
+            clearInterval(interval)
             setTimeout(async () => {
               const guildlist = (await axios.get('/data/guilds')).data
               this.$store.commit('user/updateGuilds', guildlist)
