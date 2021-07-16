@@ -36,19 +36,14 @@ import Swal from 'sweetalert2'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      list: [ ],
-      search: ''
-    }
-  },
   async fetch() {
     const { data } = await axios.get('/admin/experimentsapi?anticache=' + Math.random())
     this.list = data
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Admin Panel'
+      list: [ ],
+      search: ''
     }
   },
   methods: {
@@ -119,13 +114,16 @@ export default Vue.extend({
       })
     }
   },
+  head() {
+    return {
+      title: 'FreeStuff Admin Panel'
+    }
+  },
   fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

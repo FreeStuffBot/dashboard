@@ -7,15 +7,16 @@
 </template>
 
 <script lang="ts">
-export default {
-  created() {
+import Vue from 'vue'
+
+export default Vue.extend({
+  mounted() {
+    this.$store.dispatch('pageLoad')
   }
-}
+})
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 html, body, #app {
   position: absolute;
   top: 0;

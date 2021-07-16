@@ -28,8 +28,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 .container {
   max-width: 40vw;
 }

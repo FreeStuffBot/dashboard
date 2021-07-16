@@ -23,16 +23,16 @@ import axios from 'axios'
 
 export default Vue.extend({
   transition: 'slide-down',
+  async fetch() {
+    const { data: files } = await axios.get('/admin/logsapi/_list')
+    if (!files) return alert('Aoooyooo. Error! Check console.')
+    this.files = files
+  },
   data() {
     return {
       files: [],
       content: ''
     }
-  },
-  async fetch() {
-    const { data: files } = await axios.get('/admin/logsapi/_list')
-    if (!files) return alert('Aoooyooo. Error! Check console.')
-    this.files = files
   },
   head() {
     return {
@@ -44,8 +44,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

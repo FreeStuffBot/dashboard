@@ -79,7 +79,7 @@ export default Vue.extend({
           type: 'page',
           name: this.$store.state.user.username,
           secret: 'Nice pfp, bro',
-          url: '/me',
+          url: '/',
           icon: this.$store.state.user.avatarUrl
         },
         {
@@ -122,14 +122,14 @@ export default Vue.extend({
           type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
           name: 'Your application',
           secret: 'Manage your api project',
-          url: '/application/home',
+          url: '/apps/home',
           icon: '/assets/img/peepobusiness.png'
         },
         {
           type: this.$store.getters['user/apiAccess'] ? 'none' : 'page',
           name: 'Get Access',
           secret: 'A FreeStuff API key is a very good investment!',
-          url: '/api-info',
+          url: '/apps/api-info',
           icon: '/assets/img/peepobusiness.png'
         },
         {
@@ -204,8 +204,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 nav {
   display: block;
 

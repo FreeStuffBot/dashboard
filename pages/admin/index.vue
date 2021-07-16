@@ -60,15 +60,9 @@ export default Vue.extend({
   transition: 'slide-down',
   data() {
     return {
-      git: this.$store.state.gitCommit
+      git: 'TODO'
     }
   },
-  head() {
-    return {
-      title: 'FreeStuff Admin Panel'
-    }
-  },
-  fetchOnServer: false,
   methods: {
     /* async */ action(type: string) {
       alert('temporarily disabled')
@@ -122,13 +116,17 @@ export default Vue.extend({
       //   })
       // }
     }
-  }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Admin Panel'
+    }
+  },
+  fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

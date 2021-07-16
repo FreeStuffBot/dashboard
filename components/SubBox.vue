@@ -48,8 +48,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 .subbox {
   display: block;
   background: var(--color);

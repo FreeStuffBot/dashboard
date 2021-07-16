@@ -192,8 +192,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 .statspanel {
   background-color: $bg-bright;
   padding: $box-padding;

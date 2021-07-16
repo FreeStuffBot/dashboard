@@ -59,11 +59,6 @@ export default Vue.extend({
       ...this.$store.state.user
     }
   },
-  head() {
-    return {
-      title: 'FreeStuff Management'
-    }
-  },
   computed: {
     greeting() {
       const hour = new Date().getHours()
@@ -98,13 +93,16 @@ export default Vue.extend({
         confirmButtonText: 'Close'
       })
     }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Management'
+    }
   }
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

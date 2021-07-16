@@ -232,8 +232,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

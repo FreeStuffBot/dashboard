@@ -65,8 +65,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 
 .usericons {
   padding-right: 7pt;

@@ -73,13 +73,6 @@ import Swal from 'sweetalert2'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      users: [],
-      langs: {} as any,
-      search: ''
-    }
-  },
   async fetch() {
     const { data } = await axios.get('/admin/usersapi')
     this.users = data.sort((a:any, b:any) => b.scope.length - a.scope.length)
@@ -87,9 +80,11 @@ export default Vue.extend({
     for (const lang of list.data)
       this.langs[lang._id] = lang.lang_name_en
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Admin Users'
+      users: [],
+      langs: {} as any,
+      search: ''
     }
   },
   computed: {
@@ -97,7 +92,6 @@ export default Vue.extend({
       return this.$store.getters['user/isAdmin']
     }
   },
-  fetchOnServer: false,
   methods: {
     searchFilter(user: any) {
       if (this.search === '') return true
@@ -178,13 +172,17 @@ export default Vue.extend({
     geoloc(userid: string) {
       this.$router.push({ path: `/admin/geoloc/${userid}` })
     }
-  }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Admin Users'
+    }
+  },
+  fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

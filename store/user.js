@@ -30,10 +30,12 @@ export const state = () => ({
 })
 
 export const mutations = {
-  login(state, data) {
-    for (const key of Object.keys(data.data)) {
+  updateUser(state, data) {
+    if (!data) return
+
+    for (const key of Object.keys(data)) {
       // @ts-ignore
-      state[key] = data.data[key]
+      state[key] = data[key]
     }
 
     state.avatarUrl = state.avatar

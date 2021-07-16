@@ -38,8 +38,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 .shard {
   position: relative;
   width: 90px;

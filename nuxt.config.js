@@ -20,56 +20,86 @@ module.exports = {
   },
   loading: { color: '#fff' },
   css: [
-    '@/assets/style/global.scss'
   ],
   plugins: [
     { src: '~plugins/vue-chartjs.js', ssr: false }
   ],
   buildModules: [
     '@nuxt/typescript-build',
-    '@nuxtjs/svg'
+    '@nuxtjs/svg',
+    '@nuxtjs/style-resources'
   ],
   modules: [
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    'nuxt-i18n'
   ],
+  styleResources: {
+    scss: [
+      '@/assets/style/all.scss'
+    ]
+  },
   build: {
   },
-  render: {
-    csp: {
-      reportOnly: false,
-      hashAlgorithm: 'sha256',
-      policies: {
-        'default-src': [ "'self'" ],
-        'img-src': [
-          'https:',
-          '*.google-analytics.com',
-          'cdn.discordapp.com',
-          '*.steamstatic.com',
-          'cdn.akamai.steamstatic.com',
-          'localhost',
-          '*.freestuffbot.xyz',
-          'data:'
-        ],
-        'worker-src': [ "'self'", 'blob:' ],
-        'style-src': [ "'self'", "'unsafe-inline'" ],
-        'connect-src': [ '*' ],
-        'script-src': [
-          "'self'",
-          "'unsafe-inline'",
-          'sentry.io',
-          'ajax.cloudflare.com',
-          'static.cloudflareinsights.com'
-        ],
-        'form-action': [ "'self'" ],
-        'frame-ancestors': [ "'none'" ],
-        'object-src': [ "'none'" ],
-        'base-uri': []
-      }
-    }
-  },
+  // render: {
+  //   csp: {
+  //     reportOnly: false,
+  //     hashAlgorithm: 'sha256',
+  //     policies: {
+  //       'default-src': [ "'self'" ],
+  //       'img-src': [
+  //         'https:',
+  //         '*.google-analytics.com',
+  //         'cdn.discordapp.com',
+  //         '*.steamstatic.com',
+  //         'cdn.akamai.steamstatic.com',
+  //         'localhost:*',
+  //         '*.freestuffbot.xyz',
+  //         'data:'
+  //       ],
+  //       'worker-src': [ "'self'", 'blob:' ],
+  //       'style-src': [ "'self'", "'unsafe-inline'" ],
+  //       'connect-src': [ '*' ],
+  //       'script-src': [
+  //         '*',
+  //         'localhost:*',
+  //         '*.freestuffbot.xyz',
+  //         'data:',
+  //         "'self'",
+  //         "'unsafe-inline'",
+  //         "'unsafe-eval'",
+  //         'sentry.io',
+  //         'ajax.cloudflare.com',
+  //         'static.cloudflareinsights.com'
+  //       ],
+  //       'form-action': [ "'self'" ],
+  //       'frame-ancestors': [ "'none'" ],
+  //       'object-src': [ "'none'" ],
+  //       'base-uri': []
+  //     }
+  //   }
+  // },
   generate: {
     exclude: [
       /^\/o\//
     ]
+  },
+  i18n: {
+    locales: [ 'en' ],
+    defaultLocale: 'en',
+    vueI18n: {
+      fallbackLocale: 'en',
+      messages: {
+        en: {
+          continue: 'Continue',
+          skip: 'Skip',
+          new: 'New',
+          back: 'Back',
+          create: 'Create',
+          add: 'Add',
+
+          error_user_invalid: 'Invalid user'
+        }
+      }
+    }
   }
 }

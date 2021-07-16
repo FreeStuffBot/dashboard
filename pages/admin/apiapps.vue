@@ -29,11 +29,6 @@ import axios from 'axios'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      list: []
-    }
-  },
   async fetch() {
     const { data } = await axios.get('/admin/apiappsapi?anticache=' + Math.random())
     this.list = await Promise.all(data.map(async (d: any) => ({
@@ -45,6 +40,11 @@ export default Vue.extend({
         )
     })))
   },
+  data() {
+    return {
+      list: []
+    }
+  },
   fetchOnServer: false,
   head() {
     return {
@@ -55,8 +55,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

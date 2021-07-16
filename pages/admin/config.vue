@@ -23,13 +23,6 @@ import axios from 'axios'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      configStr: '',
-      error: '',
-      config: {}
-    }
-  },
   async fetch() {
     const { data } = await axios.get('/admin/configapi')
     if (!data) return alert('Aoooyooo. Error! Check console.')
@@ -37,9 +30,11 @@ export default Vue.extend({
     this.config = data
     this.configStr = JSON.stringify(data, null, 2)
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Admin Panel'
+      configStr: '',
+      error: '',
+      config: {}
     }
   },
   watch: {
@@ -59,13 +54,16 @@ export default Vue.extend({
       alert(`${status}: ${statusText}`)
     }
   },
+  head() {
+    return {
+      title: 'FreeStuff Admin Panel'
+    }
+  },
   fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

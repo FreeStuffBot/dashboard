@@ -43,8 +43,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 .accinfobox {
   display: flex;
   background: #393f55;

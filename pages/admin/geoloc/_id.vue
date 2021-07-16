@@ -15,21 +15,16 @@ import Axios from 'axios'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      map: null as any,
-      user: {} as any
-    }
-  },
   async fetch() {
     const { data } = await Axios.get('/admin/usersapi/' + this.$route.params.id)
     this.user = data
     if (this.map)
       this.mountMarkers()
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Admin Users'
+      map: null as any,
+      user: {} as any
     }
   },
   mounted() {
@@ -57,13 +52,16 @@ export default Vue.extend({
       })
     }
   },
+  head() {
+    return {
+      title: 'FreeStuff Admin Users'
+    }
+  },
   fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 h1 {
   position: relative;
   z-index: 100;

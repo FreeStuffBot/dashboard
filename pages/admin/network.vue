@@ -81,11 +81,6 @@ export default Vue.extend({
       selected: [] as string[]
     }
   },
-  head() {
-    return {
-      title: 'FreeStuff Admin Panel'
-    }
-  },
   computed: {
     socketVisualRendered(): string {
       let out = ''
@@ -179,13 +174,16 @@ export default Vue.extend({
       })
     }
   },
+  head() {
+    return {
+      title: 'FreeStuff Admin Panel'
+    }
+  },
   fetchOnServer: false
 })
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;

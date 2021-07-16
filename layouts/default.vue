@@ -43,7 +43,7 @@ Vue.use(require('vue-tippy').default, {
 Vue.component('tippy', require('vue-tippy').TippyComponent)
 
 
-export default {
+export default Vue.extend({
   components: {
     SidebarNav
   },
@@ -51,13 +51,14 @@ export default {
     return {
       dev: process.env.NODE_ENV !== 'production'
     }
+  },
+  mounted() {
+    this.$store.dispatch('pageLoad')
   }
-}
+})
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 html, body, #layout, #app {
   position: absolute;
   top: 0;
@@ -193,8 +194,6 @@ html, body, #layout, #app {
 </style>
 
 <style lang="scss">
-@import '~/assets/style/all.scss';
-
 .container {
   width: 100%;
   max-width: 550pt;

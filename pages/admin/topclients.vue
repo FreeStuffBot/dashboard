@@ -22,14 +22,14 @@ import axios from 'axios'
 
 export default Vue.extend({
   transition: 'slide-down',
+  async fetch() {
+    const { data } = await axios.get('/admin/topclientsapi?anticache=' + Math.random())
+    this.list = data.sort((a: any, b: any) => b.size - a.size)
+  },
   data() {
     return {
       list: []
     }
-  },
-  async fetch() {
-    const { data } = await axios.get('/admin/topclientsapi?anticache=' + Math.random())
-    this.list = data.sort((a: any, b: any) => b.size - a.size)
   },
   fetchOnServer: false,
   head() {
@@ -41,8 +41,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/style/all.scss';
-
 span {
   color: white;
   font-family: $font-regular;
