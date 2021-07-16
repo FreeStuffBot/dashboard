@@ -1,6 +1,6 @@
 <template>
   <div id="layout">
-    <div id="app">
+    <div v-if="$store.state.loginStatus === 'success'" id="app">
       <div id="sidebar">
         <div class="container">
           <div v-if="dev" class="devnotice">

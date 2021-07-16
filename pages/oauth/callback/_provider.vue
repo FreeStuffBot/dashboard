@@ -11,7 +11,7 @@ import Vue from 'vue'
 import API from '~/lib/api'
 
 export default Vue.extend({
-  layout: 'fullscreen',
+  layout: 'blank',
   fetchOnServer: false,
   async fetch() {
     try {
@@ -23,7 +23,7 @@ export default Vue.extend({
 
       localStorage.setItem('token', data.token)
 
-      this.$store.commit('updateUser', data.user)
+      this.$store.commit('user/updateUser', data.user)
 
       // if (data.do_setup) {
       //   this.$router.push({ path: '/callback/setup' })
@@ -32,6 +32,7 @@ export default Vue.extend({
 
       this.$router.push({ path: '/' })
     } catch (ex) {
+      console.error(ex)
       this.$router.push({ path: '/login' })
     }
   }
@@ -39,28 +40,4 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  column-gap: 20pt;
-  grid-template-columns: 1fr;
-  grid-template-areas: "main";
-}
-
-.panel {
-  height: 100%;
-  background-color: $bg-bright;
-  border-radius: 5pt;
-  padding: 10pt;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: $color-sub;
-
-  &.main { grid-area: main; }
-
-  * { flex-shrink: 0; }
-}
 </style>
