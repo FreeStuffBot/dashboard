@@ -38,7 +38,6 @@ export const actions = {
     } else {
       store.commit('user/updateUser', user.data)
       store.commit('updateLoginStatus', 'success')
-      console.log(user)
       store.commit('lang/loaded', user.data.lang)
       store.commit('gitDataLoaded', user.data.gitData)
     }
