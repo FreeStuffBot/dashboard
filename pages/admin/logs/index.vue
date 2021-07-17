@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data: files } = await axios.get('/admin/logsapi/_list')
+    const { data: files } = await API.adminGetLogs()
     if (!files) return alert('Aoooyooo. Error! Check console.')
     this.files = files
   },

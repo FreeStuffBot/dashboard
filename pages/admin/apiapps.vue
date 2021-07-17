@@ -25,15 +25,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await axios.get('/admin/apiappsapi?anticache=' + Math.random())
+    const { data } = await API.adminGetApps()
     this.list = await Promise.all(data.map(async (d: any) => ({
       ...d,
-      avatar: (await axios.get('/admin/usersapi/' + d._id) as any)?.data?.avatar
+      avatar: (await API.adminGetUser(d._id))?.data?.avatar
         || ((/^[0-9]/.test(d._id))
           ? 'https://cdn.discordapp.com/embed/avatars/0.png'
           : 'https://management.freestuffbot.xyz/_nuxt/assets/img/logo.png'

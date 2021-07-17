@@ -10,15 +10,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
     const path = this.$route.params.file
     if (path) {
-      const { data: content, statusText } = await axios.get('/admin/logsapi/' + path, { validateStatus: null })
-      this.content = content || statusText
+      const { data: content, statusText } = await API.adminGetLogFile(path)
+      if (typeof content === 'string')
+        this.content = content || statusText || 'error'
+      else this.content = ''
     }
   },
   data() {
@@ -28,8 +30,10 @@ export default Vue.extend({
   },
   watch: {
     async '$route.params.file'(path: string) {
-      const { data: content, statusText } = await axios.get('/admin/logsapi/' + path, { validateStatus: null })
-      this.content = content || statusText
+      const { data: content, statusText } = await API.adminGetLogFile(path)
+      if (typeof content === 'string')
+        this.content = content || statusText || 'error'
+      else this.content = ''
     }
   },
   head() {

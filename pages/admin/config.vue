@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await axios.get('/admin/configapi')
+    const { data } = await API.adminGetConfig()
     if (!data) return alert('Aoooyooo. Error! Check console.')
 
     this.config = data
@@ -50,7 +50,7 @@ export default Vue.extend({
   methods: {
     async apply() {
       const body = this.config
-      const { status, statusText } = await axios.patch('/admin/configapi', body, { validateStatus: null })
+      const { status, statusText } = await API.adminPatchConfig(body)
       alert(`${status}: ${statusText}`)
     }
   },

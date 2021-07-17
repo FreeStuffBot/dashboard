@@ -31,13 +31,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await axios.get('/admin/experimentsapi?anticache=' + Math.random())
+    const { data } = await API.adminGetExperiments()
     this.list = data
   },
   data() {
@@ -73,7 +73,7 @@ export default Vue.extend({
 
       if (!value) return
 
-      await axios.post('/admin/experimentsapi', {
+      await API.adminPostExperiment({
         name: value[0],
         description: value[1]
       })
@@ -81,7 +81,7 @@ export default Vue.extend({
       this.$fetch()
     },
     async update(name: string, rules: string) {
-      await axios.patch('/admin/experimentsapi', {
+      await API.adminPatchExperiment({
         name, rules
       })
 

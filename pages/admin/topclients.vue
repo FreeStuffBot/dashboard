@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await axios.get('/admin/topclientsapi?anticache=' + Math.random())
+    const { data } = await API.adminGetTopClients()
     this.list = data.sort((a: any, b: any) => b.size - a.size)
   },
   data() {

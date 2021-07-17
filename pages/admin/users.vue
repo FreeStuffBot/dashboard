@@ -31,9 +31,14 @@
         :key="user._id"
         class="user"
       >
-        <img :src="user.avatar ? (user.avatar.split('?size=512')[0] + '?size=64') : 'https://cdn.discordapp.com/embed/avatars/0.png'" alt="User Avatar">
+        <img
+          :src="user.data.avatar
+            ? `https://cdn.discordapp.com/avatars/${user.data.id}/${(user.data.avatar)}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png'"
+          alt="User Avatar"
+        >
         <span class="name">
-          {{ user.display }}
+          {{ user.data.username ? (user.display === user.data.username ? user.display : `${user.data.username} (${user.display})`) : user.display }}
           <img
             id="editbutton"
             v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
@@ -68,15 +73,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await axios.get('/admin/usersapi')
+    const { data } = await API.adminGetUsers()
     this.users = data.sort((a:any, b:any) => b.scope.length - a.scope.length)
-    const list = await axios.get('/translate/list')
+    const list = await API.getLanguageList()
     for (const lang of list.data)
       this.langs[lang._id] = lang.lang_name_en
   },
@@ -127,7 +132,7 @@ export default Vue.extend({
 
       if (!value) return
 
-      await axios.post('/admin/usersapi', {
+      await API.adminPostUsers({
         id: value[0],
         display: value[1],
         scope: value[2]
@@ -160,7 +165,7 @@ export default Vue.extend({
 
       if (!value) return
 
-      await axios.post('/admin/usersapi', {
+      await API.adminPostUsers({
         id: userid,
         display: value[0],
         scope: value[1],

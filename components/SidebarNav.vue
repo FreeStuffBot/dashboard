@@ -29,7 +29,7 @@
             <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link" class="visonhov">
           </div>
         </a>
-        <NuxtLink v-else :to="link.url" class="link">
+        <NuxtLink v-else :to="link.url" class="link" :subpages="link.url !== '/'">
           <div class="icon-wrapper">
             <img
               class="i"
@@ -252,7 +252,7 @@ nav {
         .visonhov { opacity: var(--opacity, 1); }
       }
 
-      &[class*="active"] {
+      &.nuxt-link-exact-active, &[subpages].nuxt-link-active {
         background-color: #000000;
         span { color: $color-major !important; }
 

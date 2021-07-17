@@ -11,7 +11,12 @@ export type ErrorData = { error: string }
 
 export default class API {
 
-  private static readonly BASE_URL = 'http://localhost/dash' // TODO load from localstore and then on login page have a input to change this
+  public static readonly API_HOST = 'http://localhost' // TODO load from localstore and then on login page have a input to change this
+  public static readonly BASE_URL = API.API_HOST + '/dash'
+
+  public static getAuthToken(): string {
+    return localStorage.getItem('token') || ''
+  }
 
   private static buildConf(headers?: any, body?: any): AxiosRequestConfig {
     headers ||= {}
@@ -221,8 +226,8 @@ export default class API {
     return this.rawGet('/admin/users')
   }
 
-  public static adminGetUser() {
-    return this.rawGet('/admin/users/:id')
+  public static adminGetUser(id: string) {
+    return this.rawGet(`/admin/users/${id}`)
   }
 
   public static adminPostUsers(data: any) {
@@ -241,8 +246,8 @@ export default class API {
     return this.rawPatch('/admin/experiments', data)
   }
 
-  public static adminGetGuild() {
-    return this.rawGet('/admin/guilds/:id')
+  public static adminGetGuild(id: string) {
+    return this.rawGet(`/admin/guilds/${id}`)
   }
 
   public static adminGetApps() {

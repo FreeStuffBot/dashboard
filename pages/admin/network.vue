@@ -66,6 +66,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import io, { Socket } from 'socket.io-client'
+import API from '../../lib/api'
 import ShardCard from '~/components/ShardCard.vue'
 
 export default Vue.extend({
@@ -123,11 +124,14 @@ export default Vue.extend({
         v.socketVisualState *= -1
     }, 300, this)
 
-    this.socket = io(`${window.location.protocol.includes('s') ? 'wss' : 'ws'}://${window.location.host}`, {
+    this.socket = io(`${window.location.protocol.includes('s') ? 'wss' : 'ws'}://${API.API_HOST.split('://')[1]}`, {
       query: {
         type: 'dashboard'
       },
-      path: '/api/internal/socket'
+      path: '/internal/socket',
+      auth: {
+        token: API.getAuthToken()
+      }
     })
 
     this.socket.on('connect', () => {
