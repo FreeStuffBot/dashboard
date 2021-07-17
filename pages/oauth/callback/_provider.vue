@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="panel main">
-      Loading, please wait
-    </div>
+    Loading, please wait
   </div>
 </template>
 
@@ -11,7 +9,7 @@ import Vue from 'vue'
 import API from '~/lib/api'
 
 export default Vue.extend({
-  layout: 'blank',
+  layout: 'auth',
   fetchOnServer: false,
   async fetch() {
     try {

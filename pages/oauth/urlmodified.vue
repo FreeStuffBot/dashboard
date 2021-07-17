@@ -10,7 +10,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  layout: 'fullscreen',
+  layout: 'auth',
   asyncData({ query }) {
     return {
       expected: query.expected,

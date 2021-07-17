@@ -3,13 +3,17 @@ import API from '~/lib/api'
 
 export const state = () => ({
   environment: 'production',
-  loginStatus: 'pending' // pending, guest, success, disconnected
+  loginStatus: 'pending', // pending, guest, success, disconnected, 404
+  gitData: null
 })
 
 
 export const mutations = {
   updateLoginStatus(state, data) {
     state.loginStatus = data
+  },
+  gitDataLoaded(state, data) {
+    state.gitData = data
   }
 }
 
@@ -23,6 +27,10 @@ export const actions = {
       store.commit('user/updateUser', null)
       store.commit('updateLoginStatus', 'disconnected')
       window.$nuxt.$router.push('/login')
+    } else if (user.status === 404) {
+      store.commit('user/updateUser', null)
+      store.commit('updateLoginStatus', '404')
+      window.$nuxt.$router.push('/login')
     } else if (user.status !== 200) {
       store.commit('user/updateUser', null)
       store.commit('updateLoginStatus', 'guest')
@@ -30,8 +38,9 @@ export const actions = {
     } else {
       store.commit('user/updateUser', user.data)
       store.commit('updateLoginStatus', 'success')
-      user.gitData
-      user.lang
+      console.log(user)
+      store.commit('lang/loaded', user.data.lang)
+      store.commit('gitDataLoaded', user.data.gitData)
     }
   },
   async refetchLines(store, data) {

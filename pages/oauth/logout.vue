@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="panel main">
-      Loading...
-    </div>
+    Loading...
   </div>
 </template>
 
@@ -10,7 +8,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  layout: 'fullscreen',
+  layout: 'auth',
   fetchOnServer: false,
   mounted() {
     localStorage.clear()
@@ -20,27 +18,4 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  column-gap: 20pt;
-  grid-template-columns: 1fr;
-  grid-template-areas: "main";
-}
-
-.panel {
-  height: 100%;
-  background-color: $bg-bright;
-  border-radius: 5pt;
-  padding: 10pt;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  &.main { grid-area: main; }
-
-  * { flex-shrink: 0; }
-}
 </style>

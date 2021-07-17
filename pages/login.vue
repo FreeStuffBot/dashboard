@@ -1,25 +1,30 @@
 <template>
-  <div class="container">
-    <div v-if="$store.state.loginStatus === 'guest'" class="panel main">
-      <h1>Login to FreeStuff</h1>
-      <div class="login-with">
-        <a
-          v-for="provider of authProviders"
-          :key="provider.name"
-          :style="`--c: ${provider.color}; --h: ${provider.colorhover}`"
-          class="auth-button"
-          @click="loginWith(provider.uri)"
-        >
-          <icon :name="provider.icon" />
-          <span>
-            Continue with {{ provider.name }}
-          </span>
-        </a>
-      </div>
+  <div v-if="$store.state.loginStatus === 'guest'" class="container">
+    <h1>Login to FreeStuff</h1>
+    <div class="login-with">
+      <a
+        v-for="provider of authProviders"
+        :key="provider.name"
+        :style="`--c: ${provider.color}; --h: ${provider.colorhover}`"
+        class="auth-button"
+        @click="loginWith(provider.uri)"
+      >
+        <icon :name="provider.icon" />
+        <span>
+          Continue with {{ provider.name }}
+        </span>
+      </a>
     </div>
-    <div v-else class="panel main">
-      Loading...
-    </div>
+  </div>
+  <div v-else-if="$store.state.loginStatus === 'disconnected'" class="container">
+    Cannot reach FreeStuff servers...<br>
+    Are you offline?
+  </div>
+  <div v-else-if="$store.state.loginStatus === '404'" class="container">
+    The dashboard is temporarily not available due to maintenance. Check our Discord for status and news.
+  </div>
+  <div v-else class="container">
+    Loading...
   </div>
 </template>
 
@@ -32,7 +37,7 @@ export default Vue.extend({
   components: {
     icon
   },
-  layout: 'fullscreen',
+  layout: 'auth',
   data() {
     return {
       authProviders: [
@@ -47,8 +52,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    if (this.$store.state.loginStatus === 'success')
-      this.$router.push('/')
+    this.$store.dispatch('pageLoad')
   },
   methods: {
     async loginWith(provider: string) {
@@ -61,40 +65,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  column-gap: 20pt;
-  grid-template-columns: 1fr;
-  grid-template-areas: "main";
-}
 
-.panel {
-  height: 100%;
-  background-color: $bg-bright;
-  border-radius: 3pt;
-  padding: 10pt;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  &.main { grid-area: main; }
-
-  * { flex-shrink: 0; }
-}
-
-.profile {
-  background-color: $bg-brighter;
-  padding: 16pt;
-  margin: 0;
-  border-radius: 999pt;
-
-  .icon {
-    width: 32pt;
-    color: $color-major;
-  }
+h1 {
+  margin-bottom: 20pt;
 }
 
 .login-with {

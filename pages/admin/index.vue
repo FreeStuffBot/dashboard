@@ -60,7 +60,7 @@ export default Vue.extend({
   transition: 'slide-down',
   data() {
     return {
-      git: this.$store.state.user.gitCommit
+      git: this.$store.state.gitData
     }
   },
   methods: {
