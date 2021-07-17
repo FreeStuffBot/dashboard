@@ -46,12 +46,18 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
+import API from '../../lib/api'
 
 
 export default Vue.extend({
   transition: 'slide-down',
+  async fetch() {
+    const info = await API.getAppData()
+    this.data = info.data
+    if (info.data.description)
+      this.newdesc = info.data.description
+  },
   data() {
     return {
       data: null as any,
@@ -59,18 +65,7 @@ export default Vue.extend({
       webhookEdit: false
     }
   },
-  async fetch() {
-    const info = await axios.get('/application/data')
-    this.data = info.data
-    if (info.data.description)
-      this.newdesc = info.data.description
-  },
   fetchOnServer: false,
-  head() {
-    return {
-      title: 'FreeStuff API'
-    }
-  },
   methods: {
     async createApp() {
       const data = await Swal.fire({
@@ -83,7 +78,7 @@ export default Vue.extend({
       })
 
       if (data.value) {
-        const success = await axios.post('/application/create')
+        const success = await API.postAppCreate()
         if (success.data.success) { this.$fetch() } else {
           Swal.fire({
             title: 'Oh noes!',
@@ -102,7 +97,7 @@ export default Vue.extend({
       })
 
       if (data.value) {
-        const res = await axios.post('/application/regenkey')
+        const res = await API.postAppRegenKey()
         Swal.fire({
           title: res.data.success ? 'Okie dokie' : 'Uh oh...',
           text: res.data.success ? 'Your api token was regenerated.' : 'Could not reset your token, please contact support!'
@@ -125,7 +120,7 @@ export default Vue.extend({
       })
 
       if (data.value) {
-        const res = await axios.post('/application/updatewebhook', { url: this.data.webhook, secret: this.data.webhooksecret })
+        const res = await API.patchAppWebhook(this.data.webhook, this.data.webhooksecret)
         Swal.fire({
           title: res.data.success ? 'Success!' : 'Uh oh...',
           text: res.data.success ? 'Your Webhook settings got updated!' : res.data.message
@@ -143,7 +138,7 @@ export default Vue.extend({
         return
       }
 
-      await axios.post('/application/testwebhook', { url: this.data.webhook, secret: this.data.webhooksecret })
+      await API.postAppWebhookTest(this.data.webhook, this.data.webhooksecret)
       Swal.fire({
         title: 'Aaaaand out!',
         text: 'Successfully sent test webhook event.<br>Make sure to save your changes first before testing!'
@@ -151,9 +146,14 @@ export default Vue.extend({
     },
     saveDesc() {
       if (this.data.description !== this.newdesc) {
-        axios.post('/application/updatedescription', { text: this.newdesc })
+        API.patchAppDescription(this.newdesc)
         this.data.description = this.newdesc
       }
+    }
+  },
+  head() {
+    return {
+      title: 'FreeStuff API'
     }
   }
 })

@@ -31,12 +31,13 @@ export const state = () => ({
 
 export const mutations = {
   updateUser(state, data) {
-    if (!data) return
+    if (!data?.data) return
 
-    for (const key of Object.keys(data)) {
+    for (const key of Object.keys(data.data)) {
       // @ts-ignore
-      state[key] = data[key]
+      state[key] = data.data[key]
     }
+    state.scope = data.scope
 
     state.avatarUrl = state.avatar
       ? `https://cdn.discordapp.com/avatars/${state.id}/${state.avatar}.png`

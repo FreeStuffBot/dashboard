@@ -54,8 +54,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
+import API from '../../lib/api'
 import UserIcons from '~/components/UserIcons.vue'
 
 export default Vue.extend({
@@ -63,17 +63,9 @@ export default Vue.extend({
     UserIcons
   },
   transition: 'slide-down',
-  data() {
-    return {
-      lang: this.$store.state.lang,
-      list: [] as any[],
-      maxProgress: 0,
-      loadingFinished: false
-    }
-  },
   async fetch() {
     const editable = this.$store.getters['user/languagesInTranslationScope']
-    const info = await axios.get('/translate/list')
+    const info = await API.getLanguageList()
     this.list = info.data
     this.list.map((e) => {
       if (e._index === 0) this.maxProgress = e._meta_progress
@@ -95,9 +87,12 @@ export default Vue.extend({
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
     setTimeout(() => (this.loadingFinished = true), 10)
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Translating'
+      lang: this.$store.state.lang,
+      list: [] as any[],
+      maxProgress: 0,
+      loadingFinished: false
     }
   },
   computed: {
@@ -170,12 +165,17 @@ export default Vue.extend({
 
       if (!value) return
 
-      const { data } = await axios.put('/translate/language/' + value[0], {
+      const { data } = await API.putLanguage(value[0], {
         name: value[1]
       })
 
       this.$fetch()
       Swal.fire({ text: data })
+    }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Translating'
     }
   },
   fetchOnServer: false

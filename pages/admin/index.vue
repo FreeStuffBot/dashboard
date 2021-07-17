@@ -10,31 +10,31 @@
     <br>
     <h2>Pages</h2>
     <div class="pages">
-      <nuxt-link to="./users">
+      <nuxt-link to="./admin/users">
         <span class="emoji">🧘‍♂️</span>
         Users
       </nuxt-link>
-      <nuxt-link to="./topclients">
+      <nuxt-link to="./admin/topclients">
         <span class="emoji">📈</span>
         Top Clients
       </nuxt-link>
-      <nuxt-link to="./experiments">
+      <nuxt-link to="./admin/experiments">
         <span class="emoji">🧪</span>
         Experiments
       </nuxt-link>
-      <nuxt-link to="./apiapps">
+      <nuxt-link to="./admin/apiapps">
         <span class="emoji">🤖</span>
         API Apps
       </nuxt-link>
-      <nuxt-link to="./network">
+      <nuxt-link to="./admin/network">
         <span class="emoji">📡</span>
         Network
       </nuxt-link>
-      <nuxt-link to="./config">
+      <nuxt-link to="./admin/config">
         <span class="emoji">⚙️</span>
         Configuration
       </nuxt-link>
-      <nuxt-link to="./logs">
+      <nuxt-link to="./admin/logs">
         <span class="emoji">🗃️</span>
         Logs
       </nuxt-link>
@@ -60,7 +60,7 @@ export default Vue.extend({
   transition: 'slide-down',
   data() {
     return {
-      git: 'TODO'
+      git: this.$store.state.user.gitCommit
     }
   },
   methods: {
@@ -93,28 +93,6 @@ export default Vue.extend({
           // })
           // return
       }
-
-      // const data = await Swal.fire({
-      //   title,
-      //   icon: 'question',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3e9e71',
-      //   confirmButtonText: 'Yes'
-      // })
-
-      // if (data.value) {
-      //   await axios.post('/admin/message', { // THIS ENDPOINT WAS REMOVED
-      //     targets,
-      //     command: type,
-      //     args: inputdata ? inputdata.split(/, */) : [ ]
-      //   })
-      //   Swal.fire({
-      //     title: 'Done',
-      //     icon: 'success',
-      //     confirmButtonColor: '#3e9e71',
-      //     confirmButtonText: 'Awesome!'
-      //   })
-      // }
     }
   },
   head() {

@@ -181,13 +181,52 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable camelcase */
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
-import { GameData, GameFlag } from '@freestuffbot/typings'
+import API from '../../lib/api'
 
+enum GameFlag {
+  TRASH = 1 << 0, // Low quality game
+  THIRDPARTY = 1 << 1, // Third party key provider
+}
+type GameApprovalStatus = 'pending' | 'declined' | 'approved'
 
-interface InterfacedGameData extends GameData {
+export interface GameInfo {
+  title: string
+  org_price: {
+    euro: number
+    usd: number
+  }
+  price: {
+    euro: number
+    usd: number
+  }
+  kind: any
+  tags: string[]
+  thumbnail: string
+  description: string
+  rating?: number
+  until: number
+  org_url: string
+  store: string
+  flags: number
+  type: string
+  notice?: string
+  store_meta: {
+    steam_subids: string
+  }
+  proxy_url?: string
+}
+
+interface GameData {
+  _id: number
+  uuid: string
+  published: number
+  responsible: string
+  status: GameApprovalStatus
+  analytics: any
+  info: GameInfo
   trash: boolean;
   thirdparty: boolean;
 }
@@ -232,24 +271,8 @@ export default Vue.extend({
   components: {
   },
   transition: 'slide-down',
-  data() {
-    return {
-      lang: this.$store.state.lang,
-      stores,
-      types,
-      productKinds,
-      thumbnailerPreview: '',
-      game: null as InterfacedGameData | null,
-      gameinfountil: '',
-      gameinfonodate: false,
-      gameinfotrash: false,
-      gameinfothirdparty: false,
-      gameinfotags: '',
-      gameinforating: 0
-    }
-  },
   async fetch() {
-    const { data } = await axios.get(`/data/game/${this.$route.params.id}`)
+    const { data } = await API.getContentData(this.$route.params.id)
     this.game = data
     if (this.game) {
       if (this.game.info.until === 0) {
@@ -266,10 +289,20 @@ export default Vue.extend({
       this.updateThumbnailerPreview()
     }
   },
-  head() {
+  data() {
     return {
-      // @ts-ignore
-      title: 'FreeStuff CMS'
+      lang: this.$store.state.lang,
+      stores,
+      types,
+      productKinds,
+      thumbnailerPreview: '',
+      game: null as GameData | null,
+      gameinfountil: '',
+      gameinfonodate: false,
+      gameinfotrash: false,
+      gameinfothirdparty: false,
+      gameinfotags: '',
+      gameinforating: 0
     }
   },
   computed: {
@@ -296,12 +329,12 @@ export default Vue.extend({
         confirmButtonText: 'Decline!'
       })
       if (doIt.value) {
-        await axios.post('/content/decline', this.buildGameInfo())
+        await API.postDecline(this.buildGameInfo())
         this.$fetch()
       }
     },
     async save() {
-      await axios.post('/content/save', this.buildGameInfo())
+      await API.postSave(this.buildGameInfo())
       this.$fetch()
       await Swal.fire({
         title: 'Changes saved!',
@@ -312,7 +345,7 @@ export default Vue.extend({
       })
     },
     async approve() { // eslint-disable-next-line camelcase
-      const guilds = await axios.get(`/content/guildamount/${this.game?.info.store}/${this.game?.info.org_price.euro}/${this.game?.info.org_price.usd}/${this.game?.trash}`)
+      const guilds = await API.getGuildAmount(this.game?.info.store || '-', this.game?.info.org_price.euro || '-', this.game?.info.org_price.usd || '-', !!this.game?.trash)
       const doIt = document.querySelector('.page>*[error]')
         ? await Swal.fire({
           title: 'Are you sure the data is correct and the game is fitting?',
@@ -331,7 +364,7 @@ export default Vue.extend({
           confirmButtonText: 'Approve!'
         })
       if (doIt.value) {
-        await axios.post('/content/approve', this.buildGameInfo())
+        await API.postApprove(this.buildGameInfo())
         this.$fetch()
       }
     },
@@ -345,7 +378,7 @@ export default Vue.extend({
         confirmButtonText: 'Delete!'
       })
       if (doIt.value) {
-        await axios.post('/content/delete', this.buildGameInfo())
+        await API.postDelete(this.buildGameInfo())
         this.$fetch()
       }
     },
@@ -371,8 +404,14 @@ export default Vue.extend({
     },
     async updateThumbnailerPreview(thumbnail?: string) {
       const thumb = encodeURIComponent(thumbnail || this.game?.info.thumbnail || '')
-      const obj = await axios.get(`/content/thumbnails/${this.game?._id}/${thumb}`)
+      const obj = await API.getThumbnails(this.game?._id.toString() || '-', thumb)
       this.thumbnailerPreview = obj.data.full
+    }
+  },
+  head() {
+    return {
+      // @ts-ignore
+      title: 'FreeStuff CMS'
     }
   },
   fetchOnServer: false

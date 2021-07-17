@@ -939,11 +939,6 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@freestuffbot/typings@^0.1.1":
-  version "0.1.1"
-  resolved "https://npm.pkg.github.com/download/@freestuffbot/typings/0.1.1/db99751c215341443c30f955fc18d83faa70b8f7842f98f6ef0774b2380da43b#d4d5e2591ddbd72935df11c5018983a9d79db09b"
-  integrity sha512-3pGKmZsdONEw1Z2aJfQuD2Sq0fmZZjS6+yfE//kjYDs40STxAdC64sVtTRNE6v7wS7BIIF0Zr/b0UFjHK4j+ww==
-
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"

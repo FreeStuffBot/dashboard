@@ -83,28 +83,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import Swal from 'sweetalert2'
+import API from '../../lib/api'
 
 export default Vue.extend({
   transition: 'slide-down',
-  data() {
-    return {
-      data: undefined as any,
-      dataOrg: undefined as any,
-      dataEn: undefined as any,
-      dataDescriptions: undefined as any,
-      issues: {} as {[key: string]: string},
-      editor: {
-        cursor: 0,
-        rtl: false
-      }
-    }
-  },
   async fetch() {
-    const data = (await axios.get(`/translate/language/${this.$route.params.lang}`)).data as { [key: string]: string }
-    const dataEn = (await axios.get('/translate/language/en-US')).data as { [key: string]: string }
-    const dataDescriptions = (await axios.get('/translate/language/descriptions')).data as { [key: string]: string }
+    const data = (await API.getLanguage(this.$route.params.lang)).data as { [key: string]: string }
+    const dataEn = (await API.getLanguage('en-US')).data as { [key: string]: string }
+    const dataDescriptions = (await API.getLanguage('descriptions')).data as { [key: string]: string }
 
     if (data._id) {
       this.data = JSON.parse(JSON.stringify(data))
@@ -123,9 +110,17 @@ export default Vue.extend({
 
     this.findIssues()
   },
-  head() {
+  data() {
     return {
-      title: 'FreeStuff Translating'
+      data: undefined as any,
+      dataOrg: undefined as any,
+      dataEn: undefined as any,
+      dataDescriptions: undefined as any,
+      issues: {} as {[key: string]: string},
+      editor: {
+        cursor: 0,
+        rtl: false
+      }
     }
   },
   computed: {
@@ -205,7 +200,7 @@ export default Vue.extend({
       })
 
       if (doIt.value) {
-        const { data } = await axios.post(`/translate/language/${this.data._id}`, payload)
+        const { data } = await API.patchLanguage(this.data._id, payload)
         console.log(data)
         this.$fetch()
       }
@@ -225,6 +220,11 @@ export default Vue.extend({
       })
       this.issues = issuesAt
       return issuesAt
+    }
+  },
+  head() {
+    return {
+      title: 'FreeStuff Translating'
     }
   },
   fetchOnServer: false

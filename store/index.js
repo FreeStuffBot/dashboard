@@ -30,6 +30,8 @@ export const actions = {
     } else {
       store.commit('user/updateUser', user.data)
       store.commit('updateLoginStatus', 'success')
+      user.gitData
+      user.lang
     }
   },
   async refetchLines(store, data) {

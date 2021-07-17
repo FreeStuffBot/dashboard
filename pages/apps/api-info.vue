@@ -20,14 +20,14 @@ import Vue from 'vue'
 export default Vue.extend({
   transition: 'slide-down',
   fetchOnServer: false,
-  head() {
-    return {
-      title: 'FreeStuff API'
-    }
-  },
   methods: {
     openPatreon() {
       window.open('https://freestuffbot.xyz/o/patreon', '_blank')
+    }
+  },
+  head() {
+    return {
+      title: 'FreeStuff API'
     }
   }
 })

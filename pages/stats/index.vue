@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
+import API from '../../lib/api'
 import StatsPanel from '~/components/StatsPanel.vue'
 
 export default Vue.extend({
@@ -96,30 +96,12 @@ export default Vue.extend({
     StatsPanel
   },
   transition: 'slide-down',
-  data() {
-    return {
-      stats: undefined,
-      timespan: 7,
-      mode: 0,
-      analysis: false,
-      settings: {
-        raw: [] as number[],
-        currency: 0,
-        react: 0,
-        trash: 0,
-        altDate: 0,
-        themes: [] as number[],
-        langs: [] as number[]
-      },
-      loadingFinished: false
-    }
-  },
   async fetch() {
-    const stats = await axios.get('/stats/all')
+    const stats = await API.getStatsAll()
     this.stats = stats.data
 
     if (this.analysis) {
-      const settings = await axios.get('/stats/settings')
+      const settings = await API.getStatsSettings()
       this.settings.raw = settings.data as number[]
       let currency = 0
       let react = 0
@@ -164,6 +146,24 @@ export default Vue.extend({
 
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
     setTimeout(() => (this.loadingFinished = true), 10)
+  },
+  data() {
+    return {
+      stats: undefined,
+      timespan: 7,
+      mode: 0,
+      analysis: false,
+      settings: {
+        raw: [] as number[],
+        currency: 0,
+        react: 0,
+        trash: 0,
+        altDate: 0,
+        themes: [] as number[],
+        langs: [] as number[]
+      },
+      loadingFinished: false
+    }
   },
   fetchOnServer: false,
   head() {

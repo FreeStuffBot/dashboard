@@ -39,7 +39,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Swal from 'sweetalert2'
-import axios from 'axios'
+import API from '../../lib/api'
 import GameListElement from '~/components/GameListElement.vue'
 
 
@@ -48,6 +48,13 @@ export default Vue.extend({
     GameListElement
   },
   transition: 'slide-down',
+  async fetch() {
+    const { data } = await API.getContentList(0, 20)
+    this.games = data
+
+    // eslint-disable-next-line nuxt/no-timing-in-fetch-data
+    setTimeout(() => (this.loadingFinished = true), 10)
+  },
   data() {
     return {
       lang: this.$store.state.lang,
@@ -56,19 +63,6 @@ export default Vue.extend({
       loadingFinished: false
     }
   },
-  async fetch() {
-    const { data } = await axios.get('/data/games/0/20')
-    this.games = data
-
-    // eslint-disable-next-line nuxt/no-timing-in-fetch-data
-    setTimeout(() => (this.loadingFinished = true), 10)
-  },
-  head() {
-    return {
-      title: 'FreeStuff CMS'
-    }
-  },
-  fetchOnServer: false,
   methods: {
     toggleSelect(id: string) {
       console.log(id)
@@ -90,7 +84,7 @@ export default Vue.extend({
           })
           Swal.showLoading()
 
-          const game = await axios.post('/content/new/url', { url }, { timeout: 5 * 60 * 1000 })
+          const game = await API.postNewUrl(url)
           if (game.data.error) {
             Swal.fire({
               title: game.data.error,
@@ -117,7 +111,7 @@ export default Vue.extend({
         })
 
         if (data.value) {
-          const game = await axios.post('/content/new/scratch')
+          const game = await API.postNewScratch()
           this.$router.replace(`/content/${game.data._id}`)
         }
       }
@@ -142,7 +136,7 @@ export default Vue.extend({
           })
           Swal.showLoading()
 
-          const res = await axios.post('/content/scrape/' + store, { }, { timeout: 5 * 60 * 1000 })
+          const res = await API.postScrapeStore(store)
           if (res.data.success) {
             Swal.close()
             Swal.fire({
@@ -163,10 +157,16 @@ export default Vue.extend({
     },
     async loadMore() {
       if (!this.games) this.$fetch()
-      const { data } = await axios.get(`/data/games/${this.games.length}/20`)
+      const { data } = await API.getContentList(this.games.length, 20)
       this.games.push(...data)
     }
-  }
+  },
+  head() {
+    return {
+      title: 'FreeStuff CMS'
+    }
+  },
+  fetchOnServer: false
 })
 </script>
 

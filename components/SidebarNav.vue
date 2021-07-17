@@ -147,7 +147,7 @@ export default Vue.extend({
           type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
           name: 'Admin Panel',
           secret: 'Business Time',
-          url: '/admin/panel',
+          url: '/admin',
           icon: '/assets/img/peepocool.png'
         }
         // {
