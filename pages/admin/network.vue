@@ -124,7 +124,7 @@ export default Vue.extend({
         v.socketVisualState *= -1
     }, 300, this)
 
-    this.socket = io(`${window.location.protocol.includes('s') ? 'wss' : 'ws'}://${API.API_HOST.split('://')[1]}`, {
+    this.socket = io(`${window.location.protocol.includes('s') ? 'wss' : 'ws'}://${API.API_HOST().split('://')[1]}`, {
       query: {
         type: 'dashboard'
       },

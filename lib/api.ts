@@ -11,8 +11,23 @@ export type ErrorData = { error: string }
 
 export default class API {
 
-  public static readonly API_HOST = 'http://localhost' // TODO load from localstore and then on login page have a input to change this
-  public static readonly BASE_URL = API.API_HOST + '/dash'
+  public static readonly API_HOST = () => {
+    const host = window.$nuxt?.$route.query?.API_HOST?.toString()
+    if (host) {
+      if (host.toLowerCase() === 'null') {
+        localStorage.removeItem('API_HOST')
+      } else {
+        localStorage.setItem('API_HOST', host)
+        return host
+      }
+    }
+    if (localStorage.getItem('API_HOST'))
+      return localStorage.getItem('API_HOST')?.toString() || ''
+
+    return 'https://api.freestuffbot.xyz'
+  }
+
+  public static readonly BASE_URL = () => API.API_HOST() + '/dash'
 
   public static getAuthToken(): string {
     return localStorage.getItem('token') || ''
@@ -49,7 +64,7 @@ export default class API {
 
   public static async rawGet(url: string, headers?: any): Promise<AxiosResponse & ErrorData> {
     try {
-      const res = await axios.get(API.BASE_URL + url, this.buildConf(headers)) as any
+      const res = await axios.get(API.BASE_URL() + url, this.buildConf(headers)) as any
       if (res.status < 200 || res.status >= 300)
         res.error = res.data.error ? window.$nuxt?.$t('error_' + res.data.error, { details: res.data.message }) as string : `http ${status}`
       return res
@@ -60,7 +75,7 @@ export default class API {
 
   public static async rawPost(url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
     try {
-      const res = await axios.post(API.BASE_URL + url, body, this.buildConf(headers)) as any
+      const res = await axios.post(API.BASE_URL() + url, body, this.buildConf(headers)) as any
       if (res.status < 200 || res.status >= 300)
         res.error = res.data.error ? window.$nuxt?.$t('error_' + res.data.error, { details: res.data.message }) as string : `http ${status}`
       return res
@@ -71,7 +86,7 @@ export default class API {
 
   public static async rawPatch(url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
     try {
-      const res = await axios.patch(API.BASE_URL + url, body, this.buildConf(headers)) as any
+      const res = await axios.patch(API.BASE_URL() + url, body, this.buildConf(headers)) as any
       if (res.status < 200 || res.status >= 300)
         res.error = res.data.error ? window.$nuxt?.$t('error_' + res.data.error, { details: res.data.message }) as string : `http ${status}`
       return res
@@ -82,7 +97,7 @@ export default class API {
 
   public static async rawPut(url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
     try {
-      const res = await axios.put(API.BASE_URL + url, body, this.buildConf(headers)) as any
+      const res = await axios.put(API.BASE_URL() + url, body, this.buildConf(headers)) as any
       if (res.status < 200 || res.status >= 300)
         res.error = res.data.error ? window.$nuxt?.$t('error_' + res.data.error, { details: res.data.message }) as string : `http ${status}`
       return res
@@ -93,7 +108,7 @@ export default class API {
 
   public static async rawDelete(url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
     try {
-      const res = await axios.delete(API.BASE_URL + url, this.buildConf(headers, body)) as any
+      const res = await axios.delete(API.BASE_URL() + url, this.buildConf(headers, body)) as any
       if (res.status < 200 || res.status >= 300)
         res.error = res.data.error ? window.$nuxt?.$t('error_' + res.data.error, { details: res.data.message }) as string : `http ${status}`
       return res
