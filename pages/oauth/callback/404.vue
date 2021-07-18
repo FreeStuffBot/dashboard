@@ -13,7 +13,8 @@ export default Vue.extend({
   fetchOnServer: false,
   async fetch() {
     try {
-      const { data, status } = await API.authCode(this.$route.params.provider, this.$route.query.code + '')
+      const provider = this.$route.path.split('/callback/')[1].split('?')[0]
+      const { data, status } = await API.authCode(provider, this.$route.query.code + '')
       if (status !== 200) {
         this.$router.push({ path: '/login' })
         return

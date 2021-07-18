@@ -1,30 +1,35 @@
 <template>
-  <div v-if="$store.state.loginStatus === 'guest'" class="container">
-    <h1>Login to FreeStuff</h1>
-    <div class="login-with">
-      <a
-        v-for="provider of authProviders"
-        :key="provider.name"
-        :style="`--c: ${provider.color}; --h: ${provider.colorhover}`"
-        class="auth-button"
-        @click="loginWith(provider.uri)"
-      >
-        <icon :name="provider.icon" />
-        <span>
-          Continue with {{ provider.name }}
-        </span>
-      </a>
+  <div class="container">
+    <div v-if="$store.state.loginStatus === 'guest'">
+      <h1>Login to FreeStuff</h1>
+      <div class="login-with">
+        <a
+          v-for="provider of authProviders"
+          :key="provider.name"
+          :style="`--c: ${provider.color}; --h: ${provider.colorhover}`"
+          class="auth-button"
+          @click="loginWith(provider.uri)"
+        >
+          <icon :name="provider.icon" />
+          <span>
+            Continue with {{ provider.name }}
+          </span>
+        </a>
+      </div>
     </div>
-  </div>
-  <div v-else-if="$store.state.loginStatus === 'disconnected'" class="container">
-    Cannot reach FreeStuff servers...<br>
-    Are you offline?
-  </div>
-  <div v-else-if="$store.state.loginStatus === '404'" class="container">
-    The dashboard is temporarily not available due to maintenance. Check our Discord for status and news.
-  </div>
-  <div v-else class="container">
-    Loading...
+    <div v-else-if="$store.state.loginStatus === 'disconnected'">
+      Cannot reach FreeStuff servers...<br>
+      Are you offline?
+    </div>
+    <div v-else-if="$store.state.loginStatus === '404'">
+      The dashboard is temporarily not available due to maintenance. Check our Discord for status and news.
+    </div>
+    <div v-else>
+      Loading...
+    </div>
+    <div class="floater">
+      v1.0
+    </div>
   </div>
 </template>
 
@@ -114,5 +119,14 @@ h1 {
     border-radius: 3pt;
     pointer-events: none;
   }
+}
+
+.floater {
+  position: absolute;
+  bottom: 30pt;
+  right: 30pt;
+  color: $color-minor;
+  font-family: $font-minor;
+  font-size: 9pt;
 }
 </style>
