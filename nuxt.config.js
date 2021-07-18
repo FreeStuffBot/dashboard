@@ -79,6 +79,7 @@ module.exports = {
   //   }
   // },
   generate: {
+    fallback: true,
     exclude: [
       /^\/o\//
     ]
