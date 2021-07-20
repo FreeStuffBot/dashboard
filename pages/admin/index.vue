@@ -10,31 +10,31 @@
     <br>
     <h2>Pages</h2>
     <div class="pages">
-      <nuxt-link to="./admin/users">
+      <nuxt-link to="/admin/users">
         <span class="emoji">🧘‍♂️</span>
         Users
       </nuxt-link>
-      <nuxt-link to="./admin/topclients">
+      <nuxt-link to="/admin/topclients">
         <span class="emoji">📈</span>
         Top Clients
       </nuxt-link>
-      <nuxt-link to="./admin/experiments">
+      <nuxt-link to="/admin/experiments">
         <span class="emoji">🧪</span>
         Experiments
       </nuxt-link>
-      <nuxt-link to="./admin/apiapps">
+      <nuxt-link to="/admin/apiapps">
         <span class="emoji">🤖</span>
         API Apps
       </nuxt-link>
-      <nuxt-link to="./admin/network">
+      <nuxt-link to="/admin/network">
         <span class="emoji">📡</span>
         Network
       </nuxt-link>
-      <nuxt-link to="./admin/config">
+      <nuxt-link to="/admin/config">
         <span class="emoji">⚙️</span>
         Configuration
       </nuxt-link>
-      <nuxt-link to="./admin/logs">
+      <nuxt-link to="/admin/logs">
         <span class="emoji">🗃️</span>
         Logs
       </nuxt-link>
