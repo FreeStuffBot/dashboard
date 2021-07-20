@@ -7,6 +7,7 @@
     <h2>Overview:</h2>
     <span v-if="git">Running Commit #{{ git.shortHash }} ({{ git.subject }} :: {{ git.author.name }}) from {{ git.time }}</span>
     <span v-else>Running unknown Commit (no admin permission?)</span>
+    <span>Web v1.1</span>
     <br>
     <h2>Pages</h2>
     <div class="pages">

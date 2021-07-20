@@ -28,7 +28,7 @@
       Loading...
     </div>
     <div class="floater">
-      v1.0
+      v1.1
     </div>
   </div>
 </template>
