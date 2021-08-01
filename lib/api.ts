@@ -17,7 +17,7 @@ export default class API {
       if (host.toLowerCase() === 'null') {
         localStorage.removeItem('API_HOST')
       } else {
-        localStorage.setItem('API_HOST', host)
+        localStorage.setItem('API_HOST', host.endsWith('/') ? host.substr(0, host.length - 1) : host)
         return host
       }
     }

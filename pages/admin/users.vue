@@ -33,7 +33,7 @@
       >
         <img
           :src="(user.data && user.data.avatar)
-            ? `https://cdn.discordapp.com/avatars/${user.data?.id}/${(user.data?.avatar)}.png`
+            ? `https://cdn.discordapp.com/avatars/${user.data.id}/${(user.data.avatar)}.png`
             : 'https://cdn.discordapp.com/embed/avatars/0.png'"
           alt="User Avatar"
         >
