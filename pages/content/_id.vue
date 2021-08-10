@@ -64,7 +64,7 @@
           <span>&euro;</span>
         </div>
         <div class="el2">
-          <input v-model="game.info.org_price.dollar" type="number" placeholder="0.00" min="0" step="0.01">
+          <input v-model="game.info.org_price.usd" type="number" placeholder="0.00" min="0" step="0.01">
           <span>&dollar;</span>
         </div>
       </div>
@@ -75,7 +75,7 @@
           <span>&euro;</span>
         </div>
         <div class="el2">
-          <input v-model="game.info.price.dollar" type="number" placeholder="0.00" min="0" step="0.01">
+          <input v-model="game.info.price.usd" type="number" placeholder="0.00" min="0" step="0.01">
           <span>&dollar;</span>
         </div>
       </div>
@@ -399,6 +399,11 @@ export default Vue.extend({
 
       game.info.tags = this.gameinfotags.split(', ').map(t => t.trim()).filter(t => !!t)
       game.info.rating = (this.gameinforating || 0) / 100
+
+      game.info.org_price.euro = parseFloat(game.info.org_price.euro)
+      game.info.org_price.usd = parseFloat(game.info.org_price.usd)
+      game.info.price.euro = parseFloat(game.info.price.euro)
+      game.info.price.usd = parseFloat(game.info.price.usd)
 
       return game
     },
