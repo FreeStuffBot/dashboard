@@ -38,7 +38,7 @@
           alt="User Avatar"
         >
         <span class="name">
-          {{ user.data.username ? (user.display === user.data.username ? user.display : `${user.data.username} (${user.display})`) : user.display }}
+          {{ (user.data && user.data.username) ? (user.display === user.data.username ? user.display : `${user.data.username} (${user.display})`) : user.display }}
           <img
             id="editbutton"
             v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"

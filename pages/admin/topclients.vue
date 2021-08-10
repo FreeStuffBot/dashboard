@@ -11,7 +11,7 @@
     >
       <img :src="client.icon || 'https://cdn.discordapp.com/embed/avatars/1.png'" alt="Icon">
       <span class="name" v-text="`${client.name} • ${client.size}`" />
-      <span class="rest" v-html="client.features.length ? client.features.map(f => f.replaceAll('_', ' ').toLowerCase()).join('<br>') : '(None)'" />
+      <span class="rest" v-html="(client.features && client.features.length) ? client.features.map(f => f.replaceAll('_', ' ').toLowerCase()).join('<br>') : '(None)'" />
     </div>
   </div>
 </template>
