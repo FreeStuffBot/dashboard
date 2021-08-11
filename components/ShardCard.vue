@@ -8,7 +8,7 @@
       `<t>index: <d>${data.index}</d></t>`,
       `<t>version: <d>${data.version.substr(0, 8)}</d></t>`,
       `<t>server: <d>${data.server}</d></t>`,
-      `<t>datas: <d>${data.task && data.task.ids}</d></t>`,
+      `<t>shards: <d>${data.task && data.task.ids}</d></t>`,
       `<t>outdated: <d>${!!data.outdated}</d></t>`,
     ].filter(e => !!e).join('<br>')"
     :status="data.status"
@@ -34,7 +34,7 @@
   >
     <span class="id cc" v-text="data.id" />
     <span class="status cc" v-text="data.status" />
-    <span class="server" :outdated="!!data.outdated" v-text="data.worker.index" />
+    <span class="server" :outdated="!!data.outdated" v-text="data.status === 'slot' ? '-' : data.worker.index" />
   </div>
 </template>
 
