@@ -119,7 +119,7 @@ export default Vue.extend({
       outer:
       for (let i = 0; i < this.workerCount * this.shardsPerWorker; i++) {
         for (const worker of this.workers) {
-          const found = worker.shards.find((s: any) => (s.id === i))
+          const found = worker.shards.filter((s: any) => (!!s)).find((s: any) => (s.id === i))
           if (found) {
             found.worker = worker
             out.push(found)
