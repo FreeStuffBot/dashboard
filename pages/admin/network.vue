@@ -11,7 +11,10 @@
     />
 
     <br>
-    <span v-text="`Shard count: ${shardCount}`" />
+    <span v-text="`Worker count: ${workerCount}`" />
+    <span v-text="`Shards per worker: ${shardsPerWorker}`" />
+    <span v-text="`Total shard count: ${workerCount * shardsPerWorker}`" />
+    <br>
     <span v-text="`Selected: ${selected.length}`" />
 
     <div class="actions">
@@ -35,27 +38,26 @@
     </div>
 
     <br>
-    <h2>Servers:</h2>
-    <span v-for="(amount, server) of shardsMappedToServers" :key="server" v-text="`${server}: ${amount} Shards`" />
+    <h2>Workers:</h2>
+    <div class="shardsContainer">
+      <ShardCard
+        v-for="worker of workersStocked"
+        :key="worker.id"
+        type="worker"
+        :data="worker"
+        :selected="selected.includes(worker.id)"
+        @click="clickShard(worker)"
+      />
+    </div>
     <br>
 
     <h2>Shards:</h2>
     <div class="shardsContainer">
       <ShardCard
-        v-for="shard of shardsStocked.filter(s => s.task.id === 'assigned')"
+        v-for="shard of shardsStocked"
         :key="shard.id"
-        :shard="shard"
-        :selected="selected.includes(shard.id)"
-        @click="clickShard(shard)"
-      />
-    </div>
-
-    <h2>Available:</h2>
-    <div class="shardsContainer">
-      <ShardCard
-        v-for="shard of shards.filter(s => s.task.id === 'ready')"
-        :key="shard.id"
-        :shard="shard"
+        type="shard"
+        :data="shard"
         :selected="selected.includes(shard.id)"
         @click="clickShard(shard)"
       />
@@ -77,8 +79,9 @@ export default Vue.extend({
       socket: null as Socket | null,
       socketVisualUpdater: null as any,
       socketVisualState: 0,
-      shards: [] as any[],
-      shardCount: 0,
+      workers: [] as any[],
+      workerCount: 0,
+      shardsPerWorker: 0,
       selected: [] as string[]
     }
   },
@@ -89,30 +92,48 @@ export default Vue.extend({
         out += Math.abs(this.socketVisualState) === i ? 'O' : 'o'
       return out
     },
-    shardsStocked(): any[] {
+    workersStocked(): any[] {
       const out = []
-      for (let i = 0; i < this.shardCount; i++) {
-        const found = (this as any).shards.find((s: any) => (s.task.id === 'assigned' && s.task.shardId === i))
+      for (let i = 0; i < this.workerCount; i++) {
+        const found = (this as any).workers.find((s: any) => (s.index === i))
         if (found) {
           out.push(found)
           continue
         }
+
         out.push({
           id: Math.random().toString(),
+          index: i,
           client: '-',
           mode: '-',
           version: '-',
           server: '-',
-          status: 'slot',
-          task: { id: 'assigned', shardId: i }
+          status: 'slot'
         })
       }
       return out
     },
-    shardsMappedToServers() {
-      const out = {} as any
-      for (const shard of this.shards)
-        out[shard.server] = (out[shard.server] || 0) + 1
+    shardsStocked(): any[] {
+      const out = []
+      // eslint-disable-next-line no-labels
+      outer:
+      for (let i = 0; i < this.workerCount * this.shardsPerWorker; i++) {
+        for (const worker of this.workers) {
+          const found = worker.shards.find((s: any) => (s.id === i))
+          if (found) {
+            found.worker = worker
+            out.push(found)
+            // eslint-disable-next-line no-labels
+            continue outer
+          }
+        }
+
+        out.push({
+          id: i,
+          worker: {},
+          status: 'slot'
+        })
+      }
       return out
     }
   },
@@ -135,23 +156,28 @@ export default Vue.extend({
     })
 
     this.socket.on('connect', () => {
-      this.shards = []
+      this.workers = []
     })
 
     this.socket.on('admin worker count', (count) => {
-      this.shardCount = count
+      this.workerCount = count
+    })
+
+    this.socket.on('admin worker shards', (count) => {
+      this.shardsPerWorker = count
     })
 
     this.socket.on('admin worker add', (shard) => {
-      this.shards.push(shard)
+      console.log(shard)
+      this.workers.push(shard)
     })
 
     this.socket.on('admin worker remove', (shard) => {
-      this.shards.splice(this.shards.findIndex(check => check.id === shard.id), 1)
+      this.workers.splice(this.workers.findIndex(check => check.id === shard.id), 1)
     })
 
     this.socket.on('admin worker update', (shard) => {
-      const target = this.shards.find(check => check.id === shard.id)
+      const target = this.workers.find(check => check.id === shard.id)
       if (target && shard)
         Object.assign(target, shard)
     })
@@ -165,18 +191,18 @@ export default Vue.extend({
   methods: {
     clickShard(shard: any) {
       console.log(shard)
-      if (this.selected.includes(shard.id))
-        this.selected.splice(this.selected.indexOf(shard.id), 1)
-      else
-        this.selected.push(shard.id)
+      // if (this.selected.includes(shard.id))
+      //   this.selected.splice(this.selected.indexOf(shard.id), 1)
+      // else
+      //   this.selected.push(shard.id)
     },
     action(cmd: string) {
-      this.socket?.emit('action', {
-        shards: this.selected,
-        command: {
-          id: cmd
-        }
-      })
+      // this.socket?.emit('action', {
+      //   shards: this.selected,
+      //   command: {
+      //     id: cmd
+      //   }
+      // })
     }
   },
   head() {

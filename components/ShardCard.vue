@@ -1,32 +1,52 @@
 <template>
   <div
+    v-if="type === 'worker'"
     v-tippy="{delay: 0, arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
-    class="shard"
+    class="data"
     :content="[
-      `<t>id: <d>${shard.id}</d></t>`,
-      `<t>client: <d>${shard.client}</d></t>`,
-      `<t>version: <d>${shard.version.substr(0, 8)}</d></t>`,
-      `<t>mode: <d>${shard.mode}</d></t>`,
-      `<t>server: <d>${shard.server}</d></t>`,
-      `<t>status: <d>${shard.status}</d></t>`,
-      `<t>task: <d>${Object.values(shard.task).join(', ')}</d></t>`,
-      `<t>outdated: <d>${!!shard.outdated}</d></t>`,
+      `<t>id: <d>${data.id}</d></t>`,
+      `<t>index: <d>${data.index}</d></t>`,
+      `<t>version: <d>${data.version.substr(0, 8)}</d></t>`,
+      `<t>server: <d>${data.server}</d></t>`,
+      `<t>datas: <d>${data.task && data.task.ids}</d></t>`,
+      `<t>outdated: <d>${!!data.outdated}</d></t>`,
     ].filter(e => !!e).join('<br>')"
-    :status="shard.status"
+    :status="data.status"
     :selected="selected"
     @click="$emit('click')"
   >
-    <span class="id cc" v-text="shard.task.shardId" />
-    <span class="status cc" v-text="shard.status" />
-    <span class="server" :outdated="!!shard.outdated" v-text="shard.server" />
+    <span class="id cc" v-text="data.index" />
+    <span class="status cc" v-text="data.status === 'slot' ? 'slot' : data.shards.filter(s => s.status === 'operational').length + ' healthy'" />
+    <span class="server" :outdated="!!data.outdated" v-text="data.server" />
+  </div>
+  <div
+    v-else-if="type === 'shard'"
+    v-tippy="{delay: 0, arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
+    class="data"
+    :content="[
+      `<t>id: <d>${data.id}</d></t>`,
+      `<t>status: <d>${data.status}</d></t>`,
+      `<t>worker: <d>${data.worker.id} (${data.worker.index})</d></t>`,
+    ].filter(e => !!e).join('<br>')"
+    :status="data.status"
+    :selected="selected"
+    @click="$emit('click')"
+  >
+    <span class="id cc" v-text="data.id" />
+    <span class="status cc" v-text="data.status" />
+    <span class="server" :outdated="!!data.outdated" v-text="data.worker.index" />
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    shard: {
+    data: {
       type: Object,
+      required: true
+    },
+    type: {
+      type: String,
       required: true
     },
     selected: {
@@ -38,7 +58,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.shard {
+.data {
   position: relative;
   width: 90px;
   background-color: $bg-bright;
