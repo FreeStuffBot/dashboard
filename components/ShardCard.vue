@@ -16,7 +16,7 @@
     @click="$emit('click')"
   >
     <span class="id cc" v-text="data.index" />
-    <span class="status cc" v-text="data.status === 'slot' ? 'slot' : data.shards.filter(s => s.status === 'operational').length + ' healthy'" />
+    <span class="status cc" v-text="data.status === 'slot' ? 'slot' : data.shards.filter(s => s && s.status === 'operational').length + ' healthy'" />
     <span class="server" :outdated="!!data.outdated" v-text="data.server" />
   </div>
   <div
