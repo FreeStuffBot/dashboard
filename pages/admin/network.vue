@@ -138,21 +138,22 @@ export default Vue.extend({
       this.shards = []
     })
 
-    this.socket.on('admin shards count', (count) => {
+    this.socket.on('admin worker count', (count) => {
       this.shardCount = count
     })
 
-    this.socket.on('admin shards add', (shard) => {
+    this.socket.on('admin worker add', (shard) => {
       this.shards.push(shard)
     })
 
-    this.socket.on('admin shards remove', (shard) => {
+    this.socket.on('admin worker remove', (shard) => {
       this.shards.splice(this.shards.findIndex(check => check.id === shard.id), 1)
     })
 
-    this.socket.on('admin shards update', (shard) => {
+    this.socket.on('admin worker update', (shard) => {
       const target = this.shards.find(check => check.id === shard.id)
-      Object.assign(target, shard)
+      if (target && shard)
+        Object.assign(target, shard)
     })
   },
   destroyed() {
