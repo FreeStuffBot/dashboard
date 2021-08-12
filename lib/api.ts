@@ -159,8 +159,8 @@ export default class API {
     return this.rawGet(`/content/data/${id}`)
   }
 
-  public static getGuildAmount(store: string, priceEur: string | number, priceUsd: string | number, trash: boolean) {
-    return this.rawGet(`/content/guildamount/${store}/${priceEur}/${priceUsd}/${trash}`)
+  public static getGuildAmount(store: string, price: string | number, trash: boolean) {
+    return this.rawGet(`/content/guildamount/${store}/${price}/${trash}`)
   }
 
   public static getThumbnails(id: string, thumbnail: string) {

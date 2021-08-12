@@ -97,6 +97,12 @@ export default Vue.extend({
       for (let i = 0; i < this.workerCount; i++) {
         const found = (this as any).workers.find((s: any) => (s.index === i))
         if (found) {
+          if (!(found.shards as any[]).length)
+            found.status = 'disconnected'
+          else if ((found.shards as any[]).filter(s => s).every(s => s.status === 'operational'))
+            found.status = 'operational'
+          else
+            found.status = 'idle'
           out.push(found)
           continue
         }

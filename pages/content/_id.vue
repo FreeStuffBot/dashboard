@@ -5,7 +5,7 @@
       <h2>Info:</h2>
       <span v-text="`Approved by ${lang[game.responsible]}`" /><br>
       <span v-text="`Published on ${new Date(game.published*1000).toLocaleString()}`" />
-      <h2>Discord:</h2>
+      <!-- <h2>Discord:</h2>
       <span v-text="`Announced in ${game.analytics.discord.reach} guilds`" /><br>
       <span v-text="`Estimated views: ${game.analytics.discord.reach * 10}`" /><br>
       <span v-text="`Estimated clicks: ${game.analytics.discord.reach * 2}`" />
@@ -14,7 +14,7 @@
       <span v-text="`Announced in ${game.analytics.telegram.reach.groups} regular groups`" /><br>
       <span v-text="`Announced in ${game.analytics.telegram.reach.supergroups} super groups`" /><br>
       <span v-text="`Announced in ${game.analytics.telegram.reach.channels} channels`" /><br>
-      <span v-text="`Audience: ${game.analytics.telegram.reach.users + game.analytics.telegram.reach.groupUsers + game.analytics.telegram.reach.channelUsers} users`" /><br>
+      <span v-text="`Audience: ${game.analytics.telegram.reach.users + game.analytics.telegram.reach.groupUsers + game.analytics.telegram.reach.channelUsers} users`" /><br> -->
       <h2>More:</h2>
       <a v-if="game.info.store == 'steam'" class="pretty block" href="https://analytics.google.com/analytics/web/#/report-home/a112300017w246269144p228798554" target="_blank">Audience Engagement Analytics (Google)</a>
       <span>More statistics and insights will come at some point</span>
@@ -345,7 +345,7 @@ export default Vue.extend({
       })
     },
     async approve() { // eslint-disable-next-line camelcase
-      const guilds = await API.getGuildAmount(this.game?.info.store || '-', this.game?.info.org_price.euro || '-', this.game?.info.org_price.usd || '-', !!this.game?.trash)
+      const guilds = await API.getGuildAmount(this.game?.info.store || '-', this.game?.info.org_price.euro || '-', !!this.game?.trash)
       const doIt = document.querySelector('.page>*[error]')
         ? await Swal.fire({
           title: 'Are you sure the data is correct and the game is fitting?',
