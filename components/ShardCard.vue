@@ -7,7 +7,8 @@
       `<t>id: <d>${data.id}</d></t>`,
       `<t>index: <d>${data.index}</d></t>`,
       `<t>version: <d>${data.version.substr(0, 8)}</d></t>`,
-      `<t>server: <d>${data.server}</d></t>`,
+      `<t>container: <d>${data.container}</d></t>`,
+      `<t>node: <d>${data.node}</d></t>`,
       `<t>shards: <d>${data.task && data.task.ids}</d></t>`,
       `<t>outdated: <d>${!!data.outdated}</d></t>`,
     ].filter(e => !!e).join('<br>')"
@@ -17,7 +18,7 @@
   >
     <span class="id cc" v-text="data.index" />
     <span class="status cc" v-text="data.status === 'slot' ? 'slot' : data.shards.filter(s => s && s.status === 'operational').length + ' healthy'" />
-    <span class="server" :outdated="!!data.outdated" v-text="data.server" />
+    <span class="server" :outdated="!!data.outdated" v-text="data.node" />
   </div>
   <div
     v-else-if="type === 'shard'"

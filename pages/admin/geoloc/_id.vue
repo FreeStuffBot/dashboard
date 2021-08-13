@@ -10,13 +10,13 @@ import Vue from 'vue'
 // @ts-ignore
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import Axios from 'axios'
+import API from '../../../lib/api'
 
 
 export default Vue.extend({
   transition: 'slide-down',
   async fetch() {
-    const { data } = await Axios.get('/admin/usersapi/' + this.$route.params.id)
+    const { data } = await API.adminGetUser(this.$route.params.id)
     this.user = data
     if (this.map)
       this.mountMarkers()

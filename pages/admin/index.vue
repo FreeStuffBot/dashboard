@@ -35,10 +35,10 @@
         <span class="emoji">⚙️</span>
         Configuration
       </nuxt-link>
-      <nuxt-link to="/admin/logs">
+      <!-- <nuxt-link to="/admin/logs">
         <span class="emoji">🗃️</span>
         Logs
-      </nuxt-link>
+      </nuxt-link> -->
     </div>
     <h2>Actions</h2>
     <div class="actions">

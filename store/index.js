@@ -52,15 +52,7 @@ export const getters = {
   getLanguages: (state) => {
     return state.data?.project?.languages || {}
   },
-  getLanguagesAsArray: (state) => {
-    const langs = state.data?.project?.languages
-    const out = []
-    for (const id in langs) {
-      out.push({
-        id,
-        data: langs[id]
-      })
-    }
-    return out
+  getLanguagesAsArray: () => {
+    return []
   }
 }

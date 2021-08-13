@@ -42,25 +42,41 @@
     </div>
     <div v-else class="analysis-cont">
       <h1>Analysis <img v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}" src="~/assets/icons/reload.svg" alt="Reload" content="Refresh Stats" @click.prevent="$fetch()"></h1>
-      <div v-if="settings.raw.length" class="analysis">
+      <div v-if="settings.total" class="analysis">
         <StatsPanel
-          :title="`All ${settings.raw.length} Guilds:`"
+          :title="`All ${settings.total} Guilds:`"
           :dataset="[
-            { left: `Euro (${settings.currency})`, right: `Dollar (${settings.raw.length - settings.currency})`, value: settings.currency / settings.raw.length },
-            { left: `Auto-Reaction Off (${settings.react})`, right: `Auto-Reaction On (${settings.raw.length - settings.react})`, value: settings.react / settings.raw.length },
-            { left: `Trash Games Off (${settings.trash})`, right: `Trash Games On (${settings.raw.length - settings.trash})`, value: settings.trash / settings.raw.length },
-            { left: `Free until 11/7/2024 (${settings.altDate})`, right: `Free until next Friday (${settings.raw.length - settings.altDate})`, value: settings.altDate / settings.raw.length }
+            { left: `Channel Set (${settings.setup})`, right: `Not Set Up (${settings.total - settings.setup})`, value: settings.setup / settings.total },
+            { left: `Role Ping On (${settings.ping})`, right: `Role Ping Off (${settings.total - settings.ping})`, value: settings.ping / settings.total },
+            { left: `Auto Reaction On (${settings.react})`, right: `Auto Reaction Off (${settings.total - settings.react})`, value: settings.react / settings.total },
+            { left: `Trash Games On (${settings.trash})`, right: `Trash Games Off (${settings.total - settings.trash})`, value: settings.trash / settings.total },
+            { left: `Beta On (${settings.beta})`, right: `Beta Off (${settings.total - settings.beta})`, value: settings.beta / settings.total }
           ]"
           type="barcharts"
         />
         <StatsPanel
-          title="Top Themes"
-          :dataset="settings.themes"
+          title="Themes"
+          :dataset="settings.themes.map((value, index) => ({ label: names.themes[index], value })).filter(i => !!i.value)"
           type="ranking"
         />
         <StatsPanel
-          title="Top Languages"
-          :dataset="settings.langs"
+          title="Currencies"
+          :dataset="settings.currencies.map((value, index) => ({ label: names.currencies[index], value })).filter(i => !!i.value)"
+          type="ranking"
+        />
+        <StatsPanel
+          title="Languages"
+          :dataset="settings.langs.map((value, index) => ({ label: names.languages[index], value })).filter(i => !!i.value)"
+          type="ranking"
+        />
+        <StatsPanel
+          title="Prices"
+          :dataset="settings.prices.map((value, index) => ({ label: names.prices[index], value })).filter(i => !!i.value)"
+          type="ranking"
+        />
+        <StatsPanel
+          title="Stores Enabled"
+          :dataset="settings.stores.map((value, index) => ({ label: names.stores[index], value })).filter(i => !!i.value)"
           type="ranking"
         />
       </div>
@@ -102,50 +118,14 @@ export default Vue.extend({
 
     if (this.analysis) {
       const settings = await API.getStatsSettings()
-      this.settings.raw = settings.data as number[]
-      let currency = 0
-      let react = 0
-      let trash = 0
-      let altDate = 0
-      const themes = new Array(16).fill(0)
-      const langs = new Array(32).fill(0)
-      for (const el of this.settings.raw) {
-        if ((el & (1 << 4)) === 0) currency++
-        if ((el & (1 << 5)) === 0) react++
-        if ((el & (1 << 6)) === 0) trash++
-        if ((el & (1 << 7)) === 0) altDate++
-        themes[el & 0b1111]++
-        langs[el >> 8 & 0b11111]++
-      }
-      this.settings.currency = currency
-      this.settings.react = react
-      this.settings.trash = trash
-      this.settings.altDate = altDate
-
-      const themesOut = []
-      for (let i = 0; i < themes.length; i++) {
-        if (!themes[i]) continue
-        themesOut.push({
-          value: themes[i],
-          label: `Theme ${i + 1}`
-        })
-      }
-
-      const langsOut = []
-      for (let i = 0; i < langs.length; i++) {
-        if (!langs[i]) continue
-        langsOut.push({
-          value: langs[i],
-          label: this.$store.state.lang['lang_' + i] || 'Unknown'
-        })
-      }
-
-      Vue.set(this.settings, 'themes', themesOut)
-      Vue.set(this.settings, 'langs', langsOut)
+      this.settings = settings.data
     }
 
+    const { data: langs } = await API.getLanguageList()
+    langs.forEach((e: any) => { this.names.languages[e._index] = e.lang_name_en })
+
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
-    setTimeout(() => (this.loadingFinished = true), 10)
+    setTimeout(() => (this.loadingFinished = true), 100)
   },
   data() {
     return {
@@ -153,16 +133,49 @@ export default Vue.extend({
       timespan: 7,
       mode: 0,
       analysis: false,
-      settings: {
-        raw: [] as number[],
-        currency: 0,
-        react: 0,
-        trash: 0,
-        altDate: 0,
-        themes: [] as number[],
-        langs: [] as number[]
-      },
-      loadingFinished: false
+      settings: {},
+      loadingFinished: false,
+      names: {
+        themes: [
+          'Theme 1',
+          'Theme 2',
+          'Theme 3',
+          'Theme 4',
+          'Theme 5',
+          'Theme 6',
+          'Theme 7',
+          'Theme 8',
+          'Theme 9',
+          'Theme 10',
+          'Theme 11',
+          'Theme 12',
+          'Theme 13',
+          'Theme 14',
+          'Theme 15',
+          'Theme 16'
+        ],
+        currencies: [
+          'Euro €',
+          'USD $'
+        ],
+        prices: [
+          '0+',
+          '1+',
+          '3+',
+          '10+'
+        ],
+        stores: [
+          'Other',
+          'Steam',
+          'Epic',
+          'Humble',
+          'Gog',
+          'Origin',
+          'Uplay',
+          'Itch'
+        ],
+        languages: [] as any[]
+      }
     }
   },
   fetchOnServer: false,

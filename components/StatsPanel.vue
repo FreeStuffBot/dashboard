@@ -9,7 +9,7 @@
       :style="`height: ${
         type == 'overview' ? 200 :
         type == 'graph' ? 400 :
-        type == 'barcharts' ? (67 * dataset.length - 14) :
+        type == 'barcharts' ? (70 * dataset.length - 20) :
         type == 'ranking' ? (25 * dataset.length) :
         400}px`"
     >
@@ -21,8 +21,9 @@
             { name: 'Today', value: addPlusSign(dataset.live.guilds - dataset.guilds[dataset.guilds.length - 1]) },
             { name: 'Global Rank', value: '#' + dataset.live.ranking },
             { name: 'Shards', value: dataset.live.shards },
-            { name: 'Votes (Month)', value: dataset.live.votes },
-            { name: 'Avg SpS', value: ~~(dataset.live.guilds / dataset.live.shards), info: 'Average Servers per Shard (SpS)' }
+            { name: 'Workers', value: dataset.live.workers },
+            { name: 'Avg SpS', value: ~~(dataset.live.guilds / dataset.live.shards), info: 'Average Servers per Shard (SpS)' },
+            { name: 'Votes (Month)', value: dataset.live.votes }
           ]"
           :key="hint.name"
           v-tippy="{arrow : true, arrowType : 'round', animation : 'vertical', duration: hint.info ? 500 : 50000, theme: 'black'}"

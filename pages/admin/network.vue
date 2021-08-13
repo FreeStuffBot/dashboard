@@ -113,7 +113,8 @@ export default Vue.extend({
           client: '-',
           mode: '-',
           version: '-',
-          server: '-',
+          container: '-',
+          node: '-',
           status: 'slot'
         })
       }
