@@ -120,7 +120,7 @@ export default Vue.extend({
         },
         {
           type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-          name: 'Your application',
+          name: 'Your Application',
           secret: 'Manage your api project',
           url: '/apps/home',
           icon: '/assets/img/peepobusiness.png'
@@ -132,6 +132,13 @@ export default Vue.extend({
           url: '/apps/api-info',
           icon: '/assets/img/peepobusiness.png'
         },
+        // {
+        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
+        //   name: 'Payment',
+        //   secret: 'Money time. Big cash.',
+        //   url: '/apps/payment',
+        //   icon: '/assets/img/peepocard.png'
+        // },
         {
           type: 'page',
           name: 'Documentation',

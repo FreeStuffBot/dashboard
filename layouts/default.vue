@@ -10,7 +10,7 @@
             <img src="~/assets/img/logo.png" alt="Logo">
             <div class="title">
               <span class="line1">FreeStuff</span>
-              <span class="line2">Management</span>
+              <span class="line2">Dashboard</span>
             </div>
           </div>
           <SidebarNav />
