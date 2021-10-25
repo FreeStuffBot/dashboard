@@ -155,8 +155,14 @@ export default Vue.extend({
           'Theme 16'
         ],
         currencies: [
-          'Euro €',
-          'USD $'
+          'EUR €',
+          'USD $',
+          'GBP £',
+          'BRL R$',
+          'BGN Лв',
+          'PLN zł',
+          'HUF Ft',
+          'BTC ₿'
         ],
         prices: [
           '0+',
