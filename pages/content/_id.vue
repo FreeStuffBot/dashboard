@@ -409,8 +409,9 @@ export default Vue.extend({
     },
     async updateThumbnailerPreview(thumbnail?: string) {
       const thumb = encodeURIComponent(thumbnail || this.game?.info.thumbnail || '')
-      const obj = await API.getThumbnails(this.game?._id.toString() || '-', thumb)
-      this.thumbnailerPreview = obj.data.full
+      const tags = encodeURIComponent(JSON.stringify(this.gameinfotags?.split(',') || []).replace(/ */, ''))
+      const obj = await API.getThumbnail(thumb, tags)
+      this.thumbnailerPreview = obj.data.url
     }
   },
   head() {

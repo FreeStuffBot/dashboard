@@ -163,8 +163,8 @@ export default class API {
     return this.rawGet(`/content/guildamount/${store}/${price}/${trash}`)
   }
 
-  public static getThumbnails(id: string, thumbnail: string) {
-    return this.rawGet(`/content/thumbnails/${id}/${thumbnail}`)
+  public static getThumbnail(thumbnail: string, tags: string) {
+    return this.rawGet(`/content/thumbnail/${thumbnail}/${tags}`)
   }
 
   public static postApprove(data: any) {
