@@ -23,7 +23,7 @@
         :type="lang[game.info.type]"
         :gid="game._id + ''"
         :responsible="lang[game.responsible] || game.responsible || 'System'"
-        :banner="game.info.thumbnail"
+        :banner="game.info.thumbnail.org"
         :ia-margin="i"
       />
     </div>
