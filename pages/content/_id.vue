@@ -19,11 +19,48 @@
       <a v-if="game.info.store == 'steam'" class="pretty block" href="https://analytics.google.com/analytics/web/#/report-home/a112300017w246269144p228798554" target="_blank">Audience Engagement Analytics (Google)</a>
       <span>More statistics and insights will come at some point</span>
       <h2>Game Data:</h2>
-      <span v-text="`Type: ${game.info.type}`" /><br>
-      <span v-text="`Flags: ${gameinfotrash ? 'Not trash' : 'Trash'}, ${gameinfothirdparty & 0b10 == 0 ? 'First Party' : 'Third Party'}`" /><br>
-      <span v-text="`Store: ${game.info.store}`" /><br>
-      <span v-text="`Until: ${new Date(gameinfountil).toLocaleString()}`" /><br>
-      <span v-text="`Price: ${game.info.org_price.euro}€ / ${game.info.org_price.dollar}$`" /><br>
+      <div class="preview" style="cursor: not-allowed; opacity: .5">
+        <img :src="game.info.thumbnail.org">
+      </div>
+      <label for="gi-url">Url</label>
+      <input
+        id="gi-url"
+        v-model="game.info.org_url"
+        type="url"
+        disabled
+      >
+      <label>Original Price</label>
+      <div class="splitbox">
+        <div class="el1">
+          <input type="number" :value="game.info.org_price.euro" disabled>
+          <span>&euro;</span>
+        </div>
+        <div class="el2">
+          <input type="number" :value="game.info.org_price.usd" disabled>
+          <span>&dollar;</span>
+        </div>
+      </div>
+      <div class="splitbox">
+        <div class="el1 noflex">
+          <label for="gi-store">Store</label>
+          <select id="gi-store" v-model="game.info.store" disabled>
+            <option :key="game.info.store" :value="game.info.store" v-text="lang[game.info.store]" />
+          </select>
+        </div>
+        <div class="el2 noflex">
+          <label for="gi-until">Until</label>
+          <input type="datetime-local" disabled :value="new Date(gameinfountil).toISOString().slice(0, -8)">
+        </div>
+      </div>
+      <label for="gi-trash">Flags</label>
+      <div class="toggle-cont btn-only">
+        <div v-if="gameinfotrash" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5">
+          Trash Game
+        </div>
+        <div v-if="gameinfothirdparty" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5">
+          Third Party Provider
+        </div>
+      </div>
       <!-- <div class="buttons">
         <button
           generic
