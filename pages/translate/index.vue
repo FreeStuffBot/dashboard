@@ -26,7 +26,7 @@
       :key="e._id"
       class="box"
       :editable="e._editable"
-      :to="e._editable ? `/translate/${e._id}` : ''"
+      :to="`/translate/${e._id}`"
       :ia-margin="i"
     >
       <div>
@@ -235,12 +235,9 @@ span {
   column-gap: 5pt;
   cursor: pointer;
 
-  &[editable]:hover { filter: brightness(0.9); }
+  &:hover { filter: brightness(0.9); }
 
-  &:not([editable]) {
-    pointer-events: none;
-    opacity: .5;
-  }
+  &:not([editable]) { opacity: .5; }
 }
 
 .progress {

@@ -6,6 +6,9 @@
     <h1 v-else>
       Translating {{ data.lang_name_en.charAt(0).toUpperCase() + data.lang_name_en.slice(1) }}
     </h1>
+    <div v-if="!editable" class="readonly">
+      Readonly View
+    </div>
     <div class="progress">
       <span class="title">Progress: {{ Math.round(progress / dataEn._lines.length * 100) }}%</span>
       <span v-if="progress != dataEn._lines.length" class="desc">{{ progress }} / {{ dataEn._lines.length }} lines done!</span>
@@ -40,6 +43,7 @@
         v-model="data[currentKey]"
         class="translation"
         type="text"
+        :disabled="!editable"
         :style="`direction: ${editor.rtl ? 'rtl' : 'ltr'}`"
         @keyup.ctrl.shift.enter.exact.prevent="editorMove(-1)"
         @keyup.ctrl.enter.exact.prevent="editorMove(1)"
@@ -54,13 +58,13 @@
         <span v-else-if="Object.keys(issues).length" class="issues found" @click="skipToNextUnfinished(true)" v-text="Object.keys(issues).length + (Object.keys(issues).length == 1 ? ' issue.' : ' issues.')" />
         <span v-else class="issues">No issues.</span>
 
-        <button v-if="data[currentKey] != dataOrg[currentKey]" v-tippy="{delay: [500, 0]}" content="Reverts your changes to<br>the last saved ones<br>Ctrl + Z" @click="undo()">
+        <button v-if="data[currentKey] != dataOrg[currentKey]" v-tippy="{delay: [500, 0]}" content="Reverts your changes to<br>the last saved ones<br>Ctrl + Z" :disabled="!editable" @click="undo()">
           Undo
         </button>
-        <button v-tippy="{delay: [500, 0]}" content="Copies the English text<br>Ctrl + Q" @click="clone()">
+        <button v-tippy="{delay: [500, 0]}" content="Copies the English text<br>Ctrl + Q" :disabled="!editable" @click="clone()">
           Clone
         </button>
-        <button v-tippy="{delay: [500, 0]}" content="Clears the translation<br>Ctrl + B" @click="clear()">
+        <button v-tippy="{delay: [500, 0]}" content="Clears the translation<br>Ctrl + B" :disabled="!editable" @click="clear()">
           Clear
         </button>
         <span class="div">&bull;</span>
@@ -70,7 +74,7 @@
         </button>
       </div>
     </div>
-    <div class="box">
+    <div v-if="editable" class="box">
       <button v-tippy="{delay: [500, 0]}" generic small content="Press this to save your changes.<br>Please don't spam this button, you don't need to press this after every single line!<br>(Like seriously. Don't spam pls, thx.)<br>Ctrl + S" @click="submitChanges()">
         Submit Changes
       </button>
@@ -135,6 +139,10 @@ export default Vue.extend({
     progress() {
       // @ts-ignore
       return this.dataEn._lines.filter((key: string) => this.data[key]).length
+    },
+    editable() {
+      const editable = this.$store.getters['user/languagesInTranslationScope']
+      return editable.includes('*') || editable.includes(this.$route.params.lang)
     }
   },
   methods: {
@@ -390,6 +398,12 @@ h1 {
     resize: vertical;
     min-height: 14pt;
     max-height: 200pt;
+
+    &:disabled {
+      cursor: not-allowed;
+      box-shadow: none;
+      color: #434343;
+    }
   }
 
   .buttons {
@@ -435,6 +449,11 @@ h1 {
       &:hover {
         background-color: #919eca;
       }
+
+      &:disabled {
+        pointer-events: none;
+        opacity: .5;
+      }
     }
   }
 }
@@ -450,6 +469,16 @@ h1 {
     --bg-hov: #{$success-major};
     --color: #{$color-major};
   }
+}
+
+.readonly {
+  background: #d6d4462a;
+  border: 1px solid #d6d446;
+  padding: $box-padding;
+  border-radius: $box-border-radius;
+  margin-bottom: $box-padding;
+  font-family: $font-major;
+  color: #d6d446;
 }
 
 </style>
