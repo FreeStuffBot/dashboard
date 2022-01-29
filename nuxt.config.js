@@ -27,6 +27,7 @@ module.exports = {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/svg',
+    '@nuxtjs/stylelint-module',
     '@nuxtjs/style-resources'
   ],
   modules: [
@@ -37,6 +38,11 @@ module.exports = {
     scss: [
       '@/assets/style/all.scss'
     ]
+  },
+  stylelint: {
+    fix: true,
+    failOnError: false,
+    failOnWarning: false
   },
   build: {
   },

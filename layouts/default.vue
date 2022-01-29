@@ -15,7 +15,7 @@
           </div>
           <SidebarNav />
           <footer>
-            Copyright &copy; {{ new Date().getYear() + 1900 }} FreeStuff Services
+            Copyright &copy; {{ new Date().getFullYear() }} FreeStuff Services
           </footer>
         </div>
       </div>
@@ -108,12 +108,13 @@ html, body, #layout, #app {
 }
 
 #sidebar {
-  background-color: $bg-dark;
+  background-color: $backpage;
   height: 100vh;
   overflow-x: hidden;
   padding: 0 $box-outer-padding;
-  max-width: 18vw;
+  width: $sidebar-width;
   animation: sidebar-fadein .3s ease-out .5s forwards;
+  border-right: 2px solid $color-border;
 
   .container {
     padding: $box-outer-padding 0;

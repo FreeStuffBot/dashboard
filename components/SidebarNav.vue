@@ -4,6 +4,7 @@
       <div v-if="link.type == 'header'" class="el-inner header">
         <label v-text="link.name" />
       </div>
+
       <div v-if="link.type == 'page'" class="el-inner page" :active="isActive(link)">
         <a v-if="link.url.startsWith('http')" :href="link.url" class="link" target="_blank">
           <div class="icon-wrapper">
@@ -11,14 +12,6 @@
               class="i"
               :class="{h:!!link.iconHover}"
               :src="link.icon"
-              alt="icon"
-              draggable="false"
-              :title="link.secret"
-            >
-            <img
-              v-if="link.iconHover"
-              class="a"
-              :src="link.iconHover"
               alt="icon"
               draggable="false"
               :title="link.secret"
@@ -33,16 +26,7 @@
           <div class="icon-wrapper">
             <img
               class="i"
-              :class="{h:!!link.iconHover}"
               :src="link.icon"
-              alt="icon"
-              draggable="false"
-              :title="link.secret"
-            >
-            <img
-              v-if="link.iconHover"
-              class="a"
-              :src="link.iconHover"
               alt="icon"
               draggable="false"
               :title="link.secret"
@@ -50,13 +34,6 @@
           </div>
           <div class="text-wrapper">
             <span v-text="link.name" />
-          </div>
-        </NuxtLink>
-      </div>
-      <div v-if="link.type == 'add'" class="el-inner add" :active="isActive(link)">
-        <NuxtLink to="/server/add" class="link">
-          <div class="text-wrapper">
-            <span v-text="'+ ' + link.name" />
           </div>
         </NuxtLink>
       </div>
@@ -93,13 +70,13 @@ export default Vue.extend({
           url: '/translate',
           icon: '/assets/img/peepolang.png'
         },
-        // {
-        //   type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
-        //   name: 'Documents',
-        //   secret: 'All sorts of documents and stuff ya know.',
-        //   url: '/documents',
-        //   icon: '/assets/img/peepodetective.png'
-        // },
+        {
+          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+          name: 'Documents',
+          secret: 'All sorts of documents and stuff ya know.',
+          url: '/documents',
+          icon: '/assets/img/peepodetective.png'
+        },
         {
           type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
           name: 'Content Moderation',
@@ -132,13 +109,13 @@ export default Vue.extend({
           url: '/apps/api-info',
           icon: '/assets/img/peepobusiness.png'
         },
-        // {
-        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-        //   name: 'Payment',
-        //   secret: 'Money time. Big cash.',
-        //   url: '/apps/payment',
-        //   icon: '/assets/img/peepocard.png'
-        // },
+        {
+          type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
+          name: 'Payment',
+          secret: 'Money time. Big cash.',
+          url: '/apps/payment',
+          icon: '/assets/img/peepocard.png'
+        },
         {
           type: 'page',
           name: 'Documentation',
@@ -156,48 +133,21 @@ export default Vue.extend({
           secret: 'Business Time',
           url: '/admin',
           icon: '/assets/img/peepocool.png'
+        },
+        {
+          type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
+          name: 'Users',
+          secret: 'Hehe',
+          url: '/admin/users',
+          icon: '/assets/img/peepoking.png'
+        },
+        {
+          type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
+          name: 'Usage',
+          secret: 'Your api usage',
+          url: '/application/stats',
+          icon: '/assets/img/peepobusiness.png'
         }
-        // {
-        //   type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
-        //   name: 'Users',
-        //   secret: 'Hehe',
-        //   url: '/admin/users',
-        //   icon: '/assets/img/peepoking.png'
-        // },
-        // {
-        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-        //   name: 'Usage',
-        //   secret: 'Your api usage',
-        //   url: '/application/stats',
-        //   icon: '/assets/img/peepobusiness.png'
-        // },
-        // {
-        //   type: 'header',
-        //   name: 'Your servers'
-        // },
-        // ...this.$store.state.user.guilds
-        //   ? this.$store.state.user.guilds
-        //     .filter((g: any) => g.freestuff)
-        //     .sort((a: any, b: any) => {
-        //       let out = 0;
-        //       if (a.freestuff.premium) out++;
-        //       if (b.freestuff.premium) out--;
-        //       // if (a.freestuff.premium.by == this.$store.state.user.id) out++;
-        //       // if (b.freestuff.premium.by == this.$store.state.user.id) out--;
-        //       return out;
-        //     })
-        //     .map((g: any) => { return {
-        //       type: 'page',
-        //       name: g.name,
-        //       url: `/server/${g.id}`,
-        //       icon: g.image,
-        //       iconHover: g.imageHover
-        //     }})
-        //   : [],
-        // {
-        //   type: 'add',
-        //   name: 'Add Server'
-        // }
       ]
     }
   },
@@ -228,13 +178,13 @@ nav {
   display: block;
 
   &.header {
-    margin: 32pt 0 0 0;
+    margin: 32pt 0 8pt 0;
 
     label {
       text-transform: uppercase;
       color: $color-sub;
       font-family: $font-major;
-      font-size: 12pt;
+      font-size: 11pt;
     }
   }
 
@@ -247,16 +197,13 @@ nav {
       border-radius: $box-border-radius;
       padding: $element-padding;
       display: flex;
+      gap: $element-padding;
       align-items: center;
       background-color: #00000033;
       transition: background-color .1s ease-out;
 
       &:hover {
         background-color: #00000099;
-
-        img.a { visibility: visible !important; }
-        img.h { visibility: hidden; }
-        .visonhov { opacity: var(--opacity, 1); }
       }
 
       &.nuxt-link-exact-active, &[subpages].nuxt-link-active {
@@ -268,17 +215,15 @@ nav {
       }
 
       .visonhov {
-        opacity: 0;
-        transition: opacity .1s ease;
+        opacity: .2;
       }
 
       .icon-wrapper {
         flex-shrink: 0;
-        width: 28pt;
-        height: 28pt;
+        width: 16pt;
+        height: 16pt;
         border-radius: 99pt;
         overflow: hidden;
-        margin-right: $element-padding;
         position: relative;
 
         img {
@@ -288,8 +233,6 @@ nav {
           width: 100%;
           height: 100%;
           user-select: none;
-
-          &.a { visibility: hidden; }
         }
       }
 
@@ -323,24 +266,6 @@ nav {
         }
       }
     }
-  }
-
-  &.add {
-    .text-wrapper {
-      height: 28pt;
-      width: 100% !important;
-      display: flex;
-      align-items: center;
-
-      span {
-        width: 100%;
-        text-align: center;
-        font-size: 10pt !important;
-        color: $color-minor !important;
-      }
-    }
-
-    .link:hover span { color: $color-regular !important; }
   }
 }
 

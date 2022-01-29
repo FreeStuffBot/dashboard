@@ -1,17 +1,17 @@
-@import './variables.scss';
+@import "./variables.scss";
 
 
 h1 {
   margin: 0;
-  font-size: 24pt;
   font-family: $font-header;
+  font-size: 24pt;
   color: $color-header;
 }
 
 h2 {
-  font-size: 16pt;
   margin: $box-outer-padding 0 $box-padding 0;
   font-family: $font-sub;
+  font-size: 16pt;
   color: $color-sub;
 
   &:first-of-type { margin-top: $box-padding; }
@@ -19,35 +19,36 @@ h2 {
 
 button[generic], a[button][generic] {
   padding: 10pt 16pt;
-  border-radius: 4pt;
   font-family: $font-major;
   font-size: 12pt;
-  border: none;
-  outline: none;
   color: var(--color, #{$bg-darker});
   text-decoration: none;
   cursor: pointer;
   background-color: var(--bg, #dddddd);
-  transition: background-color .1s ease-out
-            , color .1s ease-out;
+  border: none;
+  border-radius: 4pt;
+  outline: none;
+  transition:
+    background-color .1s ease-out,
+    color .1s ease-out;
 
   &:hover { background-color: var(--bg-hov, #999999); }
   &:active { opacity: .8; }
 
   &[small] {
     padding: 6pt 9pt;
-    border-radius: 2pt;
     font-family: $font-regular;
     font-size: 11pt;
+    border-radius: 2pt;
   }
 
   &[dark] {
-    background: $bg-darker;
     color: $color-sub;
+    background: $bg-darker;
 
     &:hover {
-      background: black;
       color: $color-header;
+      background: black;
     }
   }
 
@@ -58,23 +59,23 @@ button[generic], a[button][generic] {
 }
 
 div[center] {
-  width: 100%;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 a.pretty {
   display: inline-block;
   margin: $box-padding / 3 $box-padding / 2 $box-padding / 3 0;
-  color: $primary-blue;
   font-family: $font-major;
   font-size: 11pt;
+  color: $primary-blue;
   text-decoration: none;
   opacity: .5;
 
   &:hover {
-    opacity: 1;
     text-decoration: underline;
+    opacity: 1;
   }
 
   &.block {
@@ -90,27 +91,27 @@ a.pretty {
 
   .toggle {
     display: block;
-    margin: 5px 10pt 15px 0;
     padding: 7pt 12pt;
-    border: none;
-    border-radius: 2pt;
-    background-color: $bg-bright;
-    color: $color-regular;
+    margin: 5px 10pt 15px 0;
     font-family: $font-regular;
     font-size: 14pt;
-    user-select: none;
+    color: $color-regular;
     cursor: pointer;
+    user-select: none;
+    background-color: $bg-bright;
+    border: none;
+    border-radius: 2pt;
 
     &::before {
-      content: '☐';
       position: relative;
-      width: 12pt;
       display: inline-block;
+      width: 12pt;
       margin-right: 12pt;
+      content: "☐";
     }
 
     &[on] { background-color: $success-major; }
-    &[on]::before { content: '🗹' }
+    &[on]::before { content: "🗹"; }
   }
 }
 
@@ -119,11 +120,11 @@ a.pretty {
  */
 
 .tippy-tooltip {
-  background-color: black !important;
-  color: $color-regular;
+  padding: 6pt 10pt;
   font-family: $font-major;
   font-size: 11pt;
-  padding: 6pt 10pt;
+  color: $color-regular;
+  background-color: black !important;
 }
 
 .tippy-tooltip .tippy-roundarrow {
@@ -134,7 +135,7 @@ a.pretty {
   opacity: 0;
 }
 
-.tippy-tooltip[data-animation='vertical'][data-state='hidden'] {
+.tippy-tooltip[data-animation="vertical"][data-state="hidden"] {
   opacity: 0;
   transform: translateY(5px) scaleY(.95);
 }
@@ -150,16 +151,16 @@ a.pretty {
 
 .swal2-container {
   code {
-    background-color: #00000011;
     padding: 3pt;
+    background-color: #00000011;
     border-radius: 3pt;
   }
 
   span {
     display: block;
     padding-bottom: 7pt;
-    text-align: left;
     font-family: $font-regular;
     font-size: 12pt;
+    text-align: left;
   }
 }
