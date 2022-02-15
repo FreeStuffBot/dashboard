@@ -2,20 +2,45 @@
 
 
 h1 {
-  margin: 0;
+  margin: 0 0 $box-padding 0;
   font-family: $font-header;
   font-size: 24pt;
   color: $color-header;
+
+  & + h2 {
+    margin-top: $box-padding;
+  }
 }
 
 h2 {
   margin: $box-outer-padding 0 $box-padding 0;
-  font-family: $font-sub;
+  font-family: $font-major;
   font-size: 16pt;
-  color: $color-sub;
-
-  &:first-of-type { margin-top: $box-padding; }
+  color: $color-major;
 }
+
+p {
+  color: $color-regular;
+  font-family: $font-regular;
+  font-size: 12pt;
+
+  a {
+    display: inline-block;
+    margin: $box-padding / 3 $box-padding / 2 $box-padding / 3 0;
+    font-family: $font-major;
+    font-size: 11pt;
+    color: $primary-blue;
+    text-decoration: none;
+    opacity: .5;
+  
+    &:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+  }
+}
+
+/** **/
 
 button[generic], a[button][generic] {
   padding: 10pt 16pt;
@@ -64,25 +89,6 @@ div[center] {
   width: 100%;
 }
 
-a.pretty {
-  display: inline-block;
-  margin: $box-padding / 3 $box-padding / 2 $box-padding / 3 0;
-  font-family: $font-major;
-  font-size: 11pt;
-  color: $primary-blue;
-  text-decoration: none;
-  opacity: .5;
-
-  &:hover {
-    text-decoration: underline;
-    opacity: 1;
-  }
-
-  &.block {
-    display: block;
-  }
-}
-
 .toggle-cont {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -113,6 +119,18 @@ a.pretty {
     &[on] { background-color: $success-major; }
     &[on]::before { content: "🗹"; }
   }
+}
+
+.devnotice {
+  display: block;
+  padding: 5px 0;
+  text-align: center;
+  background-color: $warning-minor;
+  transform: translate(-$box-outer-padding, -$box-outer-padding);
+  width: calc(100% + #{$box-outer-padding * 2});
+  font-family: $font-major;
+  font-size: 12pt;
+  text-transform: uppercase;
 }
 
 /*

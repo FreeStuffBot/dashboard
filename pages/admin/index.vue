@@ -145,7 +145,7 @@ h1 img {
   a {
     background-color: $bg-dark;
     padding: $box-padding;
-    border-radius: $box-border-radius;
+    border-radius: $box-br;
     display: flex;
     flex-direction: column;
     align-items: center;

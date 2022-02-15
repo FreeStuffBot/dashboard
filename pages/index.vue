@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <Container>
     <h1>{{ greeting }}, {{ username }} 👋</h1>
 
     <!-- <h2>Your Subscription:</h2>
@@ -26,10 +26,12 @@
       ]"
     /> -->
 
-    <h2>Please notice:</h2>
-    <span>This dashboard is still in development. Please report any bugs over on our Discord <p v-tippy style="display: inline;" content="Oh shit that's a typo">Sewer!</p></span>
+    <Admonition
+      type="info"
+      text="This dashboard is still in development. Please report any bugs over on our Discord Server."
+    />
 
-    <h2>Your Account:</h2>
+    <h2>Your Account</h2>
     <AccountInfoBox
       :username="username"
       :discrim="`#${discriminator}`"
@@ -37,20 +39,23 @@
       :imgurl="avatarUrl"
     />
 
-    <h2>Bottom text:</h2>
-    <a class="pretty" href="https://freestuffbot.xyz/privacy" target="_blank">Privacy Policy</a>
-    <a class="pretty" href="https://freestuffbot.xyz/terms" target="_blank">Terms of Service</a>
-    <a class="pretty" href="" @click.prevent="openAcknowledgements()">Acknowledgements</a>
-  </div>
+    <h2>Bottom text</h2>
+    <p>
+      <a href="https://freestuffbot.xyz/privacy" target="_blank">Privacy Policy</a>
+      <a href="https://freestuffbot.xyz/terms" target="_blank">Terms of Service</a>
+      <a href="https://freestuffbot.xyz/licenses" target="_blank">Software Licenses</a>
+    </p>
+  </Container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Swal from 'sweetalert2'
-import AccountInfoBox from '~/components/AccountInfoBox.vue'
+import Container from '~/components/layout/Container.vue'
+import AccountInfoBox from '~/components/boxes/AccountInfoBox.vue'
 
 export default Vue.extend({
   components: {
+    Container,
     AccountInfoBox
   },
   transition: 'slide-down',
@@ -70,30 +75,6 @@ export default Vue.extend({
       return 'Ayoooo'
     }
   },
-  methods: {
-    openAcknowledgements() {
-      Swal.fire({
-        title: 'Acknowledgements',
-        html: `Made possible thanks to the following libraries and services:
-        
-<a target="_blank" href="https://vuejs.org/">Vue.JS</a>
-<a target="_blank" href="https://nuxtjs.org/">Nuxt.JS</a>
-<a target="_blank" href="https://www.typescriptlang.org/">TypeScript</a>
-<a target="_blank" href="https://github.com/axios/axios">Axios</a>
-<a target="_blank" href="https://github.com/chalk/chalk">Chalk</a>
-<a target="_blank" href="https://www.chartjs.org/">Chart.js</a>
-<a target="_blank" href="https://expressjs.com/">Express</a>
-<a target="_blank" href="https://helmetjs.github.io/">Helmet</a>
-<a target="_blank" href="https://github.com/expressjs/morgan">Morgan</a>
-<a target="_blank" href="https://www.mongodb.com/">MongoDB</a>
-<a target="_blank" href="https://pptr.dev/">Puppeteer</a>
-<a target="_blank" href="https://sweetalert2.github.io/">SweetAlert2</a>
-<a target="_blank" href="https://kabbouchi.github.io/vue-tippy/">Vue-Tippy</a>
-<a target="_blank" href="https://fontawesome.com/license">FontAwesome</a>`.split('\n').join('<br>'),
-        confirmButtonText: 'Close'
-      })
-    }
-  },
   head() {
     return {
       title: 'FreeStuff Management'
@@ -101,14 +82,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="scss">
-span {
-  color: white;
-  font-family: $font-regular;
-  font-size: 11pt;
-
-  &[minor] { color: #888888; }
-}
-
-</style>

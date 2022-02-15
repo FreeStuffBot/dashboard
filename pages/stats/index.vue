@@ -225,7 +225,7 @@ h1 img {
   .inner {
     display: block;
     background-color: $bg-darker;
-    border-radius: $box-border-radius;
+    border-radius: $box-br;
     box-shadow:
       0 2.8px 2.2px rgba(0, 0, 0, 0.045),
       0 6.7px 5.3px rgba(0, 0, 0, 0.065),

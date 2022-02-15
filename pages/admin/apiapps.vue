@@ -65,7 +65,7 @@ span {
 .app {
   background-color: $bg-bright;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding / 2;
   display: grid;
   grid-template: auto auto / auto 1fr;

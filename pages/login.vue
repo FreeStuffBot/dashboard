@@ -28,7 +28,7 @@
       Loading...
     </div>
     <div class="floater">
-      v1.1
+      v2.0
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import API from '~/lib/api'
-import icon from '~/components/icon.vue'
+import icon from '~/components/Icon.vue'
 
 export default Vue.extend({
   components: {

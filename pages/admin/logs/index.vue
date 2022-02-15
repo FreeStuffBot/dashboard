@@ -65,7 +65,7 @@ span {
 
   & > * {
     background-color: $bg-bright;
-    border-radius: $box-border-radius;
+    border-radius: $box-br;
     overflow-x: hidden;
   }
 }
@@ -84,7 +84,7 @@ span {
     color: $color-regular;
     font-family: monospace;
     text-decoration: none;
-    border-radius: $content-border-radius;
+    border-radius: $content-br;
     transition: background-color .1s ease;
 
     &.nuxt-link-active { background-color: $backpage; }

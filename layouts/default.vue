@@ -1,24 +1,7 @@
 <template>
   <div id="layout">
     <div v-if="$store.state.loginStatus === 'success'" id="app">
-      <div id="sidebar">
-        <div class="container">
-          <div v-if="dev" class="devnotice">
-            Dev Env
-          </div>
-          <div id="header">
-            <img src="~/assets/img/logo.png" alt="Logo">
-            <div class="title">
-              <span class="line1">FreeStuff</span>
-              <span class="line2">Dashboard</span>
-            </div>
-          </div>
-          <SidebarNav />
-          <footer>
-            Copyright &copy; {{ new Date().getFullYear() }} FreeStuff Services
-          </footer>
-        </div>
-      </div>
+      <Sidebar />
       <div id="wrapper">
         <nuxt />
       </div>
@@ -31,21 +14,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import SidebarNav from '~/components/SidebarNav.vue'
-
-Vue.use(require('vue-tippy').default, {
-  arrow: true,
-  arrowType: 'round',
-  animation: 'vertical',
-  duration: 100,
-  theme: 'black'
-})
-Vue.component('tippy', require('vue-tippy').TippyComponent)
-
+import Sidebar from '../components/sidebar/Sidebar.vue'
 
 export default Vue.extend({
   components: {
-    SidebarNav
+    Sidebar
   },
   data() {
     return {
@@ -107,108 +80,24 @@ html, body, #layout, #app {
   100% { opacity: 1; }
 }
 
-#sidebar {
-  background-color: $backpage;
-  height: 100vh;
-  overflow-x: hidden;
-  padding: 0 $box-outer-padding;
-  width: $sidebar-width;
-  animation: sidebar-fadein .3s ease-out .5s forwards;
-  border-right: 2px solid $color-border;
-
-  .container {
-    padding: $box-outer-padding 0;
-    min-height: calc(100vh - #{$box-outer-padding * 2});
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  #header {
-    display: flex;
-    align-items: center;
-    margin-bottom: $box-padding;
-    margin-right: $box-outer-padding * 2;
-
-    img {
-      border-radius: 99pt;
-      height: 4vw;
-      margin-right: $box-padding;
-    }
-
-    .title {
-      display: flex;
-      flex-direction: column;
-
-      * {
-        font-family: $font-header;
-        font-size: 1.8vw;
-        margin: -0.2vw;
-      }
-
-      .line1 { color: $primary-blue; }
-      .line2 { color: $primary-pink; }
-    }
-  }
-
-  nav {
-    flex-grow: 1;
-  }
-
-  footer {
-    font-family: $font-minor;
-    font-size: 10pt;
-    color: $color-minor;
-    width: 100%;
-    text-align: center;
-    margin-top: $box-outer-padding;
-  }
-
-  &::-webkit-scrollbar { width: 14px; height: 0; }
-  &::-webkit-scrollbar-track { background-color: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $bg-dark; }
-  &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
-  // &:not(:hover)::-webkit-scrollbar-thumb { background-color: transparent; }
-}
-
-@keyframes sidebar-fadein {
-  0% { transform: translateX(-10px); }
-  100% { transform: translateX(0); }
-}
-
 #wrapper {
   flex-grow: 1;
   overflow-x: hidden;
   padding: $box-outer-padding;
   animation: wrapper-fadein .4s cubic-bezier(0.34, 1.56, 0.64, 1) .5s forwards;
 
-  &::-webkit-scrollbar { width: 14px; height: 0; }
+  // &::-webkit-scrollbar { width: 14px; height: 0; }
+  // &::-webkit-scrollbar-track { background-color: transparent; }
+  // &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $backpage; }
+  // &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
+  &::-webkit-scrollbar { width: 0; height: 0; }
   &::-webkit-scrollbar-track { background-color: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $backpage; }
-  &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
+  &::-webkit-scrollbar-thumb { background-color: transparent; }
+  &::-webkit-scrollbar-thumb:hover { background-color: transparent; }
 }
 
 @keyframes wrapper-fadein {
   0% { transform: translateY(30px); }
   100% { transform: translateY(0); }
-}
-</style>
-
-<style lang="scss">
-.container {
-  width: 100%;
-  max-width: 550pt;
-}
-
-.devnotice {
-  display: block;
-  padding: 5px 0;
-  text-align: center;
-  background-color: $warning-minor;
-  transform: translate(-$box-outer-padding, -$box-outer-padding);
-  width: calc(100% + #{$box-outer-padding * 2});
-  font-family: $font-major;
-  font-size: 12pt;
-  text-transform: uppercase;
 }
 </style>

@@ -10,21 +10,30 @@ $color-border: #37393d;
 $backpage: #101318;
 $bg-bright: #3e3842; //
 $bg-brighter: #473e49; //
-$bg-dark: #1c1b22; //
-$bg-darker: #0c0c0e; //
+$bg-dark: #0b0c10;
+$bg-darker: #000000;
 
-$primary-orange: #F39807; //
-$primary-orange-trans: #F39807CC; //
-$primary-blue: #00D9FF; //
-$primary-blue-trans: #00D9FFCC; //
-$primary-pink: #FF0095; //
-$primary-pink-trans: #FF0095; //
+$color-red: #e43c26;
+$color-yellow: #d6a949;
+$color-blue: #4a73a8;
+$color-green: #3e9e71;
+$color-red-20: #e43c2644;
+$color-yellow-20: #d6a94944;
+$color-blue-20: #4a73a844;
+$color-green-20: #3e9e7144;
 
-$error-major: #e43c26; //
-$warning-major: #d64955; //
-$warning-minor: #d6a949; //
-$info-major: #4a73a8; //
-$success-major: #3e9e71; //
+/* @dep */ $primary-orange: #F39807; //
+/* @dep */ $primary-orange-trans: #F39807CC; //
+/* @dep */ $primary-blue: #00D9FF; //
+/* @dep */ $primary-blue-trans: #00D9FFCC; //
+/* @dep */ $primary-pink: #FF0095; //
+/* @dep */ $primary-pink-trans: #FF0095; //
+
+/* @dep */ $error-major: #e43c26; //
+/* @dep */ $warning-major: #d64955; //
+/* @dep */ $warning-minor: #d6a949; //
+/* @dep */ $info-major: #4a73a8; //
+/* @dep */ $success-major: #3e9e71; //
 
 
 /* General */
@@ -37,11 +46,12 @@ $font-minor: 'Montserrat 400', 'Roboto', sans-serif;
 
 /* Components */
 $box-width: 400pt;
-$box-border-radius: 5pt;
+$box-br: 5pt;
 $box-outer-padding: 40pt;
 $box-padding: 15pt;
-$content-border-radius: 3pt;
-$border: 1px solid #C5C5C5;
+$content-br: 3pt;
+$nav-padding: 8pt;
 
+$border: 1px solid #C5C5C5;
 $sidebar-width: 200pt;
 

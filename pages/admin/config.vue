@@ -74,7 +74,7 @@ span {
 textarea {
   background-color: $bg-bright;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin: $box-padding/2 0;
   color: $color-major;
   width: 50vw;

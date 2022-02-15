@@ -89,7 +89,7 @@ export default Vue.extend({
   min-width: 100px;
   background-color: $bg-dark;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   text-decoration: none;
   cursor: pointer;
   transition: background-color .1s ease-out;

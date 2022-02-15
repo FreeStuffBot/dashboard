@@ -334,6 +334,7 @@ const orderRules = [
 
 module.exports = {
   extends: 'stylelint-config-standard',
+  customSyntax: 'postcss-html',
   plugins: [
     'stylelint-order',
     'stylelint-scss'

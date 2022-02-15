@@ -226,7 +226,7 @@ span {
   display: grid;
   background-color: $bg-bright;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding / 2;
   overflow: hidden;
   box-shadow: 0 0px 6px #00000000;

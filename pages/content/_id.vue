@@ -19,7 +19,7 @@
       <a v-if="game.info.store == 'steam'" class="pretty block" href="https://analytics.google.com/analytics/web/#/report-home/a112300017w246269144p228798554" target="_blank">Audience Engagement Analytics (Google)</a>
       <span>More statistics and insights will come at some point</span>
       <h2>Game Data:</h2>
-      <div class="preview" style="cursor: not-allowed; opacity: .5">
+      <div class="preview" style="cursor: not-allowed; opacity: .5;">
         <img :src="game.info.thumbnail.org">
       </div>
       <label for="gi-url">Url</label>
@@ -54,10 +54,10 @@
       </div>
       <label for="gi-trash">Flags</label>
       <div class="toggle-cont btn-only">
-        <div v-if="gameinfotrash" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5">
+        <div v-if="gameinfotrash" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5;">
           Trash Game
         </div>
-        <div v-if="gameinfothirdparty" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5">
+        <div v-if="gameinfothirdparty" on="true" class="toggle" aria-disabled="true" style="cursor: not-allowed; opacity: .5;">
           Third Party Provider
         </div>
       </div>

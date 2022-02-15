@@ -196,7 +196,7 @@ export default Vue.extend({
 .statspanel {
   background-color: $bg-bright;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-top: $box-padding / 2;
   transition: padding .2s ease-out;
 

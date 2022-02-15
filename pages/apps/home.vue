@@ -52,7 +52,7 @@
           placeholder="Webhook Secret"
           content="Webhook Secret"
         >
-        <button generic dark style="margin-right: 10pt" @click="updateWebhook">
+        <button generic dark style="margin-right: 10pt;" @click="updateWebhook">
           {{ webhookEdit ? 'Save Changes' : 'Edit' }}
         </button>
         <button generic dark @click="testWebhook">
@@ -93,7 +93,7 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import Icon from '~/components/icon.vue'
+import Icon from '~/components/Icon.vue'
 
 
 export default Vue.extend({
@@ -232,7 +232,7 @@ span {
 
 .tokenbox {
   background-color: $bg-bright;
-  border-radius: $content-border-radius;
+  border-radius: $content-br;
   border: 1px solid $color-minor;
   padding: 10pt 15pt;
   flex-grow: 1;
@@ -257,7 +257,7 @@ span {
 
 input, textarea, select {
   background-color: $bg-bright;
-  border-radius: $content-border-radius;
+  border-radius: $content-br;
   border: none;
   padding: 10pt 15pt;
   flex-grow: 1;

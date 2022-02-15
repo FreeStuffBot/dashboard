@@ -134,7 +134,7 @@ span {
 .experiment {
   background-color: $bg-bright;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-top: $box-padding / 2;
   display: grid;
   grid-template: auto auto / auto 1fr auto;
@@ -179,7 +179,7 @@ span {
       font-size: 12pt;
       padding: 5pt 20pt;
       background-color: $bg-dark;
-      border-radius: $content-border-radius 0 0 $content-border-radius;
+      border-radius: $content-br 0 0 $content-br;
       border: none;
       transition: background-color .2s ease;
 
@@ -194,7 +194,7 @@ span {
       text-transform: uppercase;
       padding: 2pt 10pt;
       background-color: $bg-dark;
-      border-radius: 0 $content-border-radius $content-border-radius 0;
+      border-radius: 0 $content-br $content-br 0;
       border: none;
       cursor: pointer;
       transition: background-color .2s ease;
@@ -217,7 +217,7 @@ span {
   }
 
   input {
-    border-radius: $content-border-radius;
+    border-radius: $content-br;
     background-color: $bg-bright;
     border: none;
     padding: 5pt 8pt;

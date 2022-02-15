@@ -63,7 +63,7 @@ export default {
   position: relative;
   width: 90px;
   background-color: $bg-bright;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
 
   &[status="slot"] {
     background-color: transparent;
@@ -91,7 +91,7 @@ export default {
       margin: 5px 5px 0 5px;
       color: #ffffffaa;
       background-color: #00000040;
-      border-radius: $box-border-radius/2 $box-border-radius/2 0 0;
+      border-radius: $box-br/2 $box-br/2 0 0;
     }
 
     &.status {
@@ -101,7 +101,7 @@ export default {
       color: #ffffffaa;
       font-size: 8pt;
       background-color: #00000040;
-      border-radius: 0 0 $box-border-radius/2 $box-border-radius/2;
+      border-radius: 0 0 $box-br/2 $box-br/2;
     }
 
     &.server {

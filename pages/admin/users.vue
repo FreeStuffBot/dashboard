@@ -211,7 +211,7 @@ h1 img {
 }
 
 input {
-  border-radius: $content-border-radius;
+  border-radius: $content-br;
   background-color: $bg-bright;
   border: none;
   padding: 5pt 8pt;
@@ -224,7 +224,7 @@ input {
 
 .user {
   background-color: $bg-bright;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-top: $box-padding / 2;
   padding: $box-padding;
   display: grid;

@@ -21,7 +21,9 @@ module.exports = {
   loading: { color: '#fff' },
   css: [
   ],
+  components: true,
   plugins: [
+    { src: '~plugins/vue-tippy.js', ssr: false },
     { src: '~plugins/vue-chartjs.js', ssr: false }
   ],
   buildModules: [
@@ -45,6 +47,11 @@ module.exports = {
     failOnWarning: false
   },
   build: {
+    babel: {
+      plugins: [
+        [ '@babel/plugin-proposal-private-methods', { loose: true } ]
+      ]
+    }
   },
   // render: {
   //   csp: {

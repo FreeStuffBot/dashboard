@@ -47,7 +47,7 @@ export default {
   display: flex;
   background: #393f55;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding;
 
   & > img {

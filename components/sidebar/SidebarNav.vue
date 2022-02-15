@@ -1,11 +1,11 @@
 <template>
   <nav>
-    <div v-for="link of navlinks" :key="link.name" class="el-wrapper">
-      <div v-if="link.type == 'header'" class="el-inner header">
+    <div v-for="link of navlinks" :key="link.name" class="wrapper">
+      <div v-if="link.type == 'header'" class="inner header">
         <label v-text="link.name" />
       </div>
 
-      <div v-if="link.type == 'page'" class="el-inner page" :active="isActive(link)">
+      <div v-if="link.type == 'page'" class="inner page" :active="isActive(link)">
         <a v-if="link.url.startsWith('http')" :href="link.url" class="link" target="_blank">
           <div class="icon-wrapper">
             <img
@@ -19,7 +19,7 @@
           </div>
           <div class="text-wrapper">
             <span v-text="link.name" />
-            <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link" class="visonhov">
+            <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link">
           </div>
         </a>
         <NuxtLink v-else :to="link.url" class="link" :subpages="link.url !== '/'">
@@ -70,13 +70,13 @@ export default Vue.extend({
           url: '/translate',
           icon: '/assets/img/peepolang.png'
         },
-        {
-          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
-          name: 'Documents',
-          secret: 'All sorts of documents and stuff ya know.',
-          url: '/documents',
-          icon: '/assets/img/peepodetective.png'
-        },
+        // {
+        //   type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+        //   name: 'Documents',
+        //   secret: 'All sorts of documents and stuff ya know.',
+        //   url: '/documents',
+        //   icon: '/assets/img/peepodetective.png'
+        // },
         {
           type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
           name: 'Content Moderation',
@@ -109,13 +109,13 @@ export default Vue.extend({
           url: '/apps/api-info',
           icon: '/assets/img/peepobusiness.png'
         },
-        {
-          type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-          name: 'Payment',
-          secret: 'Money time. Big cash.',
-          url: '/apps/payment',
-          icon: '/assets/img/peepocard.png'
-        },
+        // {
+        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
+        //   name: 'Payment',
+        //   secret: 'Money time. Big cash.',
+        //   url: '/apps/payment',
+        //   icon: '/assets/img/peepocard.png'
+        // },
         {
           type: 'page',
           name: 'Documentation',
@@ -133,21 +133,21 @@ export default Vue.extend({
           secret: 'Business Time',
           url: '/admin',
           icon: '/assets/img/peepocool.png'
-        },
-        {
-          type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
-          name: 'Users',
-          secret: 'Hehe',
-          url: '/admin/users',
-          icon: '/assets/img/peepoking.png'
-        },
-        {
-          type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-          name: 'Usage',
-          secret: 'Your api usage',
-          url: '/application/stats',
-          icon: '/assets/img/peepobusiness.png'
         }
+        // {
+        //   type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
+        //   name: 'Users',
+        //   secret: 'Hehe',
+        //   url: '/admin/users',
+        //   icon: '/assets/img/peepoking.png'
+        // },
+        // {
+        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
+        //   name: 'Usage',
+        //   secret: 'Your api usage',
+        //   url: '/application/stats',
+        //   icon: '/assets/img/peepobusiness.png'
+        // }
       ]
     }
   },
@@ -163,18 +163,18 @@ export default Vue.extend({
 <style scoped lang="scss">
 nav {
   display: block;
-
-  a {
-    text-decoration: none;
-  }
 }
 
-.el-wrapper {
+a {
+  text-decoration: none;
+}
+
+.wrapper {
   display: block;
-  margin-bottom: 4pt;
+  margin-bottom: 0pt;
 }
 
-.el-inner {
+.inner {
   display: block;
 
   &.header {
@@ -182,46 +182,41 @@ nav {
 
     label {
       text-transform: uppercase;
-      color: $color-sub;
+      color: $color-minor;
       font-family: $font-major;
-      font-size: 11pt;
+      font-size: 10pt;
+      padding: 0 0 0 $nav-padding;
     }
   }
 
   &.page, &.add {
     .link {
-      $element-padding: 10pt;
-
       position: relative;
       display: block;
-      border-radius: $box-border-radius;
-      padding: $element-padding;
+      border-radius: $box-br;
+      padding: $nav-padding;
       display: flex;
-      gap: $element-padding;
+      gap: $nav-padding;
       align-items: center;
-      background-color: #00000033;
+      background-color: transparentize($bg-dark, 1);
       transition: background-color .1s ease-out;
 
       &:hover {
-        background-color: #00000099;
+        background-color: $bg-dark;
       }
 
       &.nuxt-link-exact-active, &[subpages].nuxt-link-active {
-        background-color: #000000;
+        background-color: $bg-darker;
         span { color: $color-major !important; }
 
         img.a { visibility: visible !important; }
         img.h { visibility: hidden; }
       }
 
-      .visonhov {
-        opacity: .2;
-      }
-
       .icon-wrapper {
         flex-shrink: 0;
-        width: 16pt;
-        height: 16pt;
+        width: 27px;
+        height: 27px;
         border-radius: 99pt;
         overflow: hidden;
         position: relative;
@@ -246,9 +241,9 @@ nav {
 
         span {
           color: $color-sub;
-          font-family: $font-regular;
+          font-family: $font-major;
           text-decoration: none;
-          font-size: 14pt;
+          font-size: 12pt;
           display: inline-block;
           flex-grow: 0;
           white-space: nowrap;
@@ -258,7 +253,7 @@ nav {
         }
 
         img {
-          --opacity: .3;
+          opacity: .2;
           height: .6em;
           width: .6em;
           padding-left: .4em;
