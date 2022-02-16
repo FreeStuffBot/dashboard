@@ -132,7 +132,7 @@ span {
 }
 
 .experiment {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
   margin-top: $box-padding / 2;
@@ -210,7 +210,7 @@ span {
     --bg: #{$bg-darker};
     --color: #{$color-major};
 
-    &.b1 { --bg-hov: #{$bg-bright}; }
+    &.b1 { --bg-hov: #{$bg-light}; }
     &.b2 { --bg-hov: #{$warning-major}; }
     &.b3 { --bg-hov: #{$info-major}; }
     &.b4 { --bg-hov: #{$success-major}; }
@@ -218,7 +218,7 @@ span {
 
   input {
     border-radius: $content-br;
-    background-color: $bg-bright;
+    background-color: $bg-light;
     border: none;
     padding: 5pt 8pt;
     font-size: 11pt;

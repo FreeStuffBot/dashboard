@@ -268,7 +268,7 @@ h1 {
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "text1 text2" "bar bar";
   row-gap: $box-padding / 2;
-  background: $bg-bright;
+  background: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
   margin-bottom: $box-padding;
@@ -459,7 +459,7 @@ h1 {
 }
 
 .box {
-  // background: $bg-bright;
+  // background: $bg-light;
   // padding: $box-padding;
   // border-radius: $box-br;
   margin-top: 50px;

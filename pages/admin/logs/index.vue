@@ -64,7 +64,7 @@ span {
   gap: 10pt;
 
   & > * {
-    background-color: $bg-bright;
+    background-color: $bg-light;
     border-radius: $box-br;
     overflow-x: hidden;
   }

@@ -36,7 +36,7 @@ export default Vue.extend({
       if (this.icon) return this.icon
       switch (this.type) {
         case 'success': return 'success'
-        case 'info': return 'warning'
+        case 'info': return 'info'
         case 'warning': return 'warning'
         case 'error': return 'error'
         default: return 'discord'

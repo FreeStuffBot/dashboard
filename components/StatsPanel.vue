@@ -194,7 +194,7 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .statspanel {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
   margin-top: $box-padding / 2;

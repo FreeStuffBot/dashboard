@@ -487,7 +487,7 @@ input, .preview, select {
   padding: 7pt 12pt;
   border: none;
   border-radius: 2pt;
-  background-color: $bg-bright;
+  background-color: $bg-light;
   color: $color-regular;
   font-family: $font-regular;
   font-size: 14pt;
@@ -544,7 +544,7 @@ input, .preview, select {
     --bg: #{$bg-darker};
     --color: #{$color-major};
 
-    &.b1 { --bg-hov: #{$bg-bright}; }
+    &.b1 { --bg-hov: #{$bg-light}; }
     &.b2 { --bg-hov: #{$warning-major}; }
     &.b3 { --bg-hov: #{$info-major}; }
     &.b4 { --bg-hov: #{$success-major}; }

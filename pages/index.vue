@@ -51,11 +51,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Container from '~/components/layout/Container.vue'
+import Admonition from '~/components/entities/Admonition.vue'
 import AccountInfoBox from '~/components/boxes/AccountInfoBox.vue'
 
 export default Vue.extend({
   components: {
     Container,
+    Admonition,
     AccountInfoBox
   },
   transition: 'slide-down',

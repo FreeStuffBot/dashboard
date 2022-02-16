@@ -40,6 +40,28 @@ p {
   }
 }
 
+@mixin a11y-hover {
+  outline: none;
+
+  &:focus-visible {
+    box-shadow:
+      0 0 0 2px $backpage,
+      0 0 0 4px #000000;
+  }
+}
+
+@media print {
+  *[print-hidden] {
+    display: none !important;
+  }
+
+  * {
+    pointer-events: none;
+    border-color: transparent;
+    outline: none;
+  }
+}
+
 /** **/
 
 button[generic], a[button][generic] {
@@ -77,7 +99,7 @@ button[generic], a[button][generic] {
     }
   }
 
-  &[bright] { --bg-hov: #{$bg-bright}; }
+  &[bright] { --bg-hov: #{$bg-light}; }
   &[warning] { --bg-hov: #{$warning-major}; }
   &[info] { --bg-hov: #{$info-major}; }
   &[success] { --bg-hov: #{$success-major}; }
@@ -104,7 +126,7 @@ div[center] {
     color: $color-regular;
     cursor: pointer;
     user-select: none;
-    background-color: $bg-bright;
+    background-color: $bg-light;
     border: none;
     border-radius: 2pt;
 

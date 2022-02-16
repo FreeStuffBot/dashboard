@@ -72,7 +72,7 @@ span {
 }
 
 textarea {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
   margin: $box-padding/2 0;

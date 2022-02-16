@@ -36,7 +36,7 @@ export default Vue.extend({
 
 .container {
   height: 100%;
-  background-color: $bg-bright;
+  background-color: $bg-light;
   border-radius: 3pt;
   display: flex;
   flex-direction: column;

@@ -63,7 +63,7 @@ span {
 }
 
 .app {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
   margin-bottom: $box-padding / 2;

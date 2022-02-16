@@ -231,7 +231,7 @@ span {
 }
 
 .tokenbox {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   border-radius: $content-br;
   border: 1px solid $color-minor;
   padding: 10pt 15pt;
@@ -256,7 +256,7 @@ span {
 }
 
 input, textarea, select {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   border-radius: $content-br;
   border: none;
   padding: 10pt 15pt;

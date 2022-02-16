@@ -185,7 +185,7 @@ a {
       color: $color-minor;
       font-family: $font-major;
       font-size: 10pt;
-      padding: 0 0 0 $nav-padding;
+      padding: 0 0 0 $content-padding;
     }
   }
 
@@ -193,10 +193,10 @@ a {
     .link {
       position: relative;
       display: block;
-      border-radius: $box-br;
-      padding: $nav-padding;
+      border-radius: $content-br;
+      padding: $content-padding;
       display: flex;
-      gap: $nav-padding;
+      gap: $content-padding;
       align-items: center;
       background-color: transparentize($bg-dark, 1);
       transition: background-color .1s ease-out;

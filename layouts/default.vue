@@ -1,13 +1,18 @@
 <template>
-  <div id="layout">
-    <div v-if="$store.state.loginStatus === 'success'" id="app">
+  <div id="root">
+    <div v-if="showApp" id="app">
       <Sidebar />
       <div id="wrapper">
         <nuxt />
       </div>
     </div>
-    <div id="loader">
+
+    <div id="loader" :hide="showApp">
       <span>&bull; &bull; &bull;</span>
+    </div>
+
+    <div id="popups">
+      <PopupsRenderer />
     </div>
   </div>
 </template>
@@ -15,24 +20,75 @@
 <script lang="ts">
 import Vue from 'vue'
 import Sidebar from '../components/sidebar/Sidebar.vue'
+import PopupsRenderer from '../components/scaffolding/PopupsRenderer.vue'
 
 export default Vue.extend({
   components: {
-    Sidebar
+    Sidebar,
+    PopupsRenderer
   },
   data() {
     return {
+      scrollFreeze: false,
+      transitionDirection: '',
+      prevRoutePath: '',
+      prevRouteDepth: 0,
+      prevRouteProject: '',
       dev: process.env.NODE_ENV !== 'production'
+    }
+  },
+  computed: {
+    showApp() {
+      return this.$store.state.loginStatus === 'success'
+    }
+  },
+  fetchOnServer: false,
+  watch: {
+    $route: {
+      deep: true,
+      handler(route: any) {
+        // #region Page transitions
+        let depth = route.name.split('-').length
+        if (!route.name.startsWith('index')) depth++
+
+        const fullPath = route.fullPath.split('?')[0]
+        const sameOrigin = (this.prevRoutePath.startsWith(fullPath) || fullPath.startsWith(this.prevRoutePath))
+
+        if (!sameOrigin)
+          this.transitionDirection = ''
+        else if (depth > this.prevRouteDepth)
+          this.transitionDirection = 'right'
+        else if (depth < this.prevRouteDepth)
+          this.transitionDirection = 'left'
+        else
+          this.transitionDirection = ''
+
+        this.prevRouteDepth = depth
+        this.prevRoutePath = fullPath
+        // #endregion
+      }
+    },
+    '$store.state.disableScroll'(value: number) {
+      if (!value) {
+        this.scrollFreeze = false
+        if (document.body.parentElement)
+          document.body.parentElement.style.overflow = ''
+      } else if (!this.scrollFreeze) {
+        this.scrollFreeze = true
+        if (document.body.parentElement)
+          document.body.parentElement.style.overflow = 'hidden'
+      }
     }
   },
   mounted() {
     this.$store.dispatch('pageLoad')
+    this.prevRoutePath = this.$route.fullPath
   }
 })
 </script>
 
 <style scoped lang="scss">
-html, body, #layout, #app {
+html, body, #root, #app {
   position: absolute;
   top: 0;
   left: 0;
@@ -58,7 +114,12 @@ html, body, #layout, #app {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  background-color: $backpage;
+  z-index: 10;
+
+  &[hide] {
+    animation: loader-fadeout .2s ease-out 1s forwards;
+  }
 
   * {
     font-family: $font-regular;
@@ -68,16 +129,26 @@ html, body, #layout, #app {
 }
 
 #app {
-  z-index: 10;
+  z-index: 5;
   background-color: $backpage;
   display: flex;
-  opacity: 0;
-  animation: app-fadein .2s ease-out .5s forwards;
 }
 
-@keyframes app-fadein {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+#popups {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min-content;
+  height: min-content;
+  padding: 0;
+  margin: 0;
+  z-index: 15;
+}
+
+@keyframes loader-fadeout {
+  0% { opacity: 1; }
+  99% { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
 }
 
 #wrapper {
@@ -88,8 +159,8 @@ html, body, #layout, #app {
 
   // &::-webkit-scrollbar { width: 14px; height: 0; }
   // &::-webkit-scrollbar-track { background-color: transparent; }
-  // &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $backpage; }
-  // &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
+  // &::-webkit-scrollbar-thumb { background-color: $bg-light; border-radius: 99px; border: 4px solid $backpage; }
+  // &::-webkit-scrollbar-thumb:hover { background-color: $bg-lighter }
   &::-webkit-scrollbar { width: 0; height: 0; }
   &::-webkit-scrollbar-track { background-color: transparent; }
   &::-webkit-scrollbar-thumb { background-color: transparent; }
