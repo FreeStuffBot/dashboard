@@ -57,6 +57,7 @@ export default Vue.extend({
   font-size: 12pt;
   color: $color-major;
   border-radius: $box-br;
+  box-shadow: 0 0 0 1px #ffffff11 inset;
 
   &:not(:last-child) { margin-bottom: $box-padding / 2; }
 

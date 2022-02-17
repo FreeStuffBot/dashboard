@@ -112,13 +112,20 @@ export default Vue.extend({
   margin: 10vh 0;
   background-color: $backpage;
   border-radius: $box-br;
+  box-shadow:
+    0 0 0 1px #ffffff22 inset,
+    0 2px 10px #000000aa;
   transition:
     opacity .2s ease,
-    transform .2s ease;
+    transform .2s ease,
+    box-shadow .2s ease;
 
   &:not([active]) {
     opacity: 0;
     transform: translateY(15%) scale(0.96);
+    box-shadow:
+      0 0 0 1px #ffffff22 inset,
+      0 5px 30px #00000033;
   }
 
   h1 {

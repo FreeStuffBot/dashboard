@@ -6,14 +6,17 @@
       class="user"
       :style="`z-index: ${5 + i}; border-color: ${bgcolor}`"
     >
-      <img
+      <object
         v-if="user.icon"
         v-tippy
         :content="user.name"
-        :src="user.icon"
+        :data="user.icon"
         alt="Icon"
         draggable="false"
+        type="image/png"
       >
+        <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar not found">
+      </object>
       <div
         v-else
         v-tippy
@@ -67,7 +70,9 @@ export default Vue.extend({
 <style scoped lang="scss">
 
 .usericons {
-  padding-right: 7pt;
+  height: $content-height;
+  display: flex;
+  align-items: center;
 }
 
 .user {
@@ -82,9 +87,9 @@ export default Vue.extend({
   outline: none;
   overflow: hidden;
 
-  img {
+  object[type="image/png"], img {
     height: 100%;
-    background: $backpage;
+    background: $bg-dark;
     border-radius: 999pt;
     outline: none;
   }
@@ -95,7 +100,7 @@ export default Vue.extend({
     align-items: center;
     height: 100%;
     min-width: 24pt;
-    background-color: $bg-dark;
+    background-color: $bg-darker;
     border-radius: 999pt;
     color: $color-sub;
     font-family: $font-sub;

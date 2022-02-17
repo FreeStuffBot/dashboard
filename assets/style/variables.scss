@@ -1,17 +1,33 @@
+:root {
+  --color-header: #ffffff; //
+  --color-major: #eeeeee; //
+  --color-regular: #dddddd; //
+  --color-sub: #aaaaaa; //
+  --color-minor: #777777; //
+  --color-border: #37393d;
+
+  --backpage: #101318;
+  --bg-light: #1b1f25; //
+  --bg-lighter: #262a31; //
+  --bg-dark: #0b0c10;
+  --bg-darker: #000000;
+}
+
+
 
 /* COLORS */
-$color-header: #ffffff; //
-$color-major: #eeeeee; //
-$color-regular: #dddddd; //
-$color-sub: #aaaaaa; //
-$color-minor: #777777; //
-$color-border: #37393d;
+$color-header: var(--color-header);
+$color-major: var(--color-major);
+$color-regular: var(--color-regular);
+$color-sub: var(--color-sub);
+$color-minor: var(--color-minor);
+$color-border: var(--color-border);
 
-$backpage: #101318;
-$bg-light: #3e3842; //
-$bg-lighter: #473e49; //
-$bg-dark: #0b0c10;
-$bg-darker: #000000;
+$backpage: var(--backpage); 
+$bg-light: var(--bg-light); 
+$bg-lighter: var(--bg-lighter); 
+$bg-dark: var(--bg-dark); 
+$bg-darker: var(--bg-darker); 
 
 $color-red: #e43c26;
 $color-yellow: #d6a949;
@@ -46,11 +62,11 @@ $font-minor: 'Montserrat 400', 'Roboto', sans-serif;
 
 /* Components */
 $box-width: 400pt;
-$box-br: 5pt;
+$box-br: 10pt;
 $box-outer-padding: 40pt;
 $box-padding: 15pt;
 
-$content-br: 3pt;
+$content-br: 6pt;
 $content-height: 35pt;
 $content-padding: 8pt;
 

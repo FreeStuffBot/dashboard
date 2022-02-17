@@ -134,11 +134,11 @@ export default class API {
   //
 
   public static getLanguageList() {
-    return this.rawGet('/translate/list')
+    return this.rawGet('/translations/languages')
   }
 
   public static getLanguage(id: string) {
-    return this.rawGet(`/translate/language/${id}`)
+    return this.rawGet(`/translations/languages/${id}`)
   }
 
   public static patchLanguage(id: string, data: any) {

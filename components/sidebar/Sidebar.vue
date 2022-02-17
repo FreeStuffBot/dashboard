@@ -33,7 +33,7 @@ section {
   padding: 0 $box-outer-padding;
   width: $sidebar-width;
   animation: sidebar-fadein .3s ease-out .5s forwards;
-  border-right: 2px solid $color-border;
+  border-right: 1px solid $color-border;
 
   .container {
     padding: $box-outer-padding 0;
@@ -52,6 +52,7 @@ section {
     margin: -$box-outer-padding/2;
     margin-bottom: 0;
     border-radius: $box-br;
+    box-shadow: 0 0 0 1px #ffffff11 inset;
 
     img {
       border-radius: 99pt;

@@ -107,6 +107,9 @@ export default Vue.extend({
   cursor: pointer;
   border-radius: $content-br;
   outline: none;
+  box-shadow:
+    0 1px #ffffff22 inset,
+    0 -1px #00000066 inset;
   transition:
     background-color .1s ease,
     filter .1s ease;

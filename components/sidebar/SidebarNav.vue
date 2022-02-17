@@ -192,25 +192,47 @@ a {
   &.page, &.add {
     .link {
       position: relative;
-      display: block;
       border-radius: $content-br;
       padding: $content-padding;
       display: flex;
       gap: $content-padding;
       align-items: center;
-      background-color: transparentize($bg-dark, 1);
-      transition: background-color .1s ease-out;
+      transform: scale(1);
+      transition: transform .1s ease-out;
 
-      &:hover {
-        background-color: $bg-dark;
+      &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: $bg-light;
+        border-radius: $content-br;
+        background-color: #00000000;
+        transform: translateX(-$content-padding) scale(0.8);
+        transition:
+          background-color .1s ease-out,
+          transform .1s ease-out;
+      }
+
+      &:not(.nuxt-link-exact-active):not([subpages].nuxt-link-active):hover::before {
+        transform: translateX(-$content-padding) scale(1);
+        background-color: $bg-light;
       }
 
       &.nuxt-link-exact-active, &[subpages].nuxt-link-active {
-        background-color: $bg-darker;
+        background-color: $bg-lighter;
         span { color: $color-major !important; }
 
         img.a { visibility: visible !important; }
         img.h { visibility: hidden; }
+
+        &::after { transition: none; }
+      }
+
+      &:active {
+        transform: scale(0.97);
+        transition: transform .02s ease-out;
       }
 
       .icon-wrapper {
