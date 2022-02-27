@@ -66,7 +66,7 @@ span {
   background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
-  margin-bottom: $box-padding / 2;
+  margin-bottom: calc($box-padding / 2);
   display: grid;
   grid-template: auto auto / auto 1fr;
   grid-template-areas: "icon title" "icon rest";

@@ -315,7 +315,7 @@ h1 {
     grid-template-columns: 1fr 1fr 4fr 1fr;
     column-gap: 10pt;
     padding-bottom: $box-padding;
-    margin-bottom: $box-padding / 2;
+    margin-bottom: calc($box-padding / 2);
     border-bottom: 1px solid #00000044;
 
     button {
@@ -364,7 +364,7 @@ h1 {
   }
 
   & > .description {
-    margin-top: $box-padding / 2;
+    margin-top: calc($box-padding / 2);
     padding: 0 5pt 10pt 5pt;
     border-radius: $box-br / 3;
     border: none;
@@ -375,7 +375,7 @@ h1 {
   }
 
   & > .orgtext {
-    margin-top: $box-padding / 2;
+    margin-top: calc($box-padding / 2);
     padding: 8pt 10pt;
     border-radius: $box-br / 3;
     border: none;
@@ -386,7 +386,7 @@ h1 {
   }
 
   & > textarea {
-    margin-top: $box-padding / 2;
+    margin-top: calc($box-padding / 2);
     padding: 8pt 10pt;
     border-radius: $box-br / 3;
     border: none;

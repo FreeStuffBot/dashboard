@@ -252,8 +252,8 @@ export default Vue.extend({
       &.overview {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        column-gap: $box-padding / 2;
-        row-gap: $box-padding / 2;
+        column-gap: calc($box-padding / 2);
+        row-gap: calc($box-padding / 2);
         width: 100%;
 
         div {
@@ -310,7 +310,7 @@ export default Vue.extend({
           }
 
           .bar {
-            margin-top: $box-padding / 2;
+            margin-top: calc($box-padding / 2);
             width: 100%;
             display: flex;
             background: $backpage;

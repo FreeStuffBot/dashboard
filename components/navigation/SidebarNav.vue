@@ -45,9 +45,9 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  computed: {
-    navlinks() {
-      return [
+  data() {
+    return {
+      navlinks: [
         {
           type: 'header',
           name: 'Welcome!'
@@ -186,6 +186,10 @@ a {
       font-family: $font-major;
       font-size: 10pt;
       padding: 0 0 0 $content-padding;
+
+      @media screen and (max-width: $res-sidebar-collapse-width) {
+        display: none;
+      }
     }
   }
 
@@ -272,6 +276,15 @@ a {
           overflow: hidden;
           text-overflow: ellipsis;
           transition: color .1s ease-out;
+
+          @media screen and (max-width: $res-tablet-width) {
+            font-size: 10pt;
+            height: $box-padding / 2;
+          }
+
+          @media screen and (max-width: $res-sidebar-collapse-width) {
+            display: none;
+          }
         }
 
         img {

@@ -75,7 +75,7 @@ textarea {
   background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
-  margin: $box-padding/2 0;
+  margin: calc($box-padding / 2) 0;
   color: $color-major;
   width: 50vw;
 }

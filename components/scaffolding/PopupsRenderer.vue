@@ -91,10 +91,14 @@ export default Vue.extend({
 
 .curtain {
   background-color: #88888800;
-  transition: background-color .2s ease;
+  backdrop-filter: blur(0);
+  transition:
+    background-color .2s ease,
+    backdrop-filter .2s ease;
 
   &[active] {
     background-color: #000000aa;
+    backdrop-filter: blur(2px);
   }
 }
 

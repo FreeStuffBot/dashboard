@@ -1,7 +1,12 @@
 <template>
   <div id="root">
     <div v-if="showApp" id="app">
-      <Sidebar />
+      <div class="anav sidebar">
+        <Sidebar />
+      </div>
+      <div class="anav mobile">
+        <Botnav />
+      </div>
       <div id="wrapper">
         <nuxt />
       </div>
@@ -19,12 +24,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Sidebar from '../components/sidebar/Sidebar.vue'
+import Sidebar from '../components/navigation/Sidebar.vue'
+import Botnav from '../components/navigation/Botnav.vue'
 import PopupsRenderer from '../components/scaffolding/PopupsRenderer.vue'
 
 export default Vue.extend({
   components: {
     Sidebar,
+    Botnav,
     PopupsRenderer
   },
   data() {
@@ -115,7 +122,7 @@ html, body, #root, #app {
   width: 100vw;
   height: 100vh;
   background-color: $backpage;
-  z-index: 10;
+  z-index: $zindex-loader;
 
   &[hide] {
     animation: loader-fadeout .2s ease-out 1s forwards;
@@ -129,7 +136,7 @@ html, body, #root, #app {
 }
 
 #app {
-  z-index: 5;
+  z-index: $zindex-app;
   background-color: $backpage;
   display: flex;
 }
@@ -142,7 +149,7 @@ html, body, #root, #app {
   height: min-content;
   padding: 0;
   margin: 0;
-  z-index: 15;
+  z-index: $zindex-popups;
 }
 
 @keyframes loader-fadeout {
@@ -151,10 +158,21 @@ html, body, #root, #app {
   100% { opacity: 0; visibility: hidden; }
 }
 
+.anav {
+  &.sidebar { visibility: visible; }
+  &.mobile { visibility: hidden; }
+
+  @media screen and (max-width: $res-sidebar-menu-width) {
+    &.sidebar { visibility: hidden; }
+    &.mobile { visibility: visible; }
+  }
+}
+
 #wrapper {
   flex-grow: 1;
   overflow-x: hidden;
   padding: $box-outer-padding;
+  margin-left: $sidebar-width;
   animation: wrapper-fadein .4s cubic-bezier(0.34, 1.56, 0.64, 1) .5s forwards;
 
   // &::-webkit-scrollbar { width: 14px; height: 0; }
@@ -165,6 +183,10 @@ html, body, #root, #app {
   &::-webkit-scrollbar-track { background-color: transparent; }
   &::-webkit-scrollbar-thumb { background-color: transparent; }
   &::-webkit-scrollbar-thumb:hover { background-color: transparent; }
+
+  @media screen and (max-width: $res-sidebar-menu-width) {
+    margin-bottom: $botnav-height;
+  }
 }
 
 @keyframes wrapper-fadein {

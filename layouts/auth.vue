@@ -24,7 +24,7 @@ export default Vue.extend({
 
 .panel {
   position: absolute;
-  width: $box-width + $box-outer-padding*2;
+  width: $box-width + calc($box-outer-padding * 2);
   height: 100%;
   top: 0;
   left: 0;

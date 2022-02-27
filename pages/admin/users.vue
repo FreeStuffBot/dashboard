@@ -225,7 +225,7 @@ input {
 .user {
   background-color: $bg-light;
   border-radius: $box-br;
-  margin-top: $box-padding / 2;
+  margin-top: calc($box-padding / 2);
   padding: $box-padding;
   display: grid;
   grid-template-columns: auto 1fr;

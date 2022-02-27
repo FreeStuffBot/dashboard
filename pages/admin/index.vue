@@ -140,7 +140,7 @@ h1 img {
 .pages {
   display: grid;
   grid-template-columns: repeat(auto-fit, 150px);
-  gap: $box-padding/2;
+  gap: calc($box-padding / 2);
 
   a {
     background-color: $bg-dark;

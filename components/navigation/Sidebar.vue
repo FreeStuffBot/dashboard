@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section name="sidebar">
     <div class="container">
       <div v-if="dev" class="devnotice" v-text="'Dev Env'" />
       <div class="title">
@@ -27,6 +27,10 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: $zindex-sidebar;
   background-color: $backpage;
   height: 100vh;
   overflow-x: hidden;
@@ -34,10 +38,15 @@ section {
   width: $sidebar-width;
   animation: sidebar-fadein .3s ease-out .5s forwards;
   border-right: 1px solid $color-border;
+  box-sizing: border-box;
+
+  @media screen and (max-width: $res-sidebar-collapse-width) {
+    padding: 0 5pt;
+  }
 
   .container {
     padding: $box-outer-padding 0;
-    min-height: calc(100vh - #{$box-outer-padding * 2});
+    min-height: calc(100vh - #{$box-outer-padding} * 2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -48,8 +57,8 @@ section {
     align-items: center;
     margin-bottom: $box-padding;
     background-color: $bg-dark;
-    padding: $box-outer-padding/2;
-    margin: -$box-outer-padding/2;
+    padding: calc(#{$box-outer-padding} / 2);
+    margin: calc(-1 * #{$box-outer-padding} / 2);
     margin-bottom: 0;
     border-radius: $box-br;
     box-shadow: 0 0 0 1px #ffffff11 inset;
@@ -67,6 +76,21 @@ section {
       margin: 0;
       padding: 0;
     }
+
+    @media screen and (max-width: $res-laplet-width) {
+      padding: 5pt;
+
+      img { height: 24pt; }
+      h2 { font-size: 18pt; }
+    }
+
+    @media screen and (max-width: $res-sidebar-collapse-width) {
+      padding: 0;
+      margin: 10px;
+
+      img { height: 27px; }
+      h2 { display: none; }
+    }
   }
 
   nav {
@@ -80,6 +104,12 @@ section {
     width: 100%;
     text-align: center;
     margin-top: $box-outer-padding;
+
+    @media screen and (max-width: $res-sidebar-collapse-width) {
+      word-break: break-all;
+      font-size: 7pt;
+      margin-top: 40pt;
+    }
   }
 
   &::-webkit-scrollbar { width: 0; height: 0; }
