@@ -26,7 +26,7 @@
 import Vue from 'vue'
 import Sidebar from '../components/navigation/Sidebar.vue'
 import Botnav from '../components/navigation/Botnav.vue'
-import PopupsRenderer from '../components/scaffolding/PopupsRenderer.vue'
+import PopupsRenderer from '../components/popups/PopupsRenderer.vue'
 
 export default Vue.extend({
   components: {

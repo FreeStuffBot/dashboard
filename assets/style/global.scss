@@ -48,13 +48,22 @@ p {
   }
 }
 
+label {
+  color: $color-sub;
+  font-family: $font-major;
+  font-size: 11pt;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: $content-padding/2;
+}
+
 @mixin a11y-hover {
   outline: none;
 
   &:focus-visible {
     box-shadow:
       0 0 0 2px $backpage,
-      0 0 0 4px #000000;
+      0 0 0 4px #ffffff;
   }
 }
 

@@ -151,13 +151,20 @@ export default class API {
 
   //
 
-  public static getContentList(offset: number, amount: number) {
-    return this.rawGet(`/content/list/${offset}/${amount}`)
+  public static getProductList(options: { offset?: number, limit?: number, status?: string } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/products?${query}`)
   }
 
-  public static getContentData(id: string) {
-    return this.rawGet(`/content/data/${id}`)
+  public static getProduct(id: string) {
+    return this.rawGet(`/content/products/${id}`)
   }
+
+  public static postProduct(data: { url: string }) {
+    return this.rawPost('/content/products', data)
+  }
+
+  /**/
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {
     return this.rawGet(`/content/guildamount/${store}/${price}/${trash}`)

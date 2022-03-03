@@ -1,56 +1,99 @@
 <template>
-  <div :class="{ container: true, 'loading-animation-queued': !loadingFinished }">
-    <h1>Content Moderation <img v-tippy="{delay: [500, 0]}" src="~/assets/icons/reload.svg" alt="Reload" content="Refresh Data" @click.prevent="$fetch()"></h1>
-    <div class="actions">
-      <button generic small class="b1" @click="action('new_url')">
-        New from URL
-      </button>
-      <button generic small class="b2" @click="action('new_scratch')">
-        New from Scratch
-      </button>
-      <button generic small class="b3" @click="action('scrape_store')">
-        Scrape Store
-      </button>
+  <Container :class="{ 'loading-animation-queued': !loadingFinished }">
+    <h1>Content Moderation</h1>
+    <div class="shelf-box">
+      <div class="box-header">
+        <h2>Announcement</h2>
+        <Button
+          text="Publish"
+          type="green"
+        />
+      </div>
+      <div
+        class="card-shelf"
+        data-shelf="announcement"
+        :dragover="currentlyOver === 'announcement'"
+        @dragover="groupDragOver"
+        @dragleave="groupDragLeave"
+      >
+        <ProductCard
+          v-for="product of products.announcement"
+          :key="product.name"
+          :data-id="product.id"
+          :data-shelf="product._shelf"
+          :data="product"
+          :dragged="currentlyDragging === product.id"
+          @dragstart="cardDragStart"
+          @dragend="cardDragEnd"
+          @TODO="moveCardToShelf(product.id, 'announcement', 'pending')"
+        />
+        <span v-if="!products.announcement.length">Drag Items Here</span>
+      </div>
     </div>
-    <h2>Games:</h2>
-    <div v-if="games.length" class="games">
-      <GameListElement
-        v-for="(game, i) in games"
-        :key="game._id"
-        :status="game.status"
-        :name="game.info.title"
-        :store="lang[game.info.store]"
-        :type="lang[game.info.type]"
-        :gid="game._id + ''"
-        :responsible="lang[game.responsible] || game.responsible || 'System'"
-        :banner="game.info.thumbnail.org"
-        :ia-margin="i"
-      />
+
+    <div class="shelf-box">
+      <div class="box-header">
+        <h2>Pending</h2>
+        <Button
+          text="New"
+          type="green"
+          @click="newProduct"
+        />
+      </div>
+      <div
+        class="card-shelf"
+        data-shelf="pending"
+        :dragover="currentlyOver === 'pending'"
+        @dragover="groupDragOver"
+        @dragleave="groupDragLeave"
+      >
+        <ProductCard
+          v-for="product of products.pending"
+          :key="product.name"
+          :data-id="product.id"
+          :data-shelf="product._shelf"
+          :data="product"
+          :dragged="currentlyDragging === product.id"
+          @dragstart="cardDragStart"
+          @dragend="cardDragEnd"
+          @dblclick="moveCardToShelf(product.id, 'pending', 'announcement')"
+        />
+        <span v-if="!products.pending.length">Drag Items Here</span>
+      </div>
     </div>
-    <span v-else minor>Loading...</span>
-    <div center>
-      <button generic dark @click="loadMore()">
-        Load more ...
-      </button>
-    </div>
-  </div>
+
+    <Button
+      text="View Published"
+      type="light"
+    />
+  </Container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import GameListElement from '~/components/GameListElement.vue'
+import { Popup, PopupType, openErrorModal } from '../../lib/popups'
+import ProductCard from '~/components/ProductCard.vue'
+import Container from '~/components/layout/Container.vue'
+import Button from '~/components/entities/Button.vue'
 
 
 export default Vue.extend({
   components: {
-    GameListElement
+    ProductCard,
+    Container,
+    Button
   },
   transition: 'slide-down',
   async fetch() {
-    const { data } = await API.getContentList(0, 20)
-    this.games = data
+    const { data, status } = await API.getProductList({ status: 'pending' })
+    if (status !== 200) return // TODO SHOW ERROR
+
+    for (const product of data)
+      product._shelf = 'pending'
+
+    this.products.pending = data
 
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
     setTimeout(() => (this.loadingFinished = true), 10)
@@ -58,16 +101,67 @@ export default Vue.extend({
   data() {
     return {
       lang: this.$store.state.lang,
-      games: [] as any[],
-      selected: [] as string[],
-      loadingFinished: false
+      loadingFinished: false,
+      dragSourceShelf: '',
+      currentlyDragging: '',
+      currentlyOver: '',
+      products: {
+        announcement: [],
+        pending: []
+      }
     }
   },
   methods: {
-    toggleSelect(id: string) {
-      console.log(id)
-      if (this.selected.includes(id)) this.selected.splice(this.selected.indexOf(id))
-      else this.selected.push(id)
+    cardDragStart(e: any) {
+      if (!e.target) return
+      const id = e.target.getAttribute('data-id')
+      this.dragSourceShelf = e.target.getAttribute('data-shelf')
+      setTimeout(() => (this.currentlyDragging = id), 20)
+    },
+    cardDragEnd() {
+      if (!this.currentlyOver || this.currentlyOver === this.dragSourceShelf) {
+        this.currentlyDragging = ''
+        this.currentlyOver = ''
+        return
+      }
+
+      this.moveCardToShelf(this.currentlyDragging, this.dragSourceShelf, this.currentlyOver)
+
+      this.currentlyDragging = ''
+      this.currentlyOver = ''
+    },
+    groupDragOver(e: any) {
+      if (!this.currentlyDragging) return
+      e.preventDefault()
+      this.currentlyOver = e.target.getAttribute('data-shelf')
+    },
+    groupDragLeave(e: any) {
+      if (this.currentlyOver === e.target.getAttribute('data-shelf'))
+        this.currentlyOver = ''
+    },
+    moveCardToShelf(cardid: string, src: string, dest: string) {
+      const srcShelf = (this.products as any)[src]
+      const destShelf = (this.products as any)[dest]
+
+      const item = srcShelf?.splice(srcShelf.findIndex((i: any) => (i.id === cardid)), 1)[0]
+      item._shelf = dest
+      destShelf.push(item)
+    },
+    newProduct() {
+      const callback = async (url: string) => {
+        const { status, statusText, data } = await API.postProduct({ url })
+        if (status !== 200)
+          return openErrorModal(this.$store, status, statusText, data)
+
+        this.$router.push(`/content/${data.id}`)
+      }
+
+      const popup: Popup = {
+        type: PopupType.NEW_PRODUCT,
+        callback
+      }
+
+      this.$store.commit('openPopup', popup)
     },
     async action(type: string) {
       if (type === 'new_url') {
@@ -154,11 +248,6 @@ export default Vue.extend({
           }
         }
       }
-    },
-    async loadMore() {
-      if (!this.games) this.$fetch()
-      const { data } = await API.getContentList(this.games.length, 20)
-      this.games.push(...data)
     }
   },
   head() {
@@ -200,4 +289,54 @@ h1 img {
   &:hover { opacity: .7; }
 }
 
+.shelf-box {
+  border-radius: $box-br;
+  background-color: $bg-dark;
+  display: block;
+  padding-bottom: $content-padding;
+  margin-bottom: $content-height;
+  overflow: hidden;
+
+  .box-header {
+    background-color: $bg-darker;
+    padding: $content-padding;
+    height: $content-height;
+    box-sizing: content-box;
+    display: flex;
+    align-items: center;
+
+    h2 {
+      margin: 0 0 0 $content-padding;
+      flex-grow: 1;
+    }
+  }
+}
+
+.card-shelf {
+  position: relative;
+  min-height: 50pt;
+  padding: $content-padding;
+  border-radius: $content-br;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $content-padding;
+  // border: 2px dashed #565656;
+  margin: $content-padding $content-padding 0 $content-padding;
+
+  &[dragover] {
+    border-color: $color-green;
+    background-color: $color-green-20;
+
+    * { pointer-events: none; }
+  }
+
+  & > span {
+    position: absolute;
+    color: $color-minor;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 </style>

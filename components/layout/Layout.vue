@@ -24,38 +24,44 @@ export default Vue.extend({
   &[data-layout="inline"] {
     display: flex;
     flex-wrap: wrap;
-    gap: $content-padding;
+    gap: $box-padding;
   }
 
   &[data-layout="center"] {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: $content-padding;
+    gap: $box-padding;
   }
 
   &[data-layout="2dynamic"] {
     display: flex;
     justify-content: space-between;
-    gap: $content-padding;
+    gap: $box-padding;
   }
 
   &[data-layout="2static"] {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $content-padding;
+    gap: $box-padding;
   }
 
   &[data-layout="3dynamic"] {
     display: flex;
     justify-content: space-between;
-    gap: $content-padding;
+    gap: $box-padding;
   }
 
   &[data-layout="3static"] {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: $content-padding;
+    gap: $box-padding;
+  }
+
+  &[data-layout="component-flow"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $box-padding;
   }
 }
 </style>

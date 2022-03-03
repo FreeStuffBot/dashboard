@@ -9,7 +9,7 @@
       <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" />
     </Layout>
 
-    <h2>Languages:</h2>
+    <h2>Languages</h2>
     <div class="langlist">
       <LanguageCard
         v-for="(e, i) of list"
@@ -26,13 +26,15 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
+import { Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Button from '~/components/entities/Button.vue'
 import LanguageCard from '~/components/LanguageCard.vue'
 
-const popups = {
+const popups: Record<string, Popup> = {
   howto: {
+    type: PopupType.MODAL,
     title: 'Hello, welcome to the translation page!',
     text: `
 Once you're done reading all of this, you can close this popup to see a list of languages. Most of those are probably grayed out and only one (or sometimes more) are brighter and on the very top of the list. These are the languages you are able to translate.
@@ -52,6 +54,7 @@ With the keys I'd like to mention that when they end with _desc, they are a comm
     ]
   },
   credits: {
+    type: PopupType.MODAL,
     title: 'You do hard work, we say thank you.',
     text: `
 But not only that, you'll get yourself a nice place on the team page on our website (https://freestuffbot.xyz/team)
@@ -70,6 +73,7 @@ To get your name there, please send the following information in the translators
     ]
   },
   shortcuts: {
+    type: PopupType.MODAL,
     title: 'More faster want now.',
     text: `
 Yes, that headline completely incorrect on purpose, thanks for letting me know.

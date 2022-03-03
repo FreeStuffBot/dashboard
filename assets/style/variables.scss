@@ -26,6 +26,17 @@ $res-sidebar-menu-width: $res-mobile-width;
   --bg-dark: #0b0c10;
   --bg-darker: #000000;
 
+  --color-red: #e43c26;
+  --color-orange: #cf8642;
+  --color-yellow: #d6a949;
+  --color-blue: #4a73a8;
+  --color-green: #3e9e71;
+  --color-red-20: #e43c2644;
+  --color-yellow-20: #d6a94944;
+  --color-orange-20: #cf864244;
+  --color-blue-20: #4a73a844;
+  --color-green-20: #3e9e7144;
+
   --box-outer-padding: 40pt;
   --box-padding: 15pt;
   --sidebar-width: min(280pt, 28vw);
@@ -77,14 +88,16 @@ $bg-lighter: var(--bg-lighter);
 $bg-dark: var(--bg-dark); 
 $bg-darker: var(--bg-darker); 
 
-$color-red: #e43c26;
-$color-yellow: #d6a949;
-$color-blue: #4a73a8;
-$color-green: #3e9e71;
-$color-red-20: #e43c2644;
-$color-yellow-20: #d6a94944;
-$color-blue-20: #4a73a844;
-$color-green-20: #3e9e7144;
+$color-red: var(--color-red);
+$color-orange: var(--color-orange);
+$color-yellow: var(--color-yellow);
+$color-blue: var(--color-blue);
+$color-green: var(--color-green);
+$color-red-20: var(--color-red-20);
+$color-yellow-20: var(--color-yellow-20);
+$color-orange-20: var(--color-orange-20);
+$color-blue-20: var(--color-blue-20);
+$color-green-20: var(--color-green-20);
 
 /* @dep */ $primary-orange: #F39807; //
 /* @dep */ $primary-orange-trans: #F39807CC; //

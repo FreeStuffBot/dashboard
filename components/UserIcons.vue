@@ -76,6 +76,7 @@ export default Vue.extend({
 }
 
 .user {
+  width: 24pt;
   height: 24pt;
   display: inline-block;
   margin: -3px -10pt -3px 0;

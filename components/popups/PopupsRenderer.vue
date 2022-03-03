@@ -1,0 +1,110 @@
+<template>
+  <div class="popups" :empty="!active">
+    <div class="curtain" :active="active" />
+    <div v-if="popup" class="popup" :active="active" @click.self="close()">
+      <PopupFrameModal v-if="popup.type === 0" :data="popup" @close="close" />
+      <PopupFrameNewProduct v-if="popup.type === 1" :data="popup" @close="close" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import PopupFrameModal from '~/components/popups/PopupFrameModal.vue'
+import PopupFrameNewProduct from '~/components/popups/PopupFrameNewProduct.vue'
+
+export default Vue.extend({
+  components: {
+    PopupFrameModal,
+    PopupFrameNewProduct
+  },
+  data() {
+    return {
+      lastPopup: {} as any
+    }
+  },
+  computed: {
+    popups(): any[] {
+      return this.$store.state.popups
+    },
+    active(): boolean {
+      return !!this.$store.state.popups.length
+    },
+    popup(): any {
+      return this.$store.state.popups[this.$store.state.popups.length - 1] || this.lastPopup
+    }
+  },
+  watch: {
+    '$store.state.popups.length'(len) {
+      if (!len) return
+      this.lastPopup = this.$store.state.popups[len - 1]
+    }
+  },
+  methods: {
+    close(handled = false) {
+      this.$store.commit('closePopup')
+      this.popup.onClose?.(handled)
+    }
+  }
+})
+</script>
+
+<style scoped lang="scss">
+.popups[empty] {
+  pointer-events: none;
+}
+
+.container, .curtain, .popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.curtain {
+  background-color: #88888800;
+  backdrop-filter: blur(0);
+  transition:
+    background-color .2s ease,
+    backdrop-filter .2s ease;
+
+  &[active] {
+    background-color: #000000aa;
+    backdrop-filter: blur(2px);
+  }
+}
+
+.popup {
+  display: grid;
+  place-items: center;
+  overflow-x: hidden;
+
+  & > div {
+    box-sizing: border-box;
+    width: 90vw;
+    max-width: 450pt;
+    padding: $box-padding;
+    margin: 10vh 0;
+    background-color: $backpage;
+    border-radius: $box-br;
+    box-shadow:
+      0 0 0 1px #ffffff22 inset,
+      0 2px 10px #000000aa;
+    transition:
+      opacity .2s ease,
+      transform .2s ease,
+      box-shadow .2s ease;
+  }
+
+  &:not([active]) > div {
+    opacity: 0;
+    transform: translateY(15%) scale(0.96);
+    box-shadow:
+      0 0 0 1px #ffffff22 inset,
+      0 5px 30px #00000033;
+  }
+}
+</style>
