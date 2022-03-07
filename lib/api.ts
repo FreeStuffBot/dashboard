@@ -151,7 +151,7 @@ export default class API {
 
   //
 
-  public static getProductList(options: { offset?: number, limit?: number, status?: string } = {}) {
+  public static getProductList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/products?${query}`)
   }
@@ -162,6 +162,10 @@ export default class API {
 
   public static postProduct(data: { url: string }) {
     return this.rawPost('/content/products', data)
+  }
+
+  public static patchProduct(id: string, data: any) {
+    return this.rawPatch(`/content/products/${id}`, data)
   }
 
   /**/

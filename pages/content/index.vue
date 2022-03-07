@@ -22,10 +22,10 @@
           :data-id="product.id"
           :data-shelf="product._shelf"
           :data="product"
-          :dragged="currentlyDragging === product.id"
+          :dragged="currentlyDragging == product.id"
           @dragstart="cardDragStart"
           @dragend="cardDragEnd"
-          @TODO="moveCardToShelf(product.id, 'announcement', 'pending')"
+          @rightclick="moveCardToShelf(product.id, 'announcement', 'pending')"
         />
         <span v-if="!products.announcement.length">Drag Items Here</span>
       </div>
@@ -53,19 +53,35 @@
           :data-id="product.id"
           :data-shelf="product._shelf"
           :data="product"
-          :dragged="currentlyDragging === product.id"
+          :dragged="currentlyDragging == product.id"
           @dragstart="cardDragStart"
           @dragend="cardDragEnd"
-          @dblclick="moveCardToShelf(product.id, 'pending', 'announcement')"
+          @rightclick="moveCardToShelf(product.id, 'pending', 'announcement')"
         />
         <span v-if="!products.pending.length">Drag Items Here</span>
       </div>
     </div>
 
-    <Button
-      text="View Published"
-      type="light"
-    />
+    <Layout name="3static">
+      <Pagelink
+        title="View Published"
+        text="Show a list of all published products."
+        icon="emojis/twemoji_news"
+        to="/content/history"
+      />
+      <Pagelink
+        title="Edit Platforms"
+        text="Change names, assets, meta info, and more"
+        icon="emojis/twemoji_shopping_cart"
+        to="/content/platforms"
+      />
+      <Pagelink
+        title="Edit Currencies"
+        text="Change names, assets, and more"
+        icon="emojis/twemoji_coin"
+        to="/content/currencies"
+      />
+    </Layout>
   </Container>
 </template>
 
@@ -73,21 +89,23 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import { Popup, PopupType, openErrorModal } from '../../lib/popups'
+import { Popup, PopupType, openErrorModal, openConfirmDialogue } from '../../lib/popups'
 import ProductCard from '~/components/ProductCard.vue'
 import Container from '~/components/layout/Container.vue'
 import Button from '~/components/entities/Button.vue'
+import Pagelink from '~/components/entities/Pagelink.vue'
 
 
 export default Vue.extend({
   components: {
     ProductCard,
     Container,
-    Button
+    Button,
+    Pagelink
   },
   transition: 'slide-down',
   async fetch() {
-    const { data, status } = await API.getProductList({ status: 'pending' })
+    const { data, status } = await API.getProductList({ queryName: 'pending' })
     if (status !== 200) return // TODO SHOW ERROR
 
     for (const product of data)
@@ -103,7 +121,7 @@ export default Vue.extend({
       lang: this.$store.state.lang,
       loadingFinished: false,
       dragSourceShelf: '',
-      currentlyDragging: '',
+      currentlyDragging: 0,
       currentlyOver: '',
       products: {
         announcement: [],
@@ -114,20 +132,20 @@ export default Vue.extend({
   methods: {
     cardDragStart(e: any) {
       if (!e.target) return
-      const id = e.target.getAttribute('data-id')
+      const id = parseInt(e.target.getAttribute('data-id'))
       this.dragSourceShelf = e.target.getAttribute('data-shelf')
       setTimeout(() => (this.currentlyDragging = id), 20)
     },
     cardDragEnd() {
       if (!this.currentlyOver || this.currentlyOver === this.dragSourceShelf) {
-        this.currentlyDragging = ''
+        this.currentlyDragging = 0
         this.currentlyOver = ''
         return
       }
 
       this.moveCardToShelf(this.currentlyDragging, this.dragSourceShelf, this.currentlyOver)
 
-      this.currentlyDragging = ''
+      this.currentlyDragging = 0
       this.currentlyOver = ''
     },
     groupDragOver(e: any) {
@@ -139,11 +157,19 @@ export default Vue.extend({
       if (this.currentlyOver === e.target.getAttribute('data-shelf'))
         this.currentlyOver = ''
     },
-    moveCardToShelf(cardid: string, src: string, dest: string) {
+    async moveCardToShelf(cardId: number, src: string, dest: string) {
       const srcShelf = (this.products as any)[src]
       const destShelf = (this.products as any)[dest]
+      const cardIndex = srcShelf.findIndex((i: any) => (i.id === cardId))
+      const card = srcShelf[cardIndex]
 
-      const item = srcShelf?.splice(srcShelf.findIndex((i: any) => (i.id === cardid)), 1)[0]
+      if (dest === 'announcement' && card.status !== 'approved') {
+        const next = await openConfirmDialogue(this.$store, 'Hold up!', 'This product is not approved yet. Do you want to continue anyway?')
+        console.log(next)
+        if (!next) return
+      }
+
+      const item = srcShelf?.splice(cardIndex, 1)[0]
       item._shelf = dest
       destShelf.push(item)
     },
@@ -156,7 +182,7 @@ export default Vue.extend({
         this.$router.push(`/content/${data.id}`)
       }
 
-      const popup: Popup = {
+      const popup: Popup<PopupType.NEW_PRODUCT> = {
         type: PopupType.NEW_PRODUCT,
         callback
       }

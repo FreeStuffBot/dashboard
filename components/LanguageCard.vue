@@ -48,19 +48,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-span, h3 {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-span {
-  color: $color-sub;
-  font-family: $font-regular;
-  font-size: 11pt;
-}
-
 .box {
   position: relative;
   display: grid;
@@ -77,6 +64,19 @@ span {
   &:hover { background-color: $bg-lighter; }
 
   &:not([editable]) { opacity: .5; }
+}
+
+span, h3 {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+span {
+  color: $color-sub;
+  font-family: $font-regular;
+  font-size: 11pt;
 }
 
 .progress {

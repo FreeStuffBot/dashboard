@@ -3,18 +3,39 @@
     <label
       v-if="label || error"
       :for="'dynamic-input-' + uid"
-      :error="!!error"
+      :data-error="!!error"
       v-text="label ? `${label}${(error && typeof error === 'string') ? ` • ${error}` : ''}` : error"
     />
     <div
-      class="inner"
-      :multiline="multiline"
-      :disabled="disabled"
-      :inline="inline"
-      :error="!!error"
+      v-if="preview"
+      class="preview"
+      :data-error="!!error"
     >
+      <slot name="preview" />
+    </div>
+    <div
+      class="inner"
+      :data-multiline="multiline"
+      :data-disabled="disabled"
+      :data-inline="inline"
+      :data-error="!!error"
+      :data-type="type"
+      :data-value="!!value"
+      :data-preview="!!preview"
+    >
+      <div
+        v-if="type === 'toggle'"
+        class="toggle"
+        :data-state="!!value"
+        tabindex="0"
+        @click="update(!value)"
+        @keydown.enter.prevent="update(!value)"
+      >
+        <Icon :name="value ? 'toggle-on' : 'toggle-off'" />
+        <span v-text="placeholder" />
+      </div>
       <textarea
-        v-if="multiline"
+        v-else-if="multiline"
         :id="'dynamic-input-' + uid"
         ref="input"
         :disabled="disabled"
@@ -88,7 +109,7 @@ export default Vue.extend({
       default: false
     },
     value: {
-      type: [ String, Number ],
+      type: [ String, Number, Boolean ],
       required: true
     },
     numMin: {
@@ -109,12 +130,17 @@ export default Vue.extend({
       uid: ''
     }
   },
+  computed: {
+    preview(): boolean {
+      return !!(this.$slots as any).preview
+    }
+  },
   mounted() {
     this.uid = Math.floor(Math.random() * 0xFFFFFFFF).toString(16)
   },
   methods: {
-    update() {
-      this.$emit('input', (this.$refs.input as any).value)
+    update(value?: any) {
+      this.$emit('input', value ?? (this.$refs.input as any)?.value)
     }
   }
 })
@@ -141,34 +167,69 @@ export default Vue.extend({
     opacity: .5;
   }
 
-  &[error] { border: 1px solid $color-red; }
-  &:hover:not([disabled]) { border-color: $bg-lighter; }
-  &[disabled] {
+  &[data-error] {
+    border-color: $color-red;
+  }
+
+  &[data-disabled] {
     cursor: not-allowed;
     opacity: .8;
   }
-  &:not([multiline]) {
-    &[inline] {
+
+  &:hover:not([data-disabled]):not([data-error]) {
+    border-color: $bg-lighter;
+  }
+
+  &:not([data-multiline]) {
+    &[data-inline] {
       display: inline-flex;
       width: max-content;
       height: unset;
 
       input, select { padding: $content-padding/3 !important; }
     }
-    &:not([inline]) {
-      height: calc(#{$content-height} - 2px);
+    &:not([data-inline]) {
+      height: $content-height;
+
+      &:not([data-type="toggle"]) {
+        height: calc(#{$content-height} - 2px);
+      }
     }
   }
 
-  &[multiline] textarea {
+  &[data-type="toggle"][data-value] {
+    border-color: $color-green !important;
+  }
+
+  &[data-preview] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  &[data-multiline] textarea {
     height: $content-height*2;
     min-height: $content-height/2;
     max-height: $content-height*5;
   }
 
-  &:focus-within:not([disabled]) {
+  &:focus-within:not([data-disabled]) {
     color: $color-major;
     border-color: $color-blue;
+  }
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: $color-regular;
+  background-color: $bg-dark;
+  border: 1px solid $bg-light;
+  border-bottom: none;
+  border-radius: $content-br $content-br 0 0;
+
+  &[data-error] {
+    border-color: $color-red;
   }
 }
 
@@ -203,7 +264,35 @@ input, textarea, select {
   &[type^="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
 }
 
-label {
-  &[error] { color: $color-red; }
+.toggle {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  box-sizing: border-box;
+  padding: $content-padding calc((#{$content-height} - 16pt) / 2);
+  gap: $content-padding;
+  align-content: center;
+  color: $color-regular;
+
+  &[data-state] {
+    background-color: $color-green-20;
+  }
+
+  .icon {
+    width: 16pt;
+    height: 16pt;
+    color: inherit;
+  }
+
+  span {
+    font-family: $font-regular;
+    font-size: 12pt;
+    color: inherit;
+    user-select: none;
+  }
 }
+
+label[data-error] { color: $color-red; }
 </style>

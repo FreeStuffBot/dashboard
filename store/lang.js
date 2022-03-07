@@ -1,8 +1,8 @@
 export const state = () => ({
-  pending: 'Approval Pending',
-  declined: 'Declined',
-  approved: 'Approved',
-  processing: 'Processing',
+  pending: '⧖ Pending',
+  declined: '✕ Declined',
+  approved: '✓ Approved',
+  processing: '… Processing',
   free: 'Free to Keep',
   weekend: 'Free for a Weekend',
   discount: 'Discount',

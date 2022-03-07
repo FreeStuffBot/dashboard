@@ -1,3 +1,4 @@
+import Dismissables from './dismissables'
 
 
 export type ButtonType
@@ -19,7 +20,7 @@ export enum PopupType {
   NEW_PRODUCT = 1
 }
 
-export type Popup = {
+type PopupHelper = {
   type: PopupType.MODAL
   title: string
   text: string
@@ -30,13 +31,15 @@ export type Popup = {
   callback: (url: string) => any
 }
 
+export type Popup<T extends PopupType> = { type: T } & PopupHelper
+
 /*
  *
  */
 
 export function openErrorModal(store: any, status: number, text: string, context?: any) {
   const details = context ? `\n${context.error}: ${context.message}` : ''
-  const data: Popup = {
+  const data: Popup<PopupType.MODAL> = {
     type: PopupType.MODAL,
     title: 'An error occured',
     text: `http ${status}: ${text}${details}\nCheck devtools for more info.`,
@@ -47,4 +50,76 @@ export function openErrorModal(store: any, status: number, text: string, context
     } ]
   }
   store.commit('openPopup', data)
+}
+
+export function openModal(store: any, data: Omit<Popup<PopupType.MODAL>, 'type'>) {
+  store.commit('openPopup', { type: PopupType.MODAL, ...data })
+}
+
+/**
+ * Runs the treasure function but opens a gatekeep modal if not dismissed
+ * @param store The vue/nuxt store
+ * @param modal The modal data to show. Excluding buttons
+ * @param dismissable The dismissable to tie this popup to
+ * @param treasure The function to call if approved
+ */
+export function openDismissableModal<T extends any>(store: any, modal: { title: string, text: string }, dismissable: Dismissables, treasure: () => T): Promise<T> {
+  if (!dismissable.show)
+    return Promise.resolve(treasure())
+
+  return new Promise((res) => {
+    const clickOkay = () => {
+      dismissable.dismiss()
+      res(treasure())
+      return true
+    }
+
+    store.commit('openPopup', {
+      ...modal,
+      type: PopupType.MODAL,
+      buttons: [
+        {
+          type: 'green',
+          text: 'Continue',
+          onClick: clickOkay
+        },
+        {
+          type: 'light',
+          text: 'Cancel',
+          onClick: () => true
+        }
+      ]
+    })
+  })
+}
+
+export function openConfirmDialogue(store: any, title: string, text: string): Promise<boolean> {
+  return new Promise((res) => {
+    store.commit('openPopup', {
+      title,
+      text,
+      type: PopupType.MODAL,
+      buttons: [
+        {
+          type: 'green',
+          text: 'Continue',
+          onClick() {
+            res(true)
+            return true
+          }
+        },
+        {
+          type: 'light',
+          text: 'Cancel',
+          onClick() {
+            res(false)
+            return true
+          }
+        }
+      ],
+      onClose(handled: boolean) {
+        if (!handled) res(false)
+      }
+    })
+  })
 }
