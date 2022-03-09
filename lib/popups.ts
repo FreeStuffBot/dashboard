@@ -17,7 +17,10 @@ export type PopupButton = {
 
 export enum PopupType {
   MODAL = 0,
-  NEW_PRODUCT = 1
+  NEW_PRODUCT = 1,
+  EDIT_PLATFORM = 2,
+  // EDIT_CURRENCY = 3,
+  QUESTION = 4,
 }
 
 type PopupHelper = {
@@ -29,6 +32,18 @@ type PopupHelper = {
 } | {
   type: PopupType.NEW_PRODUCT
   callback: (url: string) => any
+} | {
+  type: PopupType.EDIT_PLATFORM
+  data: any
+  callback?: (reload: boolean) => any
+} | {
+  type: PopupType.QUESTION
+  title: string
+  text?: string
+  label?: string
+  placeholder?: string
+  validate?: (input: string) => string
+  callback?: (input: string) => any
 }
 
 export type Popup<T extends PopupType> = { type: T } & PopupHelper
@@ -54,6 +69,10 @@ export function openErrorModal(store: any, status: number, text: string, context
 
 export function openModal(store: any, data: Omit<Popup<PopupType.MODAL>, 'type'>) {
   store.commit('openPopup', { type: PopupType.MODAL, ...data })
+}
+
+export function openPopup(store: any, data: Popup<any>) {
+  store.commit('openPopup', data)
 }
 
 /**
@@ -119,6 +138,23 @@ export function openConfirmDialogue(store: any, title: string, text: string): Pr
       ],
       onClose(handled: boolean) {
         if (!handled) res(false)
+      }
+    })
+  })
+}
+
+export function openQuestionDialogue(store: any, title: string, text?: string, label?: string, placeholder?: string, validate?: (input: string) => string): Promise<string | null> {
+  return new Promise((callback) => {
+    store.commit('openPopup', {
+      title,
+      text,
+      type: PopupType.QUESTION,
+      label,
+      placeholder,
+      validate,
+      callback,
+      onClose(handled: boolean) {
+        if (!handled) callback(null)
       }
     })
   })

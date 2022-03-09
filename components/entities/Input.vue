@@ -179,6 +179,8 @@ export default Vue.extend({
   &[data-disabled] {
     cursor: not-allowed;
     opacity: .8;
+    color: $color-sub;
+    border-color: $bg-dark;
   }
 
   &:hover:not([data-disabled]):not([data-error]) {

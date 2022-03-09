@@ -168,6 +168,23 @@ export default class API {
     return this.rawPatch(`/content/products/${id}`, data)
   }
 
+  public static getPlatformList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/platforms?${query}`)
+  }
+
+  public static postPlatform(id: string) {
+    return this.rawPost('/content/platforms', { id })
+  }
+
+  public static patchPlatform(id: string, data: any) {
+    return this.rawPatch(`/content/platforms/${id}`, data)
+  }
+
+  public static deletePlatform(id: string) {
+    return this.rawDelete(`/content/platforms/${id}`)
+  }
+
   /**/
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {

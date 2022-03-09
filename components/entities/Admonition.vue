@@ -1,7 +1,9 @@
 <template>
   <div class="rich-admonition" :type="type">
     <Icon :name="getIcon" :title="type" />
-    <span v-text="text" />
+    <div class="text">
+      <span v-for="(line, i) of text.split('\n')" :key="i" v-text="line" />
+    </div>
   </div>
 </template>
 
@@ -59,7 +61,13 @@ export default Vue.extend({
   border-radius: $box-br;
   box-shadow: 0 0 0 1px #ffffff11 inset;
 
-  &:not(:last-child) { margin-bottom: calc($box-padding / 2); }
+  span {
+    display: block;
+
+    &:not(:last-child) {
+      margin-bottom: calc(#{$content-padding} / 2);
+    }
+  }
 
   .icon {
     width: 15pt;

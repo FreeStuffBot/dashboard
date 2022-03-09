@@ -38,7 +38,7 @@ export const mutations = {
     state.disableScroll++
   },
   closePopup(state, index) {
-    state.popups.splice(index || (state.popups.length - 1), 1)
+    state.popups.splice(index ?? (state.popups.length - 1), 1)
     state.disableScroll--
   }
 }

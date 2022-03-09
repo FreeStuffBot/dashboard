@@ -30,7 +30,7 @@ import { Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Button from '~/components/entities/Button.vue'
-import LanguageCard from '~/components/LanguageCard.vue'
+import LanguageCard from '~/components/cards/LanguageCard.vue'
 
 const popups: Record<string, Popup> = {
   howto: {
