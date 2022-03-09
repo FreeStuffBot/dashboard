@@ -17,7 +17,7 @@ export default Vue.extend({
     Admonition
   },
   props: {
-    prod: {
+    product: {
       type: Object,
       required: true
     }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="prod">
     <h1 v-text="prod.data.title || ':)'" />
     <h2>General Information</h2>
     <Layout name="component-flow">
@@ -10,7 +10,7 @@
         <Input v-model="prod.data.kind" label="Kind" :options="dropdowns.kind" :error="prod.data.kind === 'other'" />
       </Layout>
       <Layout name="2static">
-        <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :min="new Date().toISOString().split('T')[0]+'T00:00'" />
+        <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :num-min="new Date().toISOString().split('T')[0]+'T00:00'" :num-step="60" />
       </Layout>
     </Layout>
 
@@ -36,10 +36,10 @@
     </Layout>
     <Layout name="component-flow">
       <Layout name="component-flow" :tight="true">
-        <Layout v-for="(price, index) of prod.data.prices" :key="index" name="$1221" :tight="true">
+        <Layout v-for="(price, index) of broker.prices" :key="index" name="$1221" :tight="true">
           <Input v-model="price.currency" :options="[]" />
-          <Input v-model="price.oldValue" type="number" :num-min="0" />
-          <Input v-model="price.newValue" type="number" :num-min="0" />
+          <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" />
+          <Input v-model="price.newValue" type="number" :num-min="0" :num-step="0.01" />
           <Button
             type="light"
             text="Remove"
@@ -143,13 +143,14 @@ export default Vue.extend({
     Button
   },
   props: {
-    prod: {
+    product: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
+      prod: null as any,
       broker: {
         until: '',
         flagTrash: false,
@@ -157,17 +158,32 @@ export default Vue.extend({
         flagPermanent: false,
         flagStaffPick: false,
         tags: '',
-        rating: 0
+        rating: 0,
+        prices: [] as any[]
       },
       dropdowns
     }
   },
   watch: {
-    prod() {
+    product: {
+      deep: true,
+      handler(val: any) {
+        this.sync(val)
+      }
+    }
+  },
+  mounted() {
+    this.sync(this.product)
+  },
+  methods: {
+    sync(data: any) {
+      this.prod = JSON.parse(JSON.stringify(data))
+      if (!data) return
+
       if (this.prod.data.until === 0) {
         this.broker.until = ''
       } else {
-        const d = new Date(this.prod.info.until * 1000)
+        const d = new Date(this.prod.data.until)
         this.broker.until = `${d.toISOString().split('T')[0]}T${(d.getHours() + '').padStart(2, '0')}:${(d.getMinutes() + '').padStart(2, '0')}`
       }
       this.broker.flagTrash = !!(this.prod.data.flags & 1)
@@ -176,9 +192,13 @@ export default Vue.extend({
       this.broker.flagStaffPick = !!(this.prod.data.flags & 8)
       this.broker.tags = this.prod.data.tags.join(', ') || ''
       this.broker.rating = ~~((this.prod.data.rating || 0) * 100)
-    }
-  },
-  methods: {
+      this.broker.prices = this.prod.data.prices
+
+      for (const price of this.broker.prices) {
+        price.oldValue = (price.oldValue / 100)
+        price.newValue = (price.newValue / 100)
+      }
+    },
     clickAddPrice(): void {
       this.prod.data.prices.push({
         currency: '',
@@ -186,6 +206,8 @@ export default Vue.extend({
         newValue: 0,
         converted: false
       })
+      console.log(this.broker.prices[0].oldValue, typeof this.broker.prices[0].oldValue)
+      console.log(this.broker.prices[0].newValue, typeof this.broker.prices[0].newValue)
     },
     compileChanges(): any {
       const data = { ...this.prod.data }
@@ -200,6 +222,11 @@ export default Vue.extend({
       if (this.broker.flagThirdparty) data.flags |= (1 << 1)
       if (this.broker.flagPermanent) data.flags |= (1 << 2)
       if (this.broker.flagStaffPick) data.flags |= (1 << 3)
+      data.prices = this.broker.prices
+      for (const price of this.broker.prices) {
+        price.oldValue = Math.round(parseFloat(price.oldValue + '') * 100)
+        price.newValue = Math.round(parseFloat(price.newValue + '') * 100)
+      }
 
       return { data }
     },
@@ -269,9 +296,13 @@ export default Vue.extend({
         ]
       })
     },
-    decline(): void {
-      // TODO
-      alert('Not implemented')
+    async decline(): Promise<void> {
+      const payload = { status: 'declined' }
+      const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
+      if (status === 200)
+        this.$router.push('/content')
+      else
+        openErrorModal(this.$store, status, statusText, data)
     }
   }
 })

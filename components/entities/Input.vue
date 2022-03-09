@@ -67,6 +67,7 @@
         :disabled="disabled"
         :min="numMin"
         :max="numMax"
+        :step="numStep"
         :placeholder="placeholder"
         :value="value"
         @input="update()"
@@ -119,6 +120,10 @@ export default Vue.extend({
     numMax: {
       type: Number,
       default: 999999999
+    },
+    numStep: {
+      type: Number,
+      default: 1
     },
     error: {
       type: [ String, Boolean ],
