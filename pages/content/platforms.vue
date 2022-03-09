@@ -2,14 +2,13 @@
   <Container>
     <h1>CMS Platforms</h1>
 
-    <Admonition v-if="error" type="error" :text="error" />
-    <Layout v-else-if="items" name="component-flow">
+    <Layout v-if="items" name="component-flow">
       <PlatformCard
         v-for="item of items"
         :key="item.id"
         :data="item"
         :editable="true"
-        @refresh="(yes) => (yes ? $fetch() : {})"
+        @refresh="reload"
       />
 
       <Layout name="inline">
@@ -34,30 +33,18 @@ import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import PlatformCard from '~/components/cards/PlatformCard.vue'
 import Button from '~/components/entities/Button.vue'
-import Admonition from '~/components/entities/Admonition.vue'
 
 export default Vue.extend({
   components: {
     Container,
     Layout,
     PlatformCard,
-    Button,
-    Admonition
+    Button
   },
   transition: 'slide-down',
-  async fetch() {
-    const { data, status, statusText } = await API.getPlatformList()
-    if (status === 200) {
-      this.items = data
-      return
-    }
-
-    this.error = `Error. http ${status}: ${statusText}.\n${data?.error}: ${data?.message}`
-  },
-  data() {
-    return {
-      error: '',
-      items: null
+  computed: {
+    items() {
+      return this.$store.state.content.platforms
     }
   },
   methods: {
@@ -81,7 +68,10 @@ export default Vue.extend({
         return
       }
 
-      this.$fetch()
+      this.reload(true)
+    },
+    reload(gate: boolean) {
+      if (gate) this.$store.dispatch('content/load', 'platforms')
     }
   },
   head() {

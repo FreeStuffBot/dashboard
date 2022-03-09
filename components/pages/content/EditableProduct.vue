@@ -20,7 +20,7 @@
     <Layout name="component-flow">
       <Input v-model="prod.data.description" label="Description" :multiline="true" :error="!prod.data.description" />
       <Layout name="2static">
-        <Input v-model="prod.data.platform" label="Platform" :options="[]" />
+        <Input v-model="prod.data.platform" label="Platform" :options="platformOptions" />
         <Input v-model="broker.rating" label="Rating (0-100)" type="number" :num-min="0" :num-max="100" />
       </Layout>
       <Input v-model="broker.tags" label="Tags (Comma Separated)" placeholder="Single Player, Co-Op, wait that doesnt make sense" />
@@ -37,7 +37,7 @@
     <Layout name="component-flow">
       <Layout name="component-flow" :tight="true">
         <Layout v-for="(price, index) of broker.prices" :key="index" name="$1221" :tight="true">
-          <Input v-model="price.currency" :options="[]" />
+          <Input v-model="price.currency" :options="currencyOptions" />
           <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" />
           <Input v-model="price.newValue" type="number" :num-min="0" :num-step="0.01" />
           <Button
@@ -162,6 +162,20 @@ export default Vue.extend({
         prices: [] as any[]
       },
       dropdowns
+    }
+  },
+  computed: {
+    platformOptions(): any[] {
+      return this.$store.state.content.platforms.map((plat: any) => ({
+        value: plat.id,
+        label: plat.name
+      }))
+    },
+    currencyOptions(): any[] {
+      return this.$store.state.content.currencies.map((curr: any) => ({
+        value: curr.id,
+        label: curr.id?.toUpperCase()
+      }))
     }
   },
   watch: {

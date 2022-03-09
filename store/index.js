@@ -46,6 +46,8 @@ export const mutations = {
 export const actions = {
   pageLoad(store) {
     store.dispatch('refetchUser')
+    store.dispatch('content/load', 'platforms')
+    store.dispatch('content/load', 'currencies')
   },
   async refetchUser(store) {
     const user = await API.authMe()

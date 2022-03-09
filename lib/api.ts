@@ -185,6 +185,23 @@ export default class API {
     return this.rawDelete(`/content/platforms/${id}`)
   }
 
+  public static getCurrencyList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/currencies?${query}`)
+  }
+
+  public static postCurrency(id: string) {
+    return this.rawPost('/content/currencies', { id })
+  }
+
+  public static patchCurrency(id: string, data: any) {
+    return this.rawPatch(`/content/currencies/${id}`, data)
+  }
+
+  public static deleteCurrency(id: string) {
+    return this.rawDelete(`/content/currencies/${id}`)
+  }
+
   /**/
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {

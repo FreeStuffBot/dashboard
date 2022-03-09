@@ -19,7 +19,7 @@ export enum PopupType {
   MODAL = 0,
   NEW_PRODUCT = 1,
   EDIT_PLATFORM = 2,
-  // EDIT_CURRENCY = 3,
+  EDIT_CURRENCY = 3,
   QUESTION = 4,
 }
 
@@ -34,6 +34,10 @@ type PopupHelper = {
   callback: (url: string) => any
 } | {
   type: PopupType.EDIT_PLATFORM
+  data: any
+  callback?: (reload: boolean) => any
+} | {
+  type: PopupType.EDIT_CURRENCY
   data: any
   callback?: (reload: boolean) => any
 } | {
