@@ -202,7 +202,27 @@ export default class API {
     return this.rawDelete(`/content/currencies/${id}`)
   }
 
-  /**/
+  //
+
+  public static getAdminExperiments() {
+    return this.rawGet('/admin/experiments')
+  }
+
+  public static getAdminConfig() {
+    return this.rawGet('/admin/config')
+  }
+
+  /*
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   */
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {
     return this.rawGet(`/content/guildamount/${store}/${price}/${trash}`)
@@ -292,10 +312,6 @@ export default class API {
 
   public static adminPostUsers(data: any) {
     return this.rawPost('/admin/users', data)
-  }
-
-  public static adminGetExperiments() {
-    return this.rawGet('/admin/experiments')
   }
 
   public static adminPostExperiment(data: any) {

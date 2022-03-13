@@ -116,6 +116,29 @@ export function openDismissableModal<T extends any>(store: any, modal: { title: 
   })
 }
 
+export function openInfoDialogue(store: any, title: string, text: string): Promise<void> {
+  return new Promise((res) => {
+    store.commit('openPopup', {
+      title,
+      text,
+      type: PopupType.MODAL,
+      buttons: [
+        {
+          type: 'green',
+          text: 'Close',
+          onClick() {
+            res()
+            return true
+          }
+        }
+      ],
+      onClose(handled: boolean) {
+        if (!handled) res()
+      }
+    })
+  })
+}
+
 export function openConfirmDialogue(store: any, title: string, text: string): Promise<boolean> {
   return new Promise((res) => {
     store.commit('openPopup', {

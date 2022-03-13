@@ -41,6 +41,7 @@
         :disabled="disabled"
         :placeholder="placeholder"
         :value="value"
+        :style="editorHeightsCss"
         @input="update()"
       />
       <select
@@ -125,6 +126,10 @@ export default Vue.extend({
       type: Number,
       default: 1
     },
+    editorHeights: {
+      type: Array, // min, default, max
+      default: undefined
+    },
     error: {
       type: [ String, Boolean ],
       default: false
@@ -138,6 +143,11 @@ export default Vue.extend({
   computed: {
     preview(): boolean {
       return !!(this.$slots as any).preview
+    },
+    editorHeightsCss(): string {
+      if (!this.editorHeights) return ''
+      const heights = this.editorHeights.map(h => (typeof h === 'number' ? `${h}pt` : h))
+      return `min-height: ${heights[0]}; height: ${heights[1]}; max-height: ${heights[2]}`
     }
   },
   mounted() {
