@@ -36,12 +36,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import API from '~/lib/api'
-import icon from '~/components/Icon.vue'
 
 export default Vue.extend({
-  components: {
-    icon
-  },
   layout: 'auth',
   data() {
     return {

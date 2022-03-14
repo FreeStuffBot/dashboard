@@ -93,13 +93,9 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import Icon from '~/components/Icon.vue'
 
 
 export default Vue.extend({
-  components: {
-    Icon
-  },
   transition: 'slide-down',
   async fetch() {
     const info = await API.getAppData()
