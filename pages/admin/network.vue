@@ -248,7 +248,7 @@ h1 img {
   margin: $box-padding 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, 90px);
-  gap: calc($box-padding / 2);
+  gap: calc(#{$box-padding} / 2);
   width: 100%;
 }
 

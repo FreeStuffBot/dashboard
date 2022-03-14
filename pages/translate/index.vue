@@ -32,7 +32,7 @@ import Layout from '~/components/layout/Layout.vue'
 import Button from '~/components/entities/Button.vue'
 import LanguageCard from '~/components/cards/LanguageCard.vue'
 
-const popups: Record<string, Popup> = {
+const popups: Record<string, Popup<PopupType.MODAL>> = {
   howto: {
     type: PopupType.MODAL,
     title: 'Hello, welcome to the translation page!',
@@ -139,7 +139,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    isAdmin() {
+    isAdmin(): boolean {
       return this.$store.getters['user/isAdmin']
     }
   },

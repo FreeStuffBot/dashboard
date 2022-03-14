@@ -166,7 +166,7 @@ div[center] {
   text-align: center;
   background-color: $warning-minor;
   transform: translate(-$box-outer-padding, -$box-outer-padding);
-  width: calc(100% + $box-outer-padding * 2);
+  width: calc(100% + #{$box-outer-padding} * 2);
   font-family: $font-major;
   font-size: 12pt;
   text-transform: uppercase;

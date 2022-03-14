@@ -43,7 +43,7 @@ export default Vue.extend({
   },
   transition: 'slide-down',
   computed: {
-    items() {
+    items(): any[] {
       return this.$store.state.content.platforms
     }
   },

@@ -122,7 +122,7 @@ export default Vue.extend({
   }
 
   .text {
-    width: calc(100% - 48pt - $box-padding);
+    width: calc(100% - 48pt - #{$box-padding});
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -54,7 +54,7 @@ export default {
   background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
-  margin-bottom: calc($box-padding / 2);
+  margin-bottom: calc(#{$box-padding} / 2);
   overflow: hidden;
   box-shadow: 0 0px 6px #00000000;
   text-decoration: none;

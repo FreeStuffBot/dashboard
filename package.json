@@ -8,7 +8,7 @@
     "dev": "nuxt-ts --port 5522 --hostname 0.0.0.0",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
-    "generate": "nuxt generate",
+    "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{vue,css,scss}\" --ignore-path .gitignore",
     "lint": "yarn lint:js && yarn lint:style"
