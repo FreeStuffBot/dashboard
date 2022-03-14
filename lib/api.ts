@@ -221,7 +221,6 @@ export default class API {
    *
    *
    *
-   *
    */
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {
