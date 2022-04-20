@@ -76,7 +76,8 @@ export default Vue.extend({
     0 2px 6px #00000077;
   transition:
     background-color .1s ease-out,
-    box-shadow .1s ease-out;
+    box-shadow .1s ease-out,
+    transform .1s ease-out;
 
   &[dragged] {
     opacity: .5;
@@ -97,6 +98,7 @@ export default Vue.extend({
     box-shadow:
       0 0 0 1px #ffffff11 inset,
       0 7px 15px #00000099;
+    transform: translateY(-2px)
   }
 }
 

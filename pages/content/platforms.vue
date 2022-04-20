@@ -28,7 +28,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import API from '../../lib/api'
-import { openErrorModal, openQuestionDialogue } from '../../lib/popups'
+import { openErrorModal, openPopup, openQuestionDialogue, Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import PlatformCard from '~/components/cards/PlatformCard.vue'
@@ -54,10 +54,10 @@ export default Vue.extend({
         'New Platform',
         'Give your new platform a nice id',
         'ID',
-        'epic',
-        (input: string) => /^[a-z]{2,12}$/.test(input)
+        '2',
+        (input: string) => /^\d{1,2}$/.test(input)
           ? ''
-          : 'Id must match /^[a-z]{2,12}$/'
+          : 'Id must be a number'
       )
 
       if (!id) return
@@ -69,6 +69,14 @@ export default Vue.extend({
       }
 
       this.reload(true)
+
+      const popup: Popup<PopupType.EDIT_PLATFORM> = {
+        type: PopupType.EDIT_PLATFORM,
+        data,
+        callback: (refresh: boolean) => this.reload(refresh)
+      }
+
+      openPopup(this.$store, popup)
     },
     reload(gate: boolean) {
       if (gate) this.$store.dispatch('content/load', 'platforms')

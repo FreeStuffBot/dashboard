@@ -2,7 +2,7 @@
   <div class="box" :data-editable="editable">
     <img :src="data.assets.icon" alt="">
     <h3 v-text="data.name" />
-    <span v-text="`${data.id} • ${data.url}`" />
+    <span v-text="`${data.id} • ${data.code} • ${data.url}`" />
     <Button
       type="blue"
       text="Edit"

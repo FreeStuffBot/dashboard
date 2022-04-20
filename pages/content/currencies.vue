@@ -28,7 +28,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import API from '../../lib/api'
-import { openErrorModal, openQuestionDialogue } from '../../lib/popups'
+import { openErrorModal, openPopup, openQuestionDialogue, Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import CurrencyCard from '~/components/cards/CurrencyCard.vue'
@@ -54,10 +54,10 @@ export default Vue.extend({
         'New Currency',
         'Give your new currency a nice id',
         'ID',
-        'eur',
-        (input: string) => /^[a-z]{3}$/.test(input)
+        '6',
+        (input: string) => /^\d{1,2}$/.test(input)
           ? ''
-          : 'Id must match /^[a-z]{3}$/'
+          : 'Id must be a number'
       )
 
       if (!id) return
@@ -69,6 +69,14 @@ export default Vue.extend({
       }
 
       this.reload(true)
+
+      const popup: Popup<PopupType.EDIT_CURRENCY> = {
+        type: PopupType.EDIT_CURRENCY,
+        data,
+        callback: (refresh: boolean) => this.reload(refresh)
+      }
+
+      openPopup(this.$store, popup)
     },
     reload(gate: boolean) {
       if (gate) this.$store.dispatch('content/load', 'currencies')

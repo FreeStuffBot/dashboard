@@ -2,7 +2,7 @@
   <Container>
     <h1>Admin</h1>
 
-    <h2>Overview:</h2>
+    <h2>Overview</h2>
     <p v-if="git">
       Running Commit #{{ git.shortHash }} ({{ git.subject }} :: {{ git.author.name }}) from {{ git.time }}
     </p>

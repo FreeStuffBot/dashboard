@@ -168,6 +168,10 @@ export default class API {
     return this.rawPatch(`/content/products/${id}`, data)
   }
 
+  public static postAnnouncement(data: { products: number[] }) {
+    return this.rawPost('/content/announcements', data)
+  }
+
   public static getPlatformList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/platforms?${query}`)

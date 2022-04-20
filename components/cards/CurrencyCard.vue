@@ -6,7 +6,7 @@
       </div>
     </div>
     <h3 v-text="data.name" />
-    <span class="id" v-text="data.id" />
+    <span class="id" v-text="`${data.id} • ${data.code}`" />
     <Button
       type="blue"
       text="Edit"

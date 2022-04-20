@@ -2,16 +2,26 @@
   <div class="frame">
     <h1 v-text="`Edit ${data.data.name}`" />
     <Layout v-if="platform" name="component-flow">
-      <Input v-model="platform.id" label="General - Id" type="text" :disabled="true" />
-      <Input v-model="platform.name" label="General - Name" type="text" />
-      <Input v-model="platform.url" label="General - URL" type="text" />
-      <Input v-model="platform.description" label="General - Description" type="text" />
-      <Input v-model="platform.assets.icon" label="Assets - Icon URL" type="text">
+      <h3>General</h3>
+      <Layout name="2static">
+        <Input v-model="platform.id" label="Id" type="text" :disabled="true" />
+        <Input v-model="platform.code" label="Code" type="text" />
+      </Layout>
+      <Layout name="2static">
+        <Input v-model="platform.name" label="Name" type="text" />
+        <Input v-model="platform.url" label="URL" type="text" />
+      </Layout>
+      <Input v-model="platform.description" label="Description" type="text" />
+
+      <h3>Assets</h3>
+      <Input v-model="platform.assets.icon" label="Icon URL" type="text">
         <template #preview>
           <div class="asset-icon-preview" :style="`background-image: url('${platform.assets.icon}')`" />
         </template>
       </Input>
-      <Input v-model="platform.gibuRef" label="Internal - Gibu API Reference" type="text" />
+
+      <h3>Internal</h3>
+      <Input v-model="platform.gibuRef" label="Gibu API Reference" type="text" />
 
       <Admonition v-if="error" type="error" :text="error" />
 
@@ -81,6 +91,11 @@ export default Vue.extend({
       this.error = ''
     },
     async save() {
+      if (!/^[a-z]{2,12}$/.test(this.platform.code)) {
+        this.error = 'Code must match /^[a-z]{2,12}$/'
+        return
+      }
+
       const { data, status, statusText } = await API.patchPlatform(this.data.data.id, this.platform)
       if (status !== 200) {
         this.error = `Error. http ${status}: ${statusText}.\n${data?.error}: ${data?.message}`

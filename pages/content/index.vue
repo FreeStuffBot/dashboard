@@ -7,6 +7,7 @@
         <Button
           text="Publish"
           type="green"
+          @click="publish"
         />
       </div>
       <div
@@ -87,9 +88,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import { Popup, PopupType, openErrorModal, openConfirmDialogue } from '../../lib/popups'
+import { Popup, PopupType, openErrorModal, openConfirmDialogue, openInfoDialogue } from '../../lib/popups'
 import ProductCard from '~/components/cards/ProductCard.vue'
 import Container from '~/components/layout/Container.vue'
 import Button from '~/components/entities/Button.vue'
@@ -124,8 +124,8 @@ export default Vue.extend({
       currentlyDragging: 0,
       currentlyOver: '',
       products: {
-        announcement: [],
-        pending: []
+        announcement: [] as any[],
+        pending: [] as any[]
       }
     }
   },
@@ -164,8 +164,8 @@ export default Vue.extend({
       const card = srcShelf[cardIndex]
 
       if (dest === 'announcement' && card.status !== 'approved') {
-        const next = await openConfirmDialogue(this.$store, 'Hold up!', 'This product is not approved yet. Do you want to continue anyway?')
-        console.log(next)
+        const next = await openConfirmDialogue(this.$store, 'Hold up!', 'This product is not approved yet. Do you want to continue anyway?\n\nClicking on continue will mark the game as approved by you.')
+        // TODO approve the game
         if (!next) return
       }
 
@@ -189,91 +189,26 @@ export default Vue.extend({
 
       this.$store.commit('openPopup', popup)
     },
-    async action(type: string) {
-      if (type === 'new_url') {
-        const { value: url } = await Swal.fire({
-          input: 'url',
-          inputPlaceholder: 'Enter the URL'
-        })
+    async publish() {
+      const products = this.products.announcement
+      const next = await openConfirmDialogue(
+        this.$store,
+        products.length === 1
+          ? 'Publish this product?'
+          : `Publish these ${products.length} products?`,
+        products.map(p => p.data.title).join(', ')
+      )
+      if (!next) return
 
-        if (url) {
-          Swal.fire({
-            title: 'Fetching Information!',
-            html: 'Please hold on...',
-            timerProgressBar: true
-          })
-          Swal.showLoading()
+      API.postAnnouncement({
+        products: products.map(p => p.id)
+      })
 
-          const game = await API.postNewUrl(url)
-          if (game.data.error) {
-            Swal.fire({
-              title: game.data.error,
-              icon: 'error'
-            })
-          } else if (game.data._id) {
-            Swal.close()
-            this.$router.replace(`/content/${game.data._id}`)
-          } else {
-            Swal.fire({
-              title: 'Failed to fetch data.',
-              icon: 'error'
-            })
-          }
-        }
-      }
-      if (type === 'new_scratch') {
-        const data = await Swal.fire({
-          title: 'New Announcement?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonColor: '#3e9e71',
-          confirmButtonText: 'Yea'
-        })
-
-        if (data.value) {
-          const game = await API.postNewScratch()
-          this.$router.replace(`/content/${game.data._id}`)
-        }
-      }
-      if (type === 'scrape_store') {
-        const { value: store } = await Swal.fire({
-          title: 'Which store would you like to get scraped?',
-          text: 'CURRENTLY BROKEN .... REEEE',
-          input: 'select',
-          inputOptions: {
-            steam: 'Steam',
-            epic: 'Epic Games Store'
-          },
-          inputPlaceholder: 'Select a store',
-          showCancelButton: true
-        })
-
-        if (store) {
-          Swal.fire({
-            title: `Scraping ${this.lang[store]}...`,
-            html: 'Please hold on...',
-            timerProgressBar: true
-          })
-          Swal.showLoading()
-
-          const res = await API.postScrapeStore(store)
-          if (res.data.success) {
-            Swal.close()
-            Swal.fire({
-              title: 'Success!',
-              text: 'Found something, take a look!',
-              icon: 'success'
-            })
-            this.$fetch()
-          } else {
-            Swal.fire({
-              title: 'Failed to fetch data.',
-              text: `Here's why:\n${res.data.error}`,
-              icon: 'error'
-            })
-          }
-        }
-      }
+      openInfoDialogue(
+        this.$store,
+        'Success!',
+        'Announcement Published!\nThanks and have a great day!'
+      )
     }
   },
   head() {
@@ -286,35 +221,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-span {
-  color: white;
-  font-family: $font-regular;
-  font-size: 11pt;
-
-  &[minor] { color: #888888; }
-}
-
-.actions {
-  margin-top: $box-padding;
-
-  button {
-    margin-right: 5pt;
-    --bg: #{$bg-darker};
-    --bg-hov: #{$success-major};
-    --color: #{$color-major};
-  }
-}
-
-h1 img {
-  height: 11pt;
-  opacity: .4;
-  padding: 3px;
-  margin: 0 0 0 3px;
-  cursor: pointer;
-
-  &:hover { opacity: .7; }
-}
-
 .shelf-box {
   border-radius: $box-br;
   background-color: $bg-dark;
@@ -357,6 +263,8 @@ h1 img {
   }
 
   & > span {
+    font-family: $font-regular;
+    font-size: 11pt;
     position: absolute;
     color: $color-minor;
     display: block;

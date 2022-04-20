@@ -128,11 +128,11 @@ const dropdowns = {
     { value: 'other', label: 'Other' }
   ],
   type: [
-    { value: 'free', label: 'Free to keep' },
-    { value: 'weekend', label: 'Free to play (weekend)' },
-    { value: 'discount', label: 'Discounted' },
-    { value: 'ad', label: 'Advertisement' },
-    { value: 'unknown', label: 'Unknown' }
+    { value: 'keep', label: 'Free to keep' },
+    { value: 'timed', label: 'Free to play (weekend)' },
+    { value: 'prime', label: 'Included in Prime' },
+    { value: 'gamepass', label: 'Included in GamePass' },
+    { value: 'other', label: 'Other' }
   ]
 }
 
@@ -174,7 +174,7 @@ export default Vue.extend({
     currencyOptions(): any[] {
       return this.$store.state.content.currencies.map((curr: any) => ({
         value: curr.id,
-        label: curr.id?.toUpperCase()
+        label: curr.code?.toUpperCase()
       }))
     }
   },
@@ -194,7 +194,7 @@ export default Vue.extend({
       this.prod = JSON.parse(JSON.stringify(data))
       if (!data) return
 
-      if (this.prod.data.until === 0) {
+      if (!this.prod.data.until) {
         this.broker.until = ''
       } else {
         const d = new Date(this.prod.data.until)

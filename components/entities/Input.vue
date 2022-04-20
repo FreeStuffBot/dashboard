@@ -43,6 +43,7 @@
         :value="value"
         :style="editorHeightsCss"
         @input="update()"
+        @blur="e => $emit('blur', e)"
       />
       <select
         v-else-if="options"
@@ -52,6 +53,7 @@
         :placeholder="placeholder"
         :value="value"
         @input="update()"
+        @blur="e => $emit('blur', e)"
       >
         <option
           v-for="option of options"
@@ -72,6 +74,7 @@
         :placeholder="placeholder"
         :value="value"
         @input="update()"
+        @blur="e => $emit('blur', e)"
       >
     </div>
   </div>
@@ -231,7 +234,7 @@ export default Vue.extend({
 
   &:focus-within:not([data-disabled]) {
     color: $color-major;
-    border-color: $color-blue;
+    border-color: $color-blue !important;
   }
 }
 
