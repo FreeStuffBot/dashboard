@@ -2,8 +2,9 @@
   <Container>
     <h1>Experiments</h1>
 
-    <Admonition v-if="error" type="error" :text="error" />
     <Layout v-if="list" name="component-flow">
+      <Admonition v-if="error" type="error" :text="error" />
+
       <Layout name="$211">
         <Input v-model="search" type="text" placeholder="Search" />
         <Button type="green" text="Add Experim..." @click="add()" />
@@ -25,9 +26,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import { openInfoDialogue } from '../../lib/popups'
+import { openFormDialogue, openInfoDialogue } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Admonition from '~/components/entities/Admonition.vue'
@@ -68,35 +68,26 @@ export default Vue.extend({
       return false
     },
     async add() {
-      const { value } = await Swal.fire({
-        title: 'New Experiment',
-        html: `
-          <label for="swal-input1">ID</label>
-          <input id="swal-input1" class="swal2-input" placeholder="experiment_name">
-          <label for="swal-input2">Description</label>
-          <input id="swal-input2" class="swal2-input" placeholder="bla bla bla">
-        `,
-        preConfirm() {
-          return [
-            (document.getElementById('swal-input1') as HTMLInputElement).value,
-            (document.getElementById('swal-input2') as HTMLInputElement).value
-          ]
-        }
+      const { id, description, rules } = await openFormDialogue(this.$store, {
+        title: 'Gaming',
+        inputs: [
+          { id: 'id', type: 'text', label: 'Id', placeholder: 'enable_feature_xyz' },
+          { id: 'description', type: 'text', label: 'Description', placeholder: 'This experiment will enable this and that.' },
+          { id: 'rules', type: 'text', label: 'Rules', placeholder: '60% of beta' }
+        ]
       })
 
-      if (!value) return
-
       await API.adminPostExperiment({
-        name: value[0],
-        description: value[1]
+        id, description, rules
       })
 
       this.$fetch()
     },
-    async update(name: string, rules: string) {
-      await API.adminPatchExperiment({
-        name, rules
-      })
+    async update(id: string, rules: string) {
+      if (rules)
+        await API.adminPatchExperiment(id, { rules })
+      else
+        await API.adminDeleteExperiment(id)
 
       this.$fetch()
     },

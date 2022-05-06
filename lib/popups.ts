@@ -21,6 +21,7 @@ export enum PopupType {
   EDIT_PLATFORM = 2,
   EDIT_CURRENCY = 3,
   QUESTION = 4,
+  FORM = 5,
 }
 
 type PopupHelper = {
@@ -46,6 +47,18 @@ type PopupHelper = {
   text?: string
   label?: string
   placeholder?: string
+  validate?: (input: string) => string
+  callback?: (input: string) => any
+} | {
+  type: PopupType.FORM
+  title: string
+  text?: string
+  inputs: {
+    id: string
+    type: 'text' | 'multiline' | 'toggle'
+    label?: string
+    placeholder?: string
+  }[]
   validate?: (input: string) => string
   callback?: (input: string) => any
 }
@@ -182,6 +195,20 @@ export function openQuestionDialogue(store: any, title: string, text?: string, l
       callback,
       onClose(handled: boolean) {
         if (!handled) callback(null)
+      }
+    })
+  })
+}
+
+export function openFormDialogue(store: any, data: Omit<Popup<PopupType.FORM>, 'type'>): Promise<any> {
+  return new Promise((callback) => {
+    store.commit('openPopup', {
+      type: PopupType.FORM,
+      ...data,
+      callback,
+      onClose(handled: boolean) {
+        // eslint-disable-next-line node/no-callback-literal
+        if (!handled) callback({} as any)
       }
     })
   })

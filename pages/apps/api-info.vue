@@ -1,23 +1,24 @@
 <template>
   <div class="container">
     <h1>FreeStuff API</h1>
-    <span>Hey there! Are you interested in using the FreeStuff API? Well you've come to the right place!</span>
-    <br>
-    <br>
-    <span>Check out the documentation on the left or head over to Patreon for API access!</span>
-    <br>
-    <br>
-    <button generic dark @click="openPatreon()">
-      Get Access
-    </button>
+    <p>Hey there! Are you interested in using the FreeStuff API? Well you've come to the right place!</p>
+    <p>Check out the documentation on the left or head over to Patreon for API access!</p>
+    <Button
+      type="green"
+      text="Get Access"
+      @click="openPatreon()"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-
+import Button from '~/components/entities/Button.vue'
 
 export default Vue.extend({
+  components: {
+    Button
+  },
   transition: 'slide-down',
   fetchOnServer: false,
   methods: {

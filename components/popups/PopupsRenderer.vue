@@ -7,6 +7,7 @@
       <PopupFrameEditPlatform v-if="popup.type === 2" :data="popup" @close="close" />
       <PopupFrameEditCurrency v-if="popup.type === 3" :data="popup" @close="close" />
       <PopupFrameQuestion v-if="popup.type === 4" :data="popup" @close="close" />
+      <PopupFrameForm v-if="popup.type === 5" :data="popup" @close="close" />
     </div>
   </div>
 </template>
@@ -18,6 +19,7 @@ import PopupFrameNewProduct from '~/components/popups/PopupFrameNewProduct.vue'
 import PopupFrameEditPlatform from '~/components/popups/PopupFrameEditPlatform.vue'
 import PopupFrameEditCurrency from '~/components/popups/PopupFrameEditCurrency.vue'
 import PopupFrameQuestion from '~/components/popups/PopupFrameQuestion.vue'
+import PopupFrameForm from '~/components/popups/PopupFrameForm.vue'
 
 export default Vue.extend({
   components: {
@@ -25,7 +27,8 @@ export default Vue.extend({
     PopupFrameNewProduct,
     PopupFrameEditPlatform,
     PopupFrameEditCurrency,
-    PopupFrameQuestion
+    PopupFrameQuestion,
+    PopupFrameForm
   },
   data() {
     return {

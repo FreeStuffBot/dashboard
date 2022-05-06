@@ -97,5 +97,34 @@ export default Vue.extend({
     }
   }
   &[data-layout="$1221"] { grid-template-columns: 1fr 2fr 2fr 1fr; }
+
+
+  @media screen and (max-width: $res-tablet-width) {
+    &[data-layout="2static"] {
+      grid-template-columns: 1fr;
+    }
+
+    &[data-layout="3static"] {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &[data-layout="4static"] {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (max-width: $res-mobile-width) {
+    &[data-layout="2static"] {
+      grid-template-columns: 1fr;
+    }
+
+    &[data-layout="3static"] {
+      grid-template-columns: 1fr;
+    }
+
+    &[data-layout="4static"] {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
 }
 </style>

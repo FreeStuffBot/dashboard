@@ -321,8 +321,12 @@ export default class API {
     return this.rawPost('/admin/experiments', data)
   }
 
-  public static adminPatchExperiment(data: any) {
-    return this.rawPatch('/admin/experiments', data)
+  public static adminPatchExperiment(id: string, data: any) {
+    return this.rawPatch(`/admin/experiments/${id}`, data)
+  }
+
+  public static adminDeleteExperiment(id: string) {
+    return this.rawDelete(`/admin/experiments/${id}`)
   }
 
   public static adminGetGuild(id: string) {

@@ -2,8 +2,8 @@
   <Container>
     <h1>Configuration</h1>
 
-    <Admonition v-if="error" type="error" :text="error" />
     <Layout v-if="config" name="component-flow">
+      <Admonition v-if="error" type="error" :text="error" />
       <Input v-model="configStr" :multiline="true" :editor-heights="[ 100, 400, 600 ]" />
       <span v-if="jsonError" v-text="jsonError" />
       <Layout name="inline">

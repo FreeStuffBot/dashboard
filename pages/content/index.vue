@@ -200,14 +200,23 @@ export default Vue.extend({
       )
       if (!next) return
 
-      API.postAnnouncement({
+      const { status, statusText, data } = await API.postAnnouncement({
         products: products.map(p => p.id)
       })
 
+      if (status === 200) {
+        openInfoDialogue(
+          this.$store,
+          'Success!',
+          'Announcement Published!\nThanks and have a great day!'
+        )
+        return
+      }
+
       openInfoDialogue(
         this.$store,
-        'Success!',
-        'Announcement Published!\nThanks and have a great day!'
+        `Error http ${status}: ${statusText}`,
+        data.message ?? 'no details'
       )
     }
   },
@@ -271,6 +280,14 @@ export default Vue.extend({
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  @media screen and (max-width: $res-tablet-width) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: $res-mobile-width) {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 </style>

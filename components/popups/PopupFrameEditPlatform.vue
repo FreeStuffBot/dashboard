@@ -12,11 +12,20 @@
         <Input v-model="platform.url" label="URL" type="text" />
       </Layout>
       <Input v-model="platform.description" label="Description" type="text" />
+      <Layout name="2static">
+        <Input v-model="platform.enabledDefault" label="User Settings" type="toggle" placeholder="Enabled by Default" />
+        <Input v-model="platform.autoPublish" label="Content Moderation" type="toggle" placeholder="Publish Automatically" />
+      </Layout>
 
       <h3>Assets</h3>
       <Input v-model="platform.assets.icon" label="Icon URL" type="text">
         <template #preview>
           <div class="asset-icon-preview" :style="`background-image: url('${platform.assets.icon}')`" />
+        </template>
+      </Input>
+      <Input v-model="platform.assets.discordEmoji" label="Discord Emoji" type="text" :error="!/^<a?:\w{2,}:\d{8,}>$/.test(platform.assets.discordEmoji)">
+        <template #preview>
+          <div class="asset-discordEmoji-preview" :style="`background-image: url('${discordEmojiUrl}')`" />
         </template>
       </Input>
 
@@ -72,6 +81,16 @@ export default Vue.extend({
     return {
       error: '',
       platform: null as any
+    }
+  },
+  computed: {
+    discordEmojiUrl(): string {
+      if (!this.platform.assets.discordEmoji) return ''
+      const id = this.platform.assets.discordEmoji.match(/\d{8,}/)?.[0]
+      if (!id) return ''
+      return this.platform.assets.discordEmoji.startsWith('<a')
+        ? `https://cdn.discordapp.com/emojis/a_${id}.gif`
+        : `https://cdn.discordapp.com/emojis/${id}.png`
     }
   },
   watch: {
@@ -134,7 +153,8 @@ export default Vue.extend({
     text-align: center;
   }
 
-  .asset-icon-preview {
+  .asset-icon-preview,
+  .asset-discordEmoji-preview {
     display: block;
     width: 100%;
     height: calc(#{$content-height} * 2);

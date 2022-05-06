@@ -152,5 +152,10 @@ span {
     width: 32pt;
     color: $color-minor;
   }
+
+  @media screen and (max-width: $res-mobile-width) {
+    aspect-ratio: unset !important;
+    height: 30pt;
+  }
 }
 </style>

@@ -167,13 +167,13 @@ export default Vue.extend({
   computed: {
     platformOptions(): any[] {
       return this.$store.state.content.platforms.map((plat: any) => ({
-        value: plat.id,
+        value: plat.code,
         label: plat.name
       }))
     },
     currencyOptions(): any[] {
       return this.$store.state.content.currencies.map((curr: any) => ({
-        value: curr.id,
+        value: curr.code,
         label: curr.code?.toUpperCase()
       }))
     }

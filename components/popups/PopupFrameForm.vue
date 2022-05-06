@@ -15,9 +15,12 @@
 
     <Layout name="component-flow">
       <Input
-        v-model="output"
-        :label="data.label"
-        :placeholder="data.placeholder"
+        v-for="input of data.inputs"
+        :key="input.id"
+        v-model="output[input.id]"
+        :type="input.type"
+        :label="input.label"
+        :placeholder="input.placeholder"
       />
 
       <Admonition v-if="error" type="error" :text="error" />
@@ -61,7 +64,7 @@ export default Vue.extend({
   data() {
     return {
       error: '',
-      output: ''
+      output: {}
     }
   },
   watch: {
@@ -78,7 +81,7 @@ export default Vue.extend({
   methods: {
     sync() {
       this.error = ''
-      this.output = ''
+      this.output = {}
     },
     submit() {
       this.error = this.data.validate?.(this.output)
