@@ -345,12 +345,8 @@ export default class API {
     return this.rawPatch('/admin/config', data)
   }
 
-  public static adminGetLogs() {
-    return this.rawGet('/admin/logs')
-  }
-
-  public static adminGetLogFile(file: string) {
-    return this.rawGet(`/admin/logs/${file}`)
+  public static adminGetServices() {
+    return this.rawGet('/admin/services')
   }
 
 }
