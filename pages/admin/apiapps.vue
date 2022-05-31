@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <h1>
-      API Apps
-    </h1>
+    <h1>API Apps</h1>
 
     <h2>List:</h2>
     <div
