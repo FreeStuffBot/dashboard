@@ -197,7 +197,7 @@ export default Vue.extend({
   background-color: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
-  margin-top: $box-padding / 2;
+  margin-top: calc($box-padding / 2);
   transition: padding .2s ease-out;
 
   &.hidden .header { margin-bottom: 0 !important; }

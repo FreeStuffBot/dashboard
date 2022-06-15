@@ -91,7 +91,7 @@ export default {
       margin: 5px 5px 0 5px;
       color: #ffffffaa;
       background-color: #00000040;
-      border-radius: $box-br/2 $box-br/2 0 0;
+      border-radius: calc($box-br / 2) calc($box-br / 2) 0 0;
     }
 
     &.status {
@@ -101,7 +101,7 @@ export default {
       color: #ffffffaa;
       font-size: 8pt;
       background-color: #00000040;
-      border-radius: 0 0 $box-br/2 $box-br/2;
+      border-radius: 0 0 calc($box-br / 2) calc($box-br / 2);
     }
 
     &.server {

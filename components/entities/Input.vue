@@ -206,7 +206,7 @@ export default Vue.extend({
       width: max-content;
       height: unset;
 
-      input, select { padding: $content-padding/3 !important; }
+      input, select { padding: calc($content-padding / 3) !important; }
     }
     &:not([data-inline]) {
       height: $content-height;
@@ -227,9 +227,9 @@ export default Vue.extend({
   }
 
   &[data-multiline] textarea {
-    height: $content-height*2;
-    min-height: $content-height/2;
-    max-height: $content-height*5;
+    height: calc($content-height * 2);
+    min-height: calc($content-height / 2);
+    max-height: calc($content-height * 5);
   }
 
   &:focus-within:not([data-disabled]) {

@@ -34,7 +34,7 @@ export default class API {
   }
 
   private static buildConf(headers?: any, body?: any): AxiosRequestConfig {
-    headers ||= {}
+    headers = headers || {}
     headers.Authorization = localStorage.getItem('token')
     const conf: AxiosRequestConfig = {
       headers,

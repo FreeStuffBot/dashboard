@@ -161,7 +161,7 @@ export default Vue.extend({
 
   a {
     display: block;
-    margin-top: $box-padding / 3;
+    margin-top: calc($box-padding / 3);
     color: $primary-blue;
     font-family: $font-major;
     font-size: 11pt;

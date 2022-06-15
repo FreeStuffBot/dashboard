@@ -267,7 +267,7 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "text1 text2" "bar bar";
-  row-gap: $box-padding / 2;
+  row-gap: calc($box-padding / 2);
   background: $bg-light;
   padding: $box-padding;
   border-radius: $box-br;
@@ -320,7 +320,7 @@ h1 {
 
     button {
       padding: 8pt;
-      border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       background-color: #7e89b1;
       color: $color-header;
@@ -341,7 +341,7 @@ h1 {
       width: calc(100% - 20pt);
       margin: 0;
       padding: 8pt 10pt;
-      border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       font-family: monospace;
       font-size: 12pt;
@@ -351,7 +351,7 @@ h1 {
 
     select {
       padding: 8pt 10pt;
-      border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       font-family: monospace;
       font-size: 12pt;
@@ -366,7 +366,7 @@ h1 {
   & > .description {
     margin-top: calc(#{$box-padding} / 2);
     padding: 0 5pt 10pt 5pt;
-    border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-regular;
     font-size: 11pt;
@@ -377,7 +377,7 @@ h1 {
   & > .orgtext {
     margin-top: calc(#{$box-padding} / 2);
     padding: 8pt 10pt;
-    border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-regular;
     font-size: 12pt;
@@ -388,7 +388,7 @@ h1 {
   & > textarea {
     margin-top: calc(#{$box-padding} / 2);
     padding: 8pt 10pt;
-    border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-major;
     font-size: 12pt;
@@ -438,7 +438,7 @@ h1 {
 
     button {
       padding: 6pt 10pt;
-      border-radius: $box-br / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       background-color: #7e89b1;
       color: $color-header;

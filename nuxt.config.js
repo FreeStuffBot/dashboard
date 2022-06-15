@@ -1,6 +1,7 @@
+import { defineNuxtConfig } from '@nuxt/bridge'
 
+export default defineNuxtConfig({
 // eslint-disable-next-line nuxt/no-cjs-in-config
-module.exports = {
   mode: 'universal',
   target: 'static',
   telemetry: false,
@@ -27,7 +28,6 @@ module.exports = {
     { src: '~plugins/vue-chartjs.js', ssr: false }
   ],
   buildModules: [
-    '@nuxt/typescript-build',
     '@nuxtjs/svg',
     '@nuxtjs/stylelint-module',
     '@nuxtjs/style-resources'
@@ -116,4 +116,4 @@ module.exports = {
       }
     }
   }
-}
+})

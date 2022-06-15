@@ -34,7 +34,7 @@ p {
 
   a {
     display: inline-block;
-    margin: $box-padding / 3 $box-padding / 2 $box-padding / 3 0;
+    margin: calc($box-padding / 3) calc($box-padding / 2) calc($box-padding / 3) 0;
     font-family: $font-major;
     font-size: 11pt;
     color: $primary-blue;
@@ -54,7 +54,7 @@ label {
   font-size: 11pt;
   text-transform: uppercase;
   display: block;
-  margin-bottom: $content-padding/2;
+  margin-bottom: calc($content-padding / 2);
 }
 
 @mixin a11y-hover {
