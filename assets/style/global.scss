@@ -10,6 +10,10 @@ h1 {
   & + h2 {
     margin-top: $box-padding;
   }
+
+  & + div > h2:first-child {
+    margin-top: $box-padding;
+  }
 }
 
 h2 {
