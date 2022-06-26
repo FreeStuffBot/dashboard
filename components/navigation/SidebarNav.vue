@@ -279,7 +279,7 @@ a {
 
           @media screen and (max-width: $res-tablet-width) {
             font-size: 10pt;
-            height: $box-padding / 2;
+            height: calc($box-padding / 2);
           }
 
           @media screen and (max-width: $res-sidebar-collapse-width) {

@@ -13,6 +13,7 @@
       <div
         class="card-shelf"
         data-shelf="announcement"
+        :dragpage="!!currentlyDragging"
         :dragover="currentlyOver === 'announcement'"
         @dragover="groupDragOver"
         @dragleave="groupDragLeave"
@@ -44,6 +45,7 @@
       <div
         class="card-shelf"
         data-shelf="pending"
+        :dragpage="!!currentlyDragging"
         :dragover="currentlyOver === 'pending'"
         @dragover="groupDragOver"
         @dragleave="groupDragLeave"
@@ -111,6 +113,7 @@ export default Vue.extend({
     for (const product of data)
       product._shelf = 'pending'
 
+    this.products.announcement = []
     this.products.pending = data
 
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
@@ -205,11 +208,12 @@ export default Vue.extend({
       })
 
       if (status === 200) {
-        openInfoDialogue(
+        await openInfoDialogue(
           this.$store,
           'Success!',
           'Announcement Published!\nThanks and have a great day!'
         )
+        this.$fetch()
         return
       }
 
@@ -260,13 +264,22 @@ export default Vue.extend({
   border-radius: $content-br;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  border: 2px dashed transparent;
   gap: $content-padding;
-  // border: 2px dashed #565656;
   margin: $content-padding $content-padding 0 $content-padding;
+  transition:
+    border-color .2s ease,
+    background-color .1s ease;
 
   &[dragover] {
-    border-color: $color-green;
     background-color: $color-green-20;
+    border-color: $color-green !important;
+
+    * { pointer-events: none; }
+  }
+
+  &[dragpage] {
+    border-color: $color-border;
 
     * { pointer-events: none; }
   }

@@ -1,7 +1,7 @@
 <template>
   <div
     class="product-card"
-    draggable="true"
+    :draggable="draggable"
     :dragged="dragged"
     @dragstart.self="e => passEvent('dragstart', e)"
     @dragend.self="e => passEvent('dragend', e)"
@@ -50,6 +50,9 @@ export default Vue.extend({
           hour: '2-digit',
           minute: '2-digit'
         })
+    },
+    draggable() {
+      return this.$listeners && this.$listeners.dragstart
     }
   },
   methods: {
@@ -70,7 +73,7 @@ export default Vue.extend({
   overflow: hidden;
   text-decoration: none;
   gap: 2pt;
-  cursor: grab;
+  cursor: pointer;
   box-shadow:
     0 0 0 1px #ffffff11 inset,
     0 2px 6px #00000077;
@@ -78,6 +81,10 @@ export default Vue.extend({
     background-color .1s ease-out,
     box-shadow .1s ease-out,
     transform .1s ease-out;
+
+  &[draggable] {
+    cursor: grab;
+  }
 
   &[dragged] {
     opacity: .5;
@@ -95,10 +102,13 @@ export default Vue.extend({
 
   &:hover {
     background-color: $bg-lighter;
-    box-shadow:
-      0 0 0 1px #ffffff11 inset,
-      0 7px 15px #00000099;
-    transform: translateY(-2px)
+
+    &[draggable] {
+      box-shadow:
+        0 0 0 1px #ffffff11 inset,
+        0 7px 15px #00000099;
+      transform: translateY(-2px)
+    }
   }
 }
 

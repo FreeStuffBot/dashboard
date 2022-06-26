@@ -1,6 +1,15 @@
 <template>
   <div v-if="prod">
     <h1 v-text="prod.data.title || ':)'" />
+
+    <Layout name="inline">
+      <Button
+        type="light"
+        text="Fetch Manually"
+        @click="fetchManually()"
+      />
+    </Layout>
+
     <h2>General Information</h2>
     <Layout name="component-flow">
       <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" />
@@ -112,7 +121,7 @@
 import Vue from 'vue'
 import API from '../../../lib/api'
 import Dismissables from '../../../lib/dismissables'
-import { openDismissableModal, openErrorModal, openModal } from '../../../lib/popups'
+import { openDismissableModal, openErrorModal, openModal, Popup, PopupType } from '../../../lib/popups'
 import Layout from '~/components/layout/Layout.vue'
 import Input from '~/components/entities/Input.vue'
 import Button from '~/components/entities/Button.vue'
@@ -317,6 +326,23 @@ export default Vue.extend({
         this.$router.push('/content')
       else
         openErrorModal(this.$store, status, statusText, data)
+    },
+    fetchManually(): void {
+      const callback = async (url: string, merge: boolean) => {
+        const { status, statusText, data } = await API.postProductRefetch(this.$route.params.id, { url, merge })
+        if (status !== 200)
+          return openErrorModal(this.$store, status, statusText, data)
+
+        this.$emit('fetch')
+      }
+
+      const popup: Popup<PopupType.NEW_PRODUCT> = {
+        type: PopupType.NEW_PRODUCT,
+        allowMerge: true,
+        callback
+      }
+
+      this.$store.commit('openPopup', popup)
     }
   }
 })

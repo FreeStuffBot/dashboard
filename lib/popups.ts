@@ -32,7 +32,8 @@ type PopupHelper = {
   onClose?: (handled: boolean) => any
 } | {
   type: PopupType.NEW_PRODUCT
-  callback: (url: string) => any
+  allowMerge?: boolean
+  callback: (url: string, merge?: boolean) => any
 } | {
   type: PopupType.EDIT_PLATFORM
   data: any

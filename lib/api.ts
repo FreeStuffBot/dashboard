@@ -151,7 +151,7 @@ export default class API {
 
   //
 
-  public static getProductList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+  public static getProductList(options: { offset?: number, limit?: number, queryName?: 'pending' | 'published' } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/products?${query}`)
   }
@@ -166,6 +166,11 @@ export default class API {
 
   public static patchProduct(id: string, data: any) {
     return this.rawPatch(`/content/products/${id}`, data)
+  }
+
+  /** will take a url and a boolean whether to merge and apply changes */
+  public static postProductRefetch(id: string, data: { url: string, merge: boolean }) {
+    return this.rawPost(`/content/products/${id}/refetch`, data)
   }
 
   public static postAnnouncement(data: { products: number[] }) {

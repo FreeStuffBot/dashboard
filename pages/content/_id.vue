@@ -10,7 +10,7 @@
         Loading...
       </p>
     </div>
-    <EditableProduct v-else-if="component === 'editable'" :product="prod" />
+    <EditableProduct v-else-if="component === 'editable'" :product="prod" @fetch="$fetch" />
     <ProcessingProduct v-else-if="component === 'processing'" :product="prod" @update="update" />
     <div v-else>
       <p>This product has an unknown status. Could not render view.</p>

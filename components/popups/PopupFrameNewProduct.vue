@@ -1,16 +1,31 @@
 <template>
   <div class="frame">
-    <h1>New Product</h1>
+    <h1>Fetch Product</h1>
     <Layout name="component-flow">
       <Input
         v-model="url"
         label="Product URL"
         placeholder="https://store.steampowered.com/app/1172050"
       />
+
+      <Layout v-if="data.allowMerge" name="2static">
+        <Button
+          type="green"
+          text="Fetch and Merge"
+          @click="submit(true)"
+        />
+        <Button
+          type="green"
+          text="Fetch and Override"
+          @click="submit(false)"
+        />
+      </Layout>
+
       <Button
+        v-else
         type="green"
         text="Create"
-        @click="submit"
+        @click="submit(false)"
       />
     </Layout>
   </div>
@@ -40,9 +55,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    submit() {
+    submit(merge: boolean) {
       this.$emit('close', true)
-      this.data.callback?.(this.url)
+      this.data.callback?.(this.url, merge)
     }
   }
 })
