@@ -217,8 +217,12 @@ export default class API {
     return this.rawGet('/admin/experiments')
   }
 
-  public static getAdminConfig() {
-    return this.rawGet('/admin/config')
+  public static getAdminConfig(name: 'global' | 'service-composition') {
+    return this.rawGet(`/admin/config/${name}`)
+  }
+
+  public static patchAdminConfig(name: 'global' | 'service-composition', data: any) {
+    return this.rawPatch(`/admin/config/${name}`, data)
   }
 
   /*

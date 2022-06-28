@@ -150,6 +150,7 @@ export default Vue.extend({
   &[lite] {
     margin: 0 #{-$content-padding};
     color: var(--color);
+    box-shadow: none;
   }
   &:not([lite]) {
     background-color: var(--color);

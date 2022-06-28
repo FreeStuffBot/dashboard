@@ -40,6 +40,7 @@
         ref="input"
         :disabled="disabled"
         :placeholder="placeholder"
+        :monospace="monospace"
         :value="value"
         :style="editorHeightsCss"
         @input="update()"
@@ -72,6 +73,7 @@
         :max="numMax"
         :step="numStep"
         :placeholder="placeholder"
+        :monospace="monospace"
         :value="value"
         @input="update()"
         @blur="e => $emit('blur', e)"
@@ -110,6 +112,10 @@ export default Vue.extend({
       default: false
     },
     inline: {
+      type: Boolean,
+      default: false
+    },
+    monospace: {
       type: Boolean,
       default: false
     },
@@ -282,6 +288,7 @@ input, textarea, select {
 
   &:disabled { cursor: not-allowed; }
   &[type^="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+  &[monospace] { font-family: monospace; }
 }
 
 .toggle {

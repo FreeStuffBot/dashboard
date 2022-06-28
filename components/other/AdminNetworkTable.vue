@@ -40,6 +40,8 @@ export default Vue.extend({
       return true
     },
     getStates(found: any): string {
+      if (!found?.length) return ''
+
       const list = {} as any
       for (const container of found)
         list[container.state] = (list[container.state] ?? 0) + 1

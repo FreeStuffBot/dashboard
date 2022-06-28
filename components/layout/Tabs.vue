@@ -4,7 +4,7 @@
       <button
         v-for="[ name, display ] of slots"
         :key="name"
-        :data-selected="name === selected"
+        :data-selected="name === value"
         @click="select(name)"
       >
         <h4 v-text="display" />
@@ -12,7 +12,7 @@
     </div>
     <div class="content">
       <div v-for="[ name ] of slots" :key="name">
-        <slot v-if="name === selected" :name="name" />
+        <slot v-if="name === value" :name="name" />
       </div>
     </div>
   </div>
@@ -22,9 +22,10 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  data() {
-    return {
-      selected: ''
+  props: {
+    value: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -35,14 +36,16 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.selected = Object.keys(this.$slots)[0]
+    this.value = Object.keys(this.$slots)[0]
+    this.$emit('input', this.value)
   },
   methods: {
     select(name: string): void {
-      this.selected = name
+      this.value = name
+      this.$emit('input', name)
     },
     sanitizeName(name: string): string {
-      return name.replace(/-/g, ' ')
+      return name.replace(/_/g, ' ')
     }
   }
 })
@@ -79,23 +82,25 @@ export default Vue.extend({
       z-index: 1
     }
 
-    &::before {
+    &::after {
       content: "";
       display: block;
       position: absolute;
       width: 100%;
       height: 100%;
+      top: 0;
+      left: 0;
       background-color: $bg-light;
       border-radius: $content-br;
       background-color: #00000000;
-      transform: translateX(-$content-padding) scale(0.8);
+      transform: scale(0.8);
       transition:
         background-color .1s ease-out,
         transform .1s ease-out;
     }
 
-    &:not([data-selected]):hover::before {
-      transform: translateX(-$content-padding) scale(1);
+    &:not([data-selected]):hover::after {
+      transform: scale(1);
       background-color: $bg-light;
     }
 
