@@ -4,6 +4,8 @@ export default defineNuxtConfig({
 // eslint-disable-next-line nuxt/no-cjs-in-config
   target: 'static',
   telemetry: false,
+  nitro: {
+  },
   head: {
     title: 'FreeStuff Dashboard',
     htmlAttrs: {
