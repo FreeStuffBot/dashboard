@@ -8277,10 +8277,10 @@ neo-async@^2.5.0, neo-async@^2.6.1, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nitropack@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/nitropack/-/nitropack-0.2.2.tgz#852c3688102fc298c205eff2f2a378e61f2b11bf"
-  integrity sha512-rfOEE8fqmZrWfyWYOq/LEeEN7U89FYPSphdjIErWn432O2xo9Tb/g7F+LzgXEBdDp2Q8m4eab30/ufUFPABVdg==
+nitropack@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/nitropack/-/nitropack-0.2.1.tgz#276d1f438990b542ae03a271ebc64635a5c82a2c"
+  integrity sha512-UcgjF0n25tiMmgplHZ057gIpt68MghWsHnmR5FGjgCOLDaysv04kyYOPGbJonq6FJUzZmNDGnvbmPBS8fzeEKQ==
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.2.0"
     "@netlify/functions" "^1.0.0"

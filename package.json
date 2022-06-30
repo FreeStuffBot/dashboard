@@ -21,7 +21,7 @@
     "@nuxtjs/svg": "^0.3.0",
     "chart.js": "2.9.4",
     "mapbox-gl": "^2.3.1",
-    "nitropack": "0.2.2",
+    "nitropack": "0.2.1",
     "nuxt-edge": "^2.16.0-27358576.777a4b7f",
     "nuxt-i18n": "^6.27.3",
     "paparsya": "^1.0.1",
