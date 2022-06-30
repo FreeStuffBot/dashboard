@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   target: 'static',
   telemetry: false,
   nitro: {
+    preset: 'netlify'
   },
   head: {
     title: 'FreeStuff Dashboard',
