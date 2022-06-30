@@ -4,6 +4,9 @@ export default defineNuxtConfig({
 // eslint-disable-next-line nuxt/no-cjs-in-config
   target: 'static',
   telemetry: false,
+  nitro: {
+    preset: 'netlify'
+  },
   head: {
     title: 'FreeStuff Dashboard',
     htmlAttrs: {
