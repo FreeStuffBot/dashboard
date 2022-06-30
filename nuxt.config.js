@@ -2,7 +2,6 @@ import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
 // eslint-disable-next-line nuxt/no-cjs-in-config
-  mode: 'universal',
   target: 'static',
   telemetry: false,
   head: {

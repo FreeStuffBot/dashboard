@@ -7,7 +7,7 @@
     "dev": "nuxi dev --port 5522",
     "build": "nuxi build",
     "start": "nuxi start",
-    "generate": "nuxi generate",
+    "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{vue,css,scss}\" --ignore-path .gitignore",
     "lint": "yarn lint:js && yarn lint:style"
@@ -21,6 +21,7 @@
     "@nuxtjs/svg": "^0.3.0",
     "chart.js": "2.9.4",
     "mapbox-gl": "^2.3.1",
+    "nitropack": "0.2.2",
     "nuxt-edge": "^2.16.0-27358576.777a4b7f",
     "nuxt-i18n": "^6.27.3",
     "paparsya": "^1.0.1",
