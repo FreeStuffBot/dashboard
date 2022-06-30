@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   target: 'static',
   telemetry: false,
   ssr: false,
-  nitro: {
-    preset: 'netlify'
+  bridge: {
+    nitro: false
   },
   head: {
     title: 'FreeStuff Dashboard',
