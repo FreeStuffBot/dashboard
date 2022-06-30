@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Webscraper and Management Dashboard for the FreeStuff Bot",
   "author": "maanex",
-  "private": true,
   "scripts": {
     "dev": "nuxi dev --port 5522",
     "build": "nuxi build",
