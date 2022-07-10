@@ -38,7 +38,9 @@ export default Vue.extend({
       switch (this.data.status) {
         case 'pending': return 'var(--color-orange)'
         case 'approved': return 'var(--color-green)'
-        default: return 'var(--color-blue)'
+        case 'published': return 'var(--color-blue)'
+        case 'declined': return 'var(--color-red)'
+        default: return 'var(--color-minor)'
       }
     },
     localizedChangedText(): string {
