@@ -12,10 +12,19 @@
           v-for="service of group.services"
           :key="service.id"
           class="service"
+          :selected="selected.includes(service.id)"
         >
-          <p class="id" v-text="service.id" />
+          <p class="id" v-text="service.id" @click="toggleSelect(service.id)" />
           <p class="minmax" :data-ok="isServiceOk(service)" v-text="`${service.found.length} / ${service.min}-${service.max}`" />
-          <p class="status" v-text="getStates(service.found)" />
+          <div class="instances">
+            <span
+              v-for="container of service.found"
+              :key="container.id"
+              :selected="selected.includes(container.id)"
+              @click="toggleSelect(container.id)"
+              v-text="container.id.substring(0, 6)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -30,6 +39,10 @@ export default Vue.extend({
     data: {
       type: Object,
       required: true
+    },
+    selected: {
+      type: Array,
+      default: []
     }
   },
   methods: {
@@ -39,16 +52,11 @@ export default Vue.extend({
       if (count > service.max) return false
       return true
     },
-    getStates(found: any): string {
-      if (!found?.length) return ''
-
-      const list = {} as any
-      for (const container of found)
-        list[container.state] = (list[container.state] ?? 0) + 1
-
-      return Object.entries(list)
-        .map(([ name, amount ]) => `${amount} ${name}`)
-        .join(', ')
+    toggleSelect(name: string): void {
+      if (this.selected.includes(name))
+        this.selected.splice(this.selected.indexOf(name), 1)
+      else
+        this.selected.push(name)
     }
   }
 })
@@ -82,8 +90,17 @@ h3 {
   grid-template-columns: 2fr 1fr 2fr;
   padding-left: $content-padding;
 
+  .id {
+    cursor: pointer;
+  }
+
   &:not(:last-child) {
     border-bottom: 1px solid $color-border;
+  }
+
+  &[selected] {
+    background-color: $color-major;
+    * { color: $color-blue; }
   }
 }
 
@@ -96,6 +113,29 @@ h3 {
 
   &:not([data-ok]) {
     color: $color-red;
+  }
+}
+
+.instances {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  span {
+    background-color: $color-blue-20;
+    color: $color-major;
+    height: fit-content;
+    font-family: monospace;
+    font-size: 11pt;
+    padding: 3pt 4pt;
+    border-radius: 3px;
+    // border: 1px solid $backpage;
+    cursor: pointer;
+
+    &[selected] {
+      background-color: $color-major;
+      color: $color-blue;
+    }
   }
 }
 </style>

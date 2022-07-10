@@ -111,7 +111,7 @@ export default Vue.extend({
     0 1px #ffffff22 inset,
     0 -1px #00000066 inset;
   transition:
-    background-color .1s ease,
+    background-color .3s ease,
     filter .1s ease;
 
   * { transition: color .1s ease; }

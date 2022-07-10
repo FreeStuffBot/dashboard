@@ -6,7 +6,7 @@
         <h2>Announcement</h2>
         <Button
           text="Publish"
-          type="green"
+          :type="products.announcement.length ? 'green' : 'light'"
           @click="publish"
         />
       </div>

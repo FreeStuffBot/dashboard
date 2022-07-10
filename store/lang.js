@@ -2,6 +2,7 @@ export const state = () => ({
   pending: '⧖ Pending',
   declined: '✕ Declined',
   approved: '✓ Approved',
+  published: '✓ Published',
   processing: '… Processing',
   keep: 'Free to Keep',
   timed: 'Free for a Weekend',

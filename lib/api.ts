@@ -225,6 +225,14 @@ export default class API {
     return this.rawPatch(`/admin/config/${name}`, data)
   }
 
+  public static getAdminServices() {
+    return this.rawGet('/admin/services')
+  }
+
+  public static postAdminServicesCommand(command: { receivers: string[], name: string, data?: any }) {
+    return this.rawPost('/admin/services/command', command)
+  }
+
   /*
    *
    *

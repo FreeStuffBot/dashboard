@@ -88,7 +88,7 @@ export default Vue.extend({
           type: this.$store.getters['user/isContributor'] ? 'page' : 'none',
           name: 'Stats',
           secret: 'Stonks',
-          url: '/stats',
+          url: 'https://monitoring.freestuffbot.xyz/',
           icon: '/assets/img/peepograph.png'
         },
         {
