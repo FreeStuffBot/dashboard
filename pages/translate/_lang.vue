@@ -267,10 +267,10 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "text1 text2" "bar bar";
-  row-gap: $box-padding / 2;
-  background: $bg-bright;
+  row-gap: calc($box-padding / 2);
+  background: $bg-light;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding;
 
   .title { grid-area: text1; }
@@ -303,7 +303,7 @@ h1 {
   flex-direction: column;
   background: #393f55;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding;
 
   & > div {
@@ -315,12 +315,12 @@ h1 {
     grid-template-columns: 1fr 1fr 4fr 1fr;
     column-gap: 10pt;
     padding-bottom: $box-padding;
-    margin-bottom: $box-padding / 2;
+    margin-bottom: calc(#{$box-padding} / 2);
     border-bottom: 1px solid #00000044;
 
     button {
       padding: 8pt;
-      border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       background-color: #7e89b1;
       color: $color-header;
@@ -341,7 +341,7 @@ h1 {
       width: calc(100% - 20pt);
       margin: 0;
       padding: 8pt 10pt;
-      border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       font-family: monospace;
       font-size: 12pt;
@@ -351,7 +351,7 @@ h1 {
 
     select {
       padding: 8pt 10pt;
-      border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       font-family: monospace;
       font-size: 12pt;
@@ -364,9 +364,9 @@ h1 {
   }
 
   & > .description {
-    margin-top: $box-padding / 2;
+    margin-top: calc(#{$box-padding} / 2);
     padding: 0 5pt 10pt 5pt;
-    border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-regular;
     font-size: 11pt;
@@ -375,9 +375,9 @@ h1 {
   }
 
   & > .orgtext {
-    margin-top: $box-padding / 2;
+    margin-top: calc(#{$box-padding} / 2);
     padding: 8pt 10pt;
-    border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-regular;
     font-size: 12pt;
@@ -386,9 +386,9 @@ h1 {
   }
 
   & > textarea {
-    margin-top: $box-padding / 2;
+    margin-top: calc(#{$box-padding} / 2);
     padding: 8pt 10pt;
-    border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
     border: none;
     font-family: $font-major;
     font-size: 12pt;
@@ -438,7 +438,7 @@ h1 {
 
     button {
       padding: 6pt 10pt;
-      border-radius: $box-border-radius / 3;
+      border-radius: calc($box-br / 3);
       border: none;
       background-color: #7e89b1;
       color: $color-header;
@@ -459,9 +459,9 @@ h1 {
 }
 
 .box {
-  // background: $bg-bright;
+  // background: $bg-light;
   // padding: $box-padding;
-  // border-radius: $box-border-radius;
+  // border-radius: $box-br;
   margin-top: 50px;
 
   button {
@@ -475,7 +475,7 @@ h1 {
   background: #d6d4462a;
   border: 1px solid #d6d446;
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding;
   font-family: $font-major;
   color: #d6d446;
@@ -485,9 +485,9 @@ h1 {
 <style>
 .orgtext span[pilcrow] {
   display: inline;
-  opacity: .3;
   margin-left: 5px;
   user-select: none;
+  opacity: .3;
 }
-.orgtext br::selection { background-color: transparent }
+.orgtext br::selection { background-color: transparent; }
 </style>

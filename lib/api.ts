@@ -34,7 +34,7 @@ export default class API {
   }
 
   private static buildConf(headers?: any, body?: any): AxiosRequestConfig {
-    headers ||= {}
+    headers = headers || {}
     headers.Authorization = localStorage.getItem('token')
     const conf: AxiosRequestConfig = {
       headers,
@@ -134,11 +134,11 @@ export default class API {
   //
 
   public static getLanguageList() {
-    return this.rawGet('/translate/list')
+    return this.rawGet('/translations/languages')
   }
 
   public static getLanguage(id: string) {
-    return this.rawGet(`/translate/language/${id}`)
+    return this.rawGet(`/translations/languages/${id}`)
   }
 
   public static patchLanguage(id: string, data: any) {
@@ -151,13 +151,90 @@ export default class API {
 
   //
 
-  public static getContentList(offset: number, amount: number) {
-    return this.rawGet(`/content/list/${offset}/${amount}`)
+  public static getProductList(options: { offset?: number, limit?: number, queryName?: 'pending' | 'published' } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/products?${query}`)
   }
 
-  public static getContentData(id: string) {
-    return this.rawGet(`/content/data/${id}`)
+  public static getProduct(id: string) {
+    return this.rawGet(`/content/products/${id}`)
   }
+
+  public static postProduct(data: { url: string }) {
+    return this.rawPost('/content/products', data)
+  }
+
+  public static patchProduct(id: string, data: any) {
+    return this.rawPatch(`/content/products/${id}`, data)
+  }
+
+  /** will take a url and a boolean whether to merge and apply changes */
+  public static postProductRefetch(id: string, data: { url: string, merge: boolean }) {
+    return this.rawPost(`/content/products/${id}/refetch`, data)
+  }
+
+  public static postAnnouncement(data: { products: number[] }) {
+    return this.rawPost('/content/announcements', data)
+  }
+
+  public static getPlatformList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/platforms?${query}`)
+  }
+
+  public static postPlatform(id: string) {
+    return this.rawPost('/content/platforms', { id })
+  }
+
+  public static patchPlatform(id: string, data: any) {
+    return this.rawPatch(`/content/platforms/${id}`, data)
+  }
+
+  public static deletePlatform(id: string) {
+    return this.rawDelete(`/content/platforms/${id}`)
+  }
+
+  public static getCurrencyList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/currencies?${query}`)
+  }
+
+  public static postCurrency(id: string) {
+    return this.rawPost('/content/currencies', { id })
+  }
+
+  public static patchCurrency(id: string, data: any) {
+    return this.rawPatch(`/content/currencies/${id}`, data)
+  }
+
+  public static deleteCurrency(id: string) {
+    return this.rawDelete(`/content/currencies/${id}`)
+  }
+
+  //
+
+  public static getAdminExperiments() {
+    return this.rawGet('/admin/experiments')
+  }
+
+  public static getAdminConfig(name: 'global' | 'service-composition') {
+    return this.rawGet(`/admin/config/${name}`)
+  }
+
+  public static patchAdminConfig(name: 'global' | 'service-composition', data: any) {
+    return this.rawPatch(`/admin/config/${name}`, data)
+  }
+
+  /*
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   */
 
   public static getGuildAmount(store: string, price: string | number, trash: boolean) {
     return this.rawGet(`/content/guildamount/${store}/${price}/${trash}`)
@@ -249,16 +326,16 @@ export default class API {
     return this.rawPost('/admin/users', data)
   }
 
-  public static adminGetExperiments() {
-    return this.rawGet('/admin/experiments')
-  }
-
   public static adminPostExperiment(data: any) {
     return this.rawPost('/admin/experiments', data)
   }
 
-  public static adminPatchExperiment(data: any) {
-    return this.rawPatch('/admin/experiments', data)
+  public static adminPatchExperiment(id: string, data: any) {
+    return this.rawPatch(`/admin/experiments/${id}`, data)
+  }
+
+  public static adminDeleteExperiment(id: string) {
+    return this.rawDelete(`/admin/experiments/${id}`)
   }
 
   public static adminGetGuild(id: string) {
@@ -277,12 +354,8 @@ export default class API {
     return this.rawPatch('/admin/config', data)
   }
 
-  public static adminGetLogs() {
-    return this.rawGet('/admin/logs')
-  }
-
-  public static adminGetLogFile(file: string) {
-    return this.rawGet(`/admin/logs/${file}`)
+  public static adminGetServices() {
+    return this.rawGet('/admin/services')
   }
 
 }

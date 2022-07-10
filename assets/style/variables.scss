@@ -1,35 +1,116 @@
 
+/* Responsive Key Dimensions */
+$res-laptop-width: 1200px;
+$res-laplet-width: 1000px;
+$res-tablet-width: 800px;
+$res-mobile-width: 450px;
+
+/* at which width the sidebar gets collapsed */
+$res-sidebar-collapse-width: $res-tablet-width;
+/* at which width the sidebar gets turned into a menu button */
+$res-sidebar-menu-width: $res-mobile-width;
+
+
+/* Dynamic Properties */
+:root {
+  --color-header: #ffffff; //
+  --color-major: #eeeeee; //
+  --color-regular: #dddddd; //
+  --color-sub: #aaaaaa; //
+  --color-minor: #777777; //
+  --color-border: #37393d;
+
+  --backpage: #101318;
+  --bg-light: #1b1f25; //
+  --bg-lighter: #262a31; //
+  --bg-dark: #0b0c10;
+  --bg-darker: #000000;
+
+  --color-red: #e43c26;
+  --color-orange: #cf8642;
+  --color-yellow: #d6a949;
+  --color-blue: #4a73a8;
+  --color-green: #3e9e71;
+  --color-red-20: #e43c2644;
+  --color-yellow-20: #d6a94944;
+  --color-orange-20: #cf864244;
+  --color-blue-20: #4a73a844;
+  --color-green-20: #3e9e7144;
+
+  --box-outer-padding: 40pt;
+  --box-padding: 15pt;
+  --sidebar-width: min(280pt, 28vw);
+
+  /** LAPTOP OVERRIDES */
+  @media screen and (max-width: $res-laptop-width) {
+    --box-outer-padding: 20pt;
+  }
+
+  /** LAPTOP-TAPLET OVERRIDES */
+  @media screen and (max-width: $res-laplet-width) {
+    --box-outer-padding: 10pt;
+    --sidebar-width: 25vw;
+  }
+
+  /** TABLET OVERRIDES */
+  @media screen and (max-width: $res-tablet-width) {
+  }
+
+  /** MOBILE OVERRIDES */
+  @media screen and (max-width: $res-mobile-width) {
+    
+  }
+
+  /** Sidebar collapse */
+  @media screen and (max-width: $res-sidebar-collapse-width) {
+    --sidebar-width: calc(27px + 8pt*2 + 5pt*2);
+  }
+
+  /** Sidebar collapse */
+  @media screen and (max-width: $res-sidebar-menu-width) {
+    --sidebar-width: 0;
+  }
+}
+
+
+
 /* COLORS */
-$color-header: #ffffff;
-$color-major: #eeeeee;
-$color-regular: #dddddd;
-$color-sub: #aaaaaa;
-$color-minor: #777777;
+$color-header: var(--color-header);
+$color-major: var(--color-major);
+$color-regular: var(--color-regular);
+$color-sub: var(--color-sub);
+$color-minor: var(--color-minor);
+$color-border: var(--color-border);
 
-// $backpage: #1f2023;
-// $bg-bright: #37393e;
-// $bg-brighter: #3e4046;
-// $bg-dark: #181a1c;
-// $bg-darker: #0c0d0e;
+$backpage: var(--backpage); 
+$bg-light: var(--bg-light); 
+$bg-lighter: var(--bg-lighter); 
+$bg-dark: var(--bg-dark); 
+$bg-darker: var(--bg-darker); 
 
-$backpage: #2a2530;
-$bg-bright: #3e3842;
-$bg-brighter: #473e49;
-$bg-dark: #1c1b22;
-$bg-darker: #0c0c0e;
+$color-red: var(--color-red);
+$color-orange: var(--color-orange);
+$color-yellow: var(--color-yellow);
+$color-blue: var(--color-blue);
+$color-green: var(--color-green);
+$color-red-20: var(--color-red-20);
+$color-yellow-20: var(--color-yellow-20);
+$color-orange-20: var(--color-orange-20);
+$color-blue-20: var(--color-blue-20);
+$color-green-20: var(--color-green-20);
 
-$primary-orange: #F39807;
-$primary-orange-trans: #F39807CC;
-$primary-blue: #00D9FF;
-$primary-blue-trans: #00D9FFCC;
-$primary-pink: #FF0095;
-$primary-pink-trans: #FF0095;
+/* @dep */ $primary-orange: #F39807; //
+/* @dep */ $primary-orange-trans: #F39807CC; //
+/* @dep */ $primary-blue: #00D9FF; //
+/* @dep */ $primary-blue-trans: #00D9FFCC; //
+/* @dep */ $primary-pink: #FF0095; //
+/* @dep */ $primary-pink-trans: #FF0095; //
 
-$error-major: #e43c26;
-$warning-major: #d64955;
-$warning-minor: #d6a949;
-$info-major: #4a73a8;
-$success-major: #3e9e71;
+/* @dep */ $error-major: #e43c26; //
+/* @dep */ $warning-major: #d64955; //
+/* @dep */ $warning-minor: #d6a949; //
+/* @dep */ $info-major: #4a73a8; //
+/* @dep */ $success-major: #3e9e71; //
 
 
 /* General */
@@ -42,10 +123,20 @@ $font-minor: 'Montserrat 400', 'Roboto', sans-serif;
 
 /* Components */
 $box-width: 400pt;
-$box-border-radius: 5pt;
-$box-outer-padding: 40pt;
-$box-padding: 15pt;
-$content-border-radius: 3pt;
-$border: 1px solid #C5C5C5;
+$box-br: 10pt;
+$box-outer-padding: var(--box-outer-padding);
+$box-padding: var(--box-padding);
 
+$content-br: 6pt;
+$content-height: 35pt;
+$content-padding: 8pt;
+
+$border: 1px solid $color-border;
+$sidebar-width: var(--sidebar-width);
+$botnav-height: 50pt;
+
+$zindex-loader: 200;
+$zindex-popups: 150;
+$zindex-sidebar: 100;
+$zindex-app: 50;
 

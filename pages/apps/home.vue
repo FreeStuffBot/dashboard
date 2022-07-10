@@ -1,24 +1,33 @@
 <template>
-  <div class="container">
-    <span v-if="!data">Loading...</span>
+  <Container>
+    <Admonition v-if="error" type="error" :text="error" />
+    <span v-else-if="!data">Loading...</span>
     <div v-else-if="data.none">
       <h1>Welcome!</h1>
-      <span>Looks like you haven't created an application yet.</span>
+      <p>Looks like you haven't created an application yet.</p>
       <br>
-      <span>Click below to get started with using the FreeStuff API!</span>
+      <p>Click below to get started with using the FreeStuff API!</p>
       <br>
       <br>
-      <button generic dark @click="createApp">
-        Create Application
-      </button>
+      <Button
+        type="green"
+        text="Create Application"
+        @click="createApp"
+      />
     </div>
     <div v-else>
-      <h1 v-text="data.type == 'partner' ? 'Your application [partner]:' : 'Your application:'" />
-      <h2>About your app:</h2>
-      <span>Please describe your app in a few words. What are you using it for? Can you link some websites / social media for your project?</span>
-      <textarea v-model="newdesc" maxlength="2048" @blur="saveDesc" />
+      <h1 v-text="data.type == 'partner' ? 'Your application [partner]' : 'Your application'" />
+      <h2>About your app</h2>
+      <p>Please describe your app in a few words. What are you using it for? Can you link some websites / social media for your project?</p>
+      <Input
+        v-model="newdesc"
+        label="Description"
+        :multiline="true"
+        @blur="saveDesc"
+      />
 
-      <h2><Icon name="key" /> API Key:</h2>
+      <!-- <h2><Icon name="key" /> API Key</h2> -->
+      <h2>API Key</h2>
       <div class="content-row">
         <div class="tokenbox">
           <span class="curtain">Hover to view</span>
@@ -30,51 +39,49 @@
       </div>
       <sub>Last regenerated {{ getLastChanged('key') }}</sub>
 
-      <h2><Icon name="webhook" /> Event Webhook:</h2>
-      <span>General Settings</span>
-      <div class="spacer small" />
-      <div class="content-row">
-        <input
-          v-model="data.webhook"
-          v-tippy="{ placement: 'top' }"
+      <!-- <h2><Icon name="webhook" /> Event Webhook</h2> -->
+      <h2>Event Webhooks</h2>
+      <!-- <div class="spacer small" /> -->
+      <Layout name="component-flow">
+        <Input
+          v-model="data.webhookUrl"
           :disabled="!webhookEdit"
-          type="text"
+          label="Webhook URL"
           placeholder="https://your-domain.com/webhooks/freestuff"
-          content="Webhook URL"
-        >
-      </div>
-      <div class="content-row">
-        <input
-          v-model="data.webhooksecret"
-          v-tippy="{ placement: 'top' }"
+        />
+        <Input
+          v-model="data.webhookSecret"
           :disabled="!webhookEdit"
-          type="text"
-          placeholder="Webhook Secret"
-          content="Webhook Secret"
-        >
-        <button generic dark style="margin-right: 10pt" @click="updateWebhook">
-          {{ webhookEdit ? 'Save Changes' : 'Edit' }}
-        </button>
-        <button generic dark @click="testWebhook">
-          {{ webhookEdit ? 'Cancel' : 'Test Webhook' }}
-        </button>
-      </div>
-      <sub>Last changed {{ getLastChanged('webhook') }}</sub>
+          label="Webhook Secret"
+          placeholder="Secret"
+        />
+        <!-- <sub>Last changed {{ getLastChanged('webhook') }}</sub> -->
 
-      <div class="spacer medium" />
-      <span>Webhook Version</span>
-      <div class="spacer small" />
-      <div class="content-row">
-        <select v-model="data.webhookVersion">
-          <option value="1">
-            Version 1 &mdash; Default
-          </option>
-          <!-- <option value="2">
-            Version 2 &mdash; NEW
-          </option> -->
-        </select>
-      </div>
-      <sub>Last changed {{ getLastChanged('webhookVersion') }}</sub>
+        <Layout name="inline">
+          <Button
+            type="light"
+            :text="webhookEdit ? 'Save Changes' : 'Edit'"
+            @click="updateWebhook"
+          />
+          <Button
+            type="light"
+            :text="webhookEdit ? 'Cancel' : 'Test Webhook'"
+            @click="testWebhook"
+          />
+        </Layout>
+
+        <div class="spacer small" />
+
+        <Input
+          v-model="data.webhookVersion"
+          label="Webhook Version"
+          :options="[
+            { label: 'Version 1 — Default', value: '1' }
+          ]"
+        />
+      <!-- <sub>Last changed {{ getLastChanged('webhookVersion') }}</sub> -->
+      </Layout>
+
 
       <div v-if="data.webhookVersion == 2">
         <div class="spacer medium" />
@@ -83,35 +90,53 @@
         <span>TODO</span>
       </div>
 
-      <h2><Icon name="analytics" /> API Usage:</h2>
+      <!-- <h2><Icon name="analytics" /> API Usage</h2> -->
+      <h2>API Usage</h2>
       <span>Coming soon&trade;</span>
     </div>
-  </div>
+  </Container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import Icon from '~/components/icon.vue'
+import { openConfirmDialogue, openInfoDialogue } from '../../lib/popups'
+import Admonition from '~/components/entities/Admonition.vue'
+import Container from '~/components/layout/Container.vue'
+import Layout from '~/components/layout/Layout.vue'
+import Button from '~/components/entities/Button.vue'
+import Input from '~/components/entities/Input.vue'
 
 
 export default Vue.extend({
   components: {
-    Icon
+    Admonition,
+    Container,
+    Layout,
+    Button,
+    Input
   },
   transition: 'slide-down',
   async fetch() {
     const info = await API.getAppData()
-    this.data = info.data
-    if (info.data.description)
-      this.newdesc = info.data.description
-    if (!info.data.webhookVersion)
-      this.data.webhookVersion = '1'
+
+    if (info.status === 200) {
+      this.data = info.data
+      if (info.data.description)
+        this.newdesc = info.data.description
+      if (!info.data.webhookVersion)
+        this.data.webhookVersion = '1'
+    } else if (info.status === 404) {
+      this.data = { none: true }
+      this.error = ''
+    } else {
+      this.error = `An error occured: http ${info.status}: ${info.statusText}`
+    }
   },
   data() {
     return {
       data: null as any,
+      error: '',
       newdesc: '',
       webhookEdit: false
     }
@@ -119,73 +144,88 @@ export default Vue.extend({
   fetchOnServer: false,
   methods: {
     getLastChanged(name: string) {
-      return this.data['lc_' + name]
-        ? new Date(this.data['lc_' + name] * 1000).toLocaleString()
+      const val = this.data['lc' + name[0].toUpperCase() + name.substring(1)]
+      return val
+        ? new Date(val * 1000).toLocaleString()
         : 'Unknown'
     },
     async createApp() {
-      const data = await Swal.fire({
-        title: 'Do you want to create an API application?',
-        html: 'By continuing, you agree to our <a href="https://freestuffbot.xyz/terms/" target="_blank">API Terms of Service</a>.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3e9e71',
-        confirmButtonText: 'Yes'
-      })
+      const yes = await openConfirmDialogue(
+        this.$store,
+        'Do you want to create an API application?',
+        'By continuing, you agree to our API Terms of Service: https://freestuffbot.xyz/terms/'
+      )
 
-      if (data.value) {
-        const success = await API.postAppCreate()
-        if (success.data.success) { this.$fetch() } else {
-          Swal.fire({
-            title: 'Could not create your application.',
-            text: (success.data.message ?? 'Perhaps it already exists? Please reload the page.') + ' If this error persists, please contact support!'
-          })
-        }
+      if (!yes) return
+
+      const res = await API.postAppCreate()
+      if (res.status !== 200) {
+        openInfoDialogue(
+          this.$store,
+          'Could not create your application.',
+          (res.data.message ?? 'Perhaps it already exists? Please reload the page.') + ' If this error persists, please contact support!'
+        )
+        return
       }
+
+      this.$fetch()
     },
     async resetApiKey() {
-      const data = await Swal.fire({
-        title: 'Regenerate API key?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3e9e71',
-        confirmButtonText: 'Yes'
-      })
+      const yes = await openConfirmDialogue(
+        this.$store,
+        'Regenerate API key?',
+        'Your old key will be made invalid'
+      )
 
-      if (data.value) {
-        const res = await API.postAppRegenKey()
-        Swal.fire({
-          title: res.data.success ? 'Okie dokie' : 'Uh oh...',
-          text: res.data.success ? 'Your api token was regenerated.' : 'Could not reset your token, please contact support!'
-        })
-        if (res.data.success) this.$fetch()
+      if (!yes) return
+
+      const res = await API.postAppRegenKey()
+      if (res.status !== 200) {
+        openInfoDialogue(
+          this.$store,
+          'Uh oh...',
+          res.data.message ?? 'Could not reset your token, please contact support!'
+        )
+        return
       }
+
+      openInfoDialogue(
+        this.$store,
+        'Okie dokie',
+        'Your api token was regenerated.'
+      )
+      this.$fetch()
     },
     async updateWebhook() {
       if (!this.webhookEdit) {
         this.webhookEdit = true
         return
       }
+      const yes = await openConfirmDialogue(
+        this.$store,
+        'Save Webhook Settings?',
+        'Just making sure...'
+      )
 
-      const data = await Swal.fire({
-        title: 'Save Webhook Settings?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3e9e71',
-        confirmButtonText: 'Yes'
-      })
+      if (!yes) return
 
-      if (data.value) {
-        const res = await API.patchAppWebhook(this.data.webhook, this.data.webhooksecret)
-        Swal.fire({
-          title: res.data.success ? 'Success!' : 'Uh oh...',
-          text: res.data.success ? 'Your Webhook settings got updated!' : res.data.message
-        })
-        if (res.data.success) {
-          this.$fetch()
-          this.webhookEdit = false
-        }
+      const res = await API.patchAppWebhook(this.data.webhookUrl, this.data.webhookSecret)
+      if (res.status !== 200) {
+        openInfoDialogue(
+          this.$store,
+          'Uh oh...',
+          res.data.message ?? 'Could update your webhook, please contact support!'
+        )
+        return
       }
+
+      openInfoDialogue(
+        this.$store,
+        'Success!',
+        'Your Webhook settings got updated!'
+      )
+      this.$fetch()
+      this.webhookEdit = false
     },
     async testWebhook() {
       if (this.webhookEdit) {
@@ -194,11 +234,12 @@ export default Vue.extend({
         return
       }
 
-      await API.postAppWebhookTest(this.data.webhook, this.data.webhooksecret)
-      Swal.fire({
-        title: 'Aaaaand out!',
-        text: 'Successfully sent test webhook event.<br>Make sure to save your changes first before testing!'
-      })
+      await API.postAppWebhookTest(this.data.webhookUrl, this.data.webhookSecret)
+      openInfoDialogue(
+        this.$store,
+        'Aaaaand out!',
+        'Successfully sent test webhook event.\nMake sure to save your changes first before testing!'
+      )
     },
     saveDesc() {
       if (this.data.description !== this.newdesc) {
@@ -231,8 +272,8 @@ span {
 }
 
 .tokenbox {
-  background-color: $bg-bright;
-  border-radius: $content-border-radius;
+  background-color: $bg-light;
+  border-radius: $content-br;
   border: 1px solid $color-minor;
   padding: 10pt 15pt;
   flex-grow: 1;
@@ -256,8 +297,8 @@ span {
 }
 
 input, textarea, select {
-  background-color: $bg-bright;
-  border-radius: $content-border-radius;
+  background-color: $bg-light;
+  border-radius: $content-br;
   border: none;
   padding: 10pt 15pt;
   flex-grow: 1;

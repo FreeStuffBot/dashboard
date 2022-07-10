@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <h1>
-      API Apps
-    </h1>
+    <h1>API Apps</h1>
 
     <h2>List:</h2>
     <div
@@ -63,10 +61,10 @@ span {
 }
 
 .app {
-  background-color: $bg-bright;
+  background-color: $bg-light;
   padding: $box-padding;
-  border-radius: $box-border-radius;
-  margin-bottom: $box-padding / 2;
+  border-radius: $box-br;
+  margin-bottom: calc(#{$box-padding} / 2);
   display: grid;
   grid-template: auto auto / auto 1fr;
   grid-template-areas: "icon title" "icon rest";

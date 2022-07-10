@@ -211,8 +211,8 @@ h1 img {
 }
 
 input {
-  border-radius: $content-border-radius;
-  background-color: $bg-bright;
+  border-radius: $content-br;
+  background-color: $bg-light;
   border: none;
   padding: 5pt 8pt;
   font-size: 11pt;
@@ -223,9 +223,9 @@ input {
 }
 
 .user {
-  background-color: $bg-bright;
-  border-radius: $box-border-radius;
-  margin-top: $box-padding / 2;
+  background-color: $bg-light;
+  border-radius: $box-br;
+  margin-top: calc(#{$box-padding} / 2);
   padding: $box-padding;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -281,7 +281,7 @@ input {
     --bg: #{$bg-darker};
     --color: #{$color-major};
 
-    &.b1 { --bg-hov: #{$bg-bright}; }
+    &.b1 { --bg-hov: #{$bg-light}; }
     &.b2 { --bg-hov: #{$warning-major}; }
     &.b3 { --bg-hov: #{$info-major}; }
     &.b4 { --bg-hov: #{$success-major}; }

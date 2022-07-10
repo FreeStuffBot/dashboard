@@ -1,9 +1,13 @@
+import { defineNuxtConfig } from '@nuxt/bridge'
 
+export default defineNuxtConfig({
 // eslint-disable-next-line nuxt/no-cjs-in-config
-module.exports = {
-  mode: 'universal',
   target: 'static',
   telemetry: false,
+  ssr: false,
+  bridge: {
+    nitro: false
+  },
   head: {
     title: 'FreeStuff Dashboard',
     htmlAttrs: {
@@ -11,7 +15,7 @@ module.exports = {
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
@@ -21,12 +25,14 @@ module.exports = {
   loading: { color: '#fff' },
   css: [
   ],
+  components: true,
   plugins: [
+    { src: '~plugins/vue-tippy.js', ssr: false },
     { src: '~plugins/vue-chartjs.js', ssr: false }
   ],
   buildModules: [
-    '@nuxt/typescript-build',
     '@nuxtjs/svg',
+    '@nuxtjs/stylelint-module',
     '@nuxtjs/style-resources'
   ],
   modules: [
@@ -38,7 +44,17 @@ module.exports = {
       '@/assets/style/all.scss'
     ]
   },
+  stylelint: {
+    fix: true,
+    failOnError: false,
+    failOnWarning: false
+  },
   build: {
+    babel: {
+      plugins: [
+        [ '@babel/plugin-proposal-private-methods', { loose: true } ]
+      ]
+    }
   },
   // render: {
   //   csp: {
@@ -103,4 +119,4 @@ module.exports = {
       }
     }
   }
-}
+})

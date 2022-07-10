@@ -1,10 +1,11 @@
 <template>
   <nav>
-    <div v-for="link of navlinks" :key="link.name" class="el-wrapper">
-      <div v-if="link.type == 'header'" class="el-inner header">
+    <div v-for="link of navlinks" :key="link.name" class="wrapper">
+      <div v-if="link.type == 'header'" class="inner header">
         <label v-text="link.name" />
       </div>
-      <div v-if="link.type == 'page'" class="el-inner page" :active="isActive(link)">
+
+      <div v-if="link.type == 'page'" class="inner page" :active="isActive(link)">
         <a v-if="link.url.startsWith('http')" :href="link.url" class="link" target="_blank">
           <div class="icon-wrapper">
             <img
@@ -15,34 +16,17 @@
               draggable="false"
               :title="link.secret"
             >
-            <img
-              v-if="link.iconHover"
-              class="a"
-              :src="link.iconHover"
-              alt="icon"
-              draggable="false"
-              :title="link.secret"
-            >
           </div>
           <div class="text-wrapper">
             <span v-text="link.name" />
-            <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link" class="visonhov">
+            <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link">
           </div>
         </a>
         <NuxtLink v-else :to="link.url" class="link" :subpages="link.url !== '/'">
           <div class="icon-wrapper">
             <img
               class="i"
-              :class="{h:!!link.iconHover}"
               :src="link.icon"
-              alt="icon"
-              draggable="false"
-              :title="link.secret"
-            >
-            <img
-              v-if="link.iconHover"
-              class="a"
-              :src="link.iconHover"
               alt="icon"
               draggable="false"
               :title="link.secret"
@@ -50,13 +34,6 @@
           </div>
           <div class="text-wrapper">
             <span v-text="link.name" />
-          </div>
-        </NuxtLink>
-      </div>
-      <div v-if="link.type == 'add'" class="el-inner add" :active="isActive(link)">
-        <NuxtLink to="/server/add" class="link">
-          <div class="text-wrapper">
-            <span v-text="'+ ' + link.name" />
           </div>
         </NuxtLink>
       </div>
@@ -68,9 +45,9 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  computed: {
-    navlinks() {
-      return [
+  data() {
+    return {
+      navlinks: [
         {
           type: 'header',
           name: 'Welcome!'
@@ -170,33 +147,6 @@ export default Vue.extend({
         //   secret: 'Your api usage',
         //   url: '/application/stats',
         //   icon: '/assets/img/peepobusiness.png'
-        // },
-        // {
-        //   type: 'header',
-        //   name: 'Your servers'
-        // },
-        // ...this.$store.state.user.guilds
-        //   ? this.$store.state.user.guilds
-        //     .filter((g: any) => g.freestuff)
-        //     .sort((a: any, b: any) => {
-        //       let out = 0;
-        //       if (a.freestuff.premium) out++;
-        //       if (b.freestuff.premium) out--;
-        //       // if (a.freestuff.premium.by == this.$store.state.user.id) out++;
-        //       // if (b.freestuff.premium.by == this.$store.state.user.id) out--;
-        //       return out;
-        //     })
-        //     .map((g: any) => { return {
-        //       type: 'page',
-        //       name: g.name,
-        //       url: `/server/${g.id}`,
-        //       icon: g.image,
-        //       iconHover: g.imageHover
-        //     }})
-        //   : [],
-        // {
-        //   type: 'add',
-        //   name: 'Add Server'
         // }
       ]
     }
@@ -213,72 +163,88 @@ export default Vue.extend({
 <style scoped lang="scss">
 nav {
   display: block;
-
-  a {
-    text-decoration: none;
-  }
 }
 
-.el-wrapper {
+a {
+  text-decoration: none;
+}
+
+.wrapper {
   display: block;
-  margin-bottom: 4pt;
+  margin-bottom: 0pt;
 }
 
-.el-inner {
+.inner {
   display: block;
 
   &.header {
-    margin: 32pt 0 0 0;
+    margin: 32pt 0 8pt 0;
 
     label {
       text-transform: uppercase;
-      color: $color-sub;
+      color: $color-minor;
       font-family: $font-major;
-      font-size: 12pt;
+      font-size: 10pt;
+      padding: 0 0 0 $content-padding;
+
+      @media screen and (max-width: $res-sidebar-collapse-width) {
+        display: none;
+      }
     }
   }
 
   &.page, &.add {
     .link {
-      $element-padding: 10pt;
-
       position: relative;
-      display: block;
-      border-radius: $box-border-radius;
-      padding: $element-padding;
+      border-radius: $content-br;
+      padding: $content-padding;
       display: flex;
+      gap: $content-padding;
       align-items: center;
-      background-color: #00000033;
-      transition: background-color .1s ease-out;
+      transform: scale(1);
+      transition: transform .1s ease-out;
 
-      &:hover {
-        background-color: #00000099;
+      &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: $bg-light;
+        border-radius: $content-br;
+        background-color: #00000000;
+        transform: translateX(-$content-padding) scale(0.8);
+        transition:
+          background-color .1s ease-out,
+          transform .1s ease-out;
+      }
 
-        img.a { visibility: visible !important; }
-        img.h { visibility: hidden; }
-        .visonhov { opacity: var(--opacity, 1); }
+      &:not(.nuxt-link-exact-active):not([subpages].nuxt-link-active):hover::before {
+        transform: translateX(-$content-padding) scale(1);
+        background-color: $bg-light;
       }
 
       &.nuxt-link-exact-active, &[subpages].nuxt-link-active {
-        background-color: #000000;
+        background-color: $bg-lighter;
         span { color: $color-major !important; }
 
         img.a { visibility: visible !important; }
         img.h { visibility: hidden; }
+
+        &::after { transition: none; }
       }
 
-      .visonhov {
-        opacity: 0;
-        transition: opacity .1s ease;
+      &:active {
+        transform: scale(0.97);
+        transition: transform .02s ease-out;
       }
 
       .icon-wrapper {
         flex-shrink: 0;
-        width: 28pt;
-        height: 28pt;
+        width: 27px;
+        height: 27px;
         border-radius: 99pt;
         overflow: hidden;
-        margin-right: $element-padding;
         position: relative;
 
         img {
@@ -288,8 +254,6 @@ nav {
           width: 100%;
           height: 100%;
           user-select: none;
-
-          &.a { visibility: hidden; }
         }
       }
 
@@ -303,19 +267,28 @@ nav {
 
         span {
           color: $color-sub;
-          font-family: $font-regular;
+          font-family: $font-major;
           text-decoration: none;
-          font-size: 14pt;
+          font-size: 12pt;
           display: inline-block;
           flex-grow: 0;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           transition: color .1s ease-out;
+
+          @media screen and (max-width: $res-tablet-width) {
+            font-size: 10pt;
+            height: calc($box-padding / 2);
+          }
+
+          @media screen and (max-width: $res-sidebar-collapse-width) {
+            display: none;
+          }
         }
 
         img {
-          --opacity: .3;
+          opacity: .2;
           height: .6em;
           width: .6em;
           padding-left: .4em;
@@ -323,24 +296,6 @@ nav {
         }
       }
     }
-  }
-
-  &.add {
-    .text-wrapper {
-      height: 28pt;
-      width: 100% !important;
-      display: flex;
-      align-items: center;
-
-      span {
-        width: 100%;
-        text-align: center;
-        font-size: 10pt !important;
-        color: $color-minor !important;
-      }
-    }
-
-    .link:hover span { color: $color-regular !important; }
   }
 }
 

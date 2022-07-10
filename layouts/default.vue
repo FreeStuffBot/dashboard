@@ -1,65 +1,101 @@
 <template>
-  <div id="layout">
-    <div v-if="$store.state.loginStatus === 'success'" id="app">
-      <div id="sidebar">
-        <div class="container">
-          <div v-if="dev" class="devnotice">
-            Dev Env
-          </div>
-          <div id="header">
-            <img src="~/assets/img/logo.png" alt="Logo">
-            <div class="title">
-              <span class="line1">FreeStuff</span>
-              <span class="line2">Dashboard</span>
-            </div>
-          </div>
-          <SidebarNav />
-          <footer>
-            Copyright &copy; {{ new Date().getYear() + 1900 }} FreeStuff Services
-          </footer>
-        </div>
+  <div id="root">
+    <div v-if="showApp" id="app">
+      <div class="anav sidebar">
+        <Sidebar />
+      </div>
+      <div class="anav mobile">
+        <Botnav />
       </div>
       <div id="wrapper">
         <nuxt />
       </div>
     </div>
-    <div id="loader">
+
+    <div id="loader" :hide="showApp">
       <span>&bull; &bull; &bull;</span>
+    </div>
+
+    <div id="popups">
+      <PopupsRenderer />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import SidebarNav from '~/components/SidebarNav.vue'
-
-Vue.use(require('vue-tippy').default, {
-  arrow: true,
-  arrowType: 'round',
-  animation: 'vertical',
-  duration: 100,
-  theme: 'black'
-})
-Vue.component('tippy', require('vue-tippy').TippyComponent)
-
+import Sidebar from '../components/navigation/Sidebar.vue'
+import Botnav from '../components/navigation/Botnav.vue'
+import PopupsRenderer from '../components/popups/PopupsRenderer.vue'
 
 export default Vue.extend({
   components: {
-    SidebarNav
+    Sidebar,
+    Botnav,
+    PopupsRenderer
   },
   data() {
     return {
+      scrollFreeze: false,
+      transitionDirection: '',
+      prevRoutePath: '',
+      prevRouteDepth: 0,
+      prevRouteProject: '',
       dev: process.env.NODE_ENV !== 'production'
+    }
+  },
+  computed: {
+    showApp() {
+      return this.$store.state.loginStatus === 'success'
+    }
+  },
+  fetchOnServer: false,
+  watch: {
+    $route: {
+      deep: true,
+      handler(route: any) {
+        // #region Page transitions
+        let depth = route.name.split('-').length
+        if (!route.name.startsWith('index')) depth++
+
+        const fullPath = route.fullPath.split('?')[0]
+        const sameOrigin = (this.prevRoutePath.startsWith(fullPath) || fullPath.startsWith(this.prevRoutePath))
+
+        if (!sameOrigin)
+          this.transitionDirection = ''
+        else if (depth > this.prevRouteDepth)
+          this.transitionDirection = 'right'
+        else if (depth < this.prevRouteDepth)
+          this.transitionDirection = 'left'
+        else
+          this.transitionDirection = ''
+
+        this.prevRouteDepth = depth
+        this.prevRoutePath = fullPath
+        // #endregion
+      }
+    },
+    '$store.state.disableScroll'(value: number) {
+      if (!value) {
+        this.scrollFreeze = false
+        if (document.body.parentElement)
+          document.body.parentElement.style.overflow = ''
+      } else if (!this.scrollFreeze) {
+        this.scrollFreeze = true
+        if (document.body.parentElement)
+          document.body.parentElement.style.overflow = 'hidden'
+      }
     }
   },
   mounted() {
     this.$store.dispatch('pageLoad')
+    this.prevRoutePath = this.$route.fullPath
   }
 })
 </script>
 
 <style scoped lang="scss">
-html, body, #layout, #app {
+html, body, #root, #app {
   position: absolute;
   top: 0;
   left: 0;
@@ -85,7 +121,12 @@ html, body, #layout, #app {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  background-color: $backpage;
+  z-index: $zindex-loader;
+
+  &[hide] {
+    animation: loader-fadeout .2s ease-out 1s forwards;
+  }
 
   * {
     font-family: $font-regular;
@@ -95,119 +136,61 @@ html, body, #layout, #app {
 }
 
 #app {
-  z-index: 10;
+  z-index: $zindex-app;
   background-color: $backpage;
   display: flex;
-  opacity: 0;
-  animation: app-fadein .2s ease-out .5s forwards;
 }
 
-@keyframes app-fadein {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+#popups {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min-content;
+  height: min-content;
+  padding: 0;
+  margin: 0;
+  z-index: $zindex-popups;
 }
 
-#sidebar {
-  background-color: $bg-dark;
-  height: 100vh;
-  overflow-x: hidden;
-  padding: 0 $box-outer-padding;
-  max-width: 18vw;
-  animation: sidebar-fadein .3s ease-out .5s forwards;
-
-  .container {
-    padding: $box-outer-padding 0;
-    min-height: calc(100vh - #{$box-outer-padding * 2});
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  #header {
-    display: flex;
-    align-items: center;
-    margin-bottom: $box-padding;
-    margin-right: $box-outer-padding * 2;
-
-    img {
-      border-radius: 99pt;
-      height: 4vw;
-      margin-right: $box-padding;
-    }
-
-    .title {
-      display: flex;
-      flex-direction: column;
-
-      * {
-        font-family: $font-header;
-        font-size: 1.8vw;
-        margin: -0.2vw;
-      }
-
-      .line1 { color: $primary-blue; }
-      .line2 { color: $primary-pink; }
-    }
-  }
-
-  nav {
-    flex-grow: 1;
-  }
-
-  footer {
-    font-family: $font-minor;
-    font-size: 10pt;
-    color: $color-minor;
-    width: 100%;
-    text-align: center;
-    margin-top: $box-outer-padding;
-  }
-
-  &::-webkit-scrollbar { width: 14px; height: 0; }
-  &::-webkit-scrollbar-track { background-color: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $bg-dark; }
-  &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
-  // &:not(:hover)::-webkit-scrollbar-thumb { background-color: transparent; }
+@keyframes loader-fadeout {
+  0% { opacity: 1; }
+  99% { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
 }
 
-@keyframes sidebar-fadein {
-  0% { transform: translateX(-10px); }
-  100% { transform: translateX(0); }
+.anav {
+  &.sidebar { visibility: visible; }
+  &.mobile { visibility: hidden; }
+
+  @media screen and (max-width: $res-sidebar-menu-width) {
+    &.sidebar { visibility: hidden; }
+    &.mobile { visibility: visible; }
+  }
 }
 
 #wrapper {
   flex-grow: 1;
   overflow-x: hidden;
   padding: $box-outer-padding;
+  margin-left: $sidebar-width;
   animation: wrapper-fadein .4s cubic-bezier(0.34, 1.56, 0.64, 1) .5s forwards;
 
-  &::-webkit-scrollbar { width: 14px; height: 0; }
+  // &::-webkit-scrollbar { width: 14px; height: 0; }
+  // &::-webkit-scrollbar-track { background-color: transparent; }
+  // &::-webkit-scrollbar-thumb { background-color: $bg-light; border-radius: 99px; border: 4px solid $backpage; }
+  // &::-webkit-scrollbar-thumb:hover { background-color: $bg-lighter }
+  &::-webkit-scrollbar { width: 0; height: 0; }
   &::-webkit-scrollbar-track { background-color: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: $bg-bright; border-radius: 99px; border: 4px solid $backpage; }
-  &::-webkit-scrollbar-thumb:hover { background-color: $bg-brighter }
+  &::-webkit-scrollbar-thumb { background-color: transparent; }
+  &::-webkit-scrollbar-thumb:hover { background-color: transparent; }
+
+  @media screen and (max-width: $res-sidebar-menu-width) {
+    margin-bottom: $botnav-height;
+  }
 }
 
 @keyframes wrapper-fadein {
   0% { transform: translateY(30px); }
   100% { transform: translateY(0); }
-}
-</style>
-
-<style lang="scss">
-.container {
-  width: 100%;
-  max-width: 550pt;
-}
-
-.devnotice {
-  display: block;
-  padding: 5px 0;
-  text-align: center;
-  background-color: $warning-minor;
-  transform: translate(-$box-outer-padding, -$box-outer-padding);
-  width: calc(100% + #{$box-outer-padding * 2});
-  font-family: $font-major;
-  font-size: 12pt;
-  text-transform: uppercase;
 }
 </style>

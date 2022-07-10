@@ -62,14 +62,14 @@ export default {
 .data {
   position: relative;
   width: 90px;
-  background-color: $bg-bright;
-  border-radius: $box-border-radius;
+  background-color: $bg-light;
+  border-radius: $box-br;
 
   &[status="slot"] {
     background-color: transparent;
-    box-shadow: 0 0 0 2px inset $bg-bright;
+    box-shadow: 0 0 0 2px inset $bg-light;
     pointer-events: none;
-    span.cc { background-color: $bg-bright; }
+    span.cc { background-color: $bg-light; }
   }
   &[status="idle"] span.cc { background-color: #F4B860; }
   &[status="reconnecting"] span.cc { background-color: #63b3d4; }
@@ -91,7 +91,7 @@ export default {
       margin: 5px 5px 0 5px;
       color: #ffffffaa;
       background-color: #00000040;
-      border-radius: $box-border-radius/2 $box-border-radius/2 0 0;
+      border-radius: calc($box-br / 2) calc($box-br / 2) 0 0;
     }
 
     &.status {
@@ -101,7 +101,7 @@ export default {
       color: #ffffffaa;
       font-size: 8pt;
       background-color: #00000040;
-      border-radius: 0 0 $box-border-radius/2 $box-border-radius/2;
+      border-radius: 0 0 calc($box-br / 2) calc($box-br / 2);
     }
 
     &.server {

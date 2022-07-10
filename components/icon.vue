@@ -30,4 +30,8 @@ export default Vue.extend({
   width: 16pt;
   height: 16pt;
 }
+
+.component-icon-wrapper svg:not([xmlns\:serif]) path:not([fill]) {
+  fill: currentColor !important;
+}
 </style>

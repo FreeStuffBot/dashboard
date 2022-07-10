@@ -24,7 +24,7 @@ export default Vue.extend({
 
 .panel {
   position: absolute;
-  width: $box-width + $box-outer-padding*2;
+  width: calc(#{$box-width} + #{$box-outer-padding} * 2);
   height: 100%;
   top: 0;
   left: 0;
@@ -36,7 +36,7 @@ export default Vue.extend({
 
 .container {
   height: 100%;
-  background-color: $bg-bright;
+  background-color: $bg-light;
   border-radius: 3pt;
   display: flex;
   flex-direction: column;

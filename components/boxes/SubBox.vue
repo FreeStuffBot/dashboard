@@ -52,7 +52,7 @@ export default {
   display: block;
   background: var(--color);
   padding: $box-padding;
-  border-radius: $box-border-radius;
+  border-radius: $box-br;
   margin-bottom: $box-padding;
 }
 
