@@ -238,7 +238,7 @@ export default Vue.extend({
       data.until = this.broker.until
         ? new Date(this.broker.until).getTime()
         : null
-      data.tags = this.broker.tags.split(',').map(s => s.trim())
+      data.tags = this.broker.tags.split(',').map(s => s.trim()).filter(s => !!s)
       data.rating = this.broker.rating / 100
       data.flags = 0
       if (this.broker.flagTrash) data.flags |= (1 << 0)
