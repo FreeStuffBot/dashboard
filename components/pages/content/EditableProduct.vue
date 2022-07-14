@@ -84,7 +84,7 @@
     <Layout name="component-flow">
       <Layout name="3static" :tight="true">
         <Input v-model="broker.flagTrash" type="toggle" placeholder="Trash Game" />
-        <Input v-model="broker.flagThirdParty" type="toggle" placeholder="Third Party Provider" />
+        <Input v-model="broker.flagThirdparty" type="toggle" placeholder="Third Party Provider" />
         <Input v-model="broker.flagPermanent" type="toggle" placeholder="Permanent Change" />
         <Input v-model="broker.flagStaffPick" type="toggle" placeholder="Staff Pick" />
       </Layout>
@@ -141,7 +141,8 @@ const dropdowns = {
     { value: 'timed', label: 'Free to play (weekend)' },
     { value: 'prime', label: 'Included in Prime' },
     { value: 'gamepass', label: 'Included in GamePass' },
-    { value: 'other', label: 'Other' }
+    { value: 'other', label: 'Other' },
+    { value: 'debug', label: 'Debug (Don\'t use)' }
   ]
 }
 

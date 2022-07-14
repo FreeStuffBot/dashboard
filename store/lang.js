@@ -8,6 +8,7 @@ export const state = () => ({
   timed: 'Free for a Weekend',
   prime: 'Included in Prime',
   gamepass: 'Included in GamePass',
+  debug: 'Debug',
   steam: 'Steam',
   epic: 'Epic Games Store',
   humble: 'Humble Bundle',
