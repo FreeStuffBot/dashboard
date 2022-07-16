@@ -46,19 +46,15 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .box {
+  @include box;
   position: relative;
   display: grid;
-  background-color: $bg-light;
-  padding: $box-padding;
-  border-radius: $box-br;
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 0 0 1px #ffffff11 inset;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto auto;
   grid-template-areas: "icon name button" "icon details button";
   column-gap: $box-padding;
-  transition: background-color .1s ease-out;
 
   &:not([data-editable]) { opacity: .5; }
 

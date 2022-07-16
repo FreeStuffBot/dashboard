@@ -71,6 +71,14 @@ label {
   }
 }
 
+@mixin box {
+  box-shadow: 0 0 0 1px #ffffff11 inset;
+  background-color: $bg-light;
+  padding: $box-padding;
+  border-radius: $box-br;
+  transition: background-color .1s ease-out;
+}
+
 @media print {
   *[print-hidden] {
     display: none !important;

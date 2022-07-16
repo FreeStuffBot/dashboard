@@ -9,6 +9,12 @@
       <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" />
     </Layout>
 
+    <br>
+    <Admonition
+      type="warning"
+      text="Translations are currently a bit broken. We are aware and working on a fix!"
+    />
+
     <h2>Languages</h2>
     <div class="langlist">
       <LanguageCard
@@ -30,6 +36,7 @@ import { Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Button from '~/components/entities/Button.vue'
+import Admonition from '~/components/entities/Admonition.vue'
 import LanguageCard from '~/components/cards/LanguageCard.vue'
 
 const popups: Record<string, Popup<PopupType.MODAL>> = {
@@ -103,7 +110,8 @@ export default Vue.extend({
     Container,
     Layout,
     Button,
-    LanguageCard
+    LanguageCard,
+    Admonition
   },
   transition: 'slide-down',
   async fetch() {

@@ -38,6 +38,37 @@
       :subtext="email || 'yo'"
       :imgurl="avatarUrl"
     />
+    
+    <h2>What to do here:</h2>
+    <Layout name="3static">
+      <Pagelink
+        title="Translations"
+        text="Want to help translating the bot? You've come to the right place!"
+        icon="emojis/twemoji_speaking_head"
+        to="/translate"
+      />
+      <Pagelink
+        v-if="$store.getters['user/apiAccess']"
+        title="FreeStuff API"
+        text="View and edit your API app"
+        icon="emojis/twemoji_electric_plug"
+        to="/apps/home"
+      />
+      <Pagelink
+        v-else
+        title="FreeStuff API"
+        text="Get access to an API for all things free games"
+        icon="emojis/twemoji_electric_plug"
+        to="/apps/api-info"
+      />
+      <Pagelink
+        v-if="$store.getters['user/isContentMod']"
+        title="Content Moderation"
+        text="You know it, we know it. Thank you <3"
+        icon="emojis/twemoji_mega"
+        to="/content/publishing"
+      />
+    </Layout>
 
     <h2>Bottom text</h2>
     <p>
@@ -53,13 +84,17 @@ import Vue from 'vue'
 import Container from '~/components/layout/Container.vue'
 import Admonition from '~/components/entities/Admonition.vue'
 import AccountInfoBox from '~/components/boxes/AccountInfoBox.vue'
+import Pagelink from '../components/entities/Pagelink.vue'
+import Layout from '../components/layout/Layout.vue'
 
 export default Vue.extend({
   components: {
     Container,
     Admonition,
-    AccountInfoBox
-  },
+    AccountInfoBox,
+    Pagelink,
+    Layout
+},
   transition: 'slide-down',
   data() {
     return {

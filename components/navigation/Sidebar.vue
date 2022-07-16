@@ -1,7 +1,6 @@
 <template>
   <section name="sidebar">
     <div class="container">
-      <div v-if="dev" class="devnotice" v-text="'Dev Env'" />
       <div class="title">
         <img src="~/assets/img/logo.png" alt="Logo">
         <h2>FreeStuff</h2>

@@ -1,26 +1,30 @@
 <template>
-  <div class="accinfobox">
-    <img :src="imgurl" alt="Profile Picture">
-    <div class="text">
-      <div>
-        <span class="un" v-text="username" />
-        <span class="dm" sub v-text="discrim" />
-      </div>
-      <span class="st" v-text="subtext" />
+  <div class="accountinfobox">
+    <div class="user">
+      <img :src="imgurl" alt="Profile Picture">
+      <span class="name" v-text="username" />
+      <span class="discrim" v-text="discrim" />
     </div>
-    <div class="buttons">
-      <a v-tippy href="javascript:alert('not implemented lol')" class="c-green" content="Settings">
-        <img src="~/assets/icons/settings.svg" alt="Settings">
-      </a>
-      <a v-tippy href="/oauth/logout" class="c-red" content="Logout">
-        <img src="~/assets/icons/logout.svg" alt="Logout">
-      </a>
-    </div>
+
+    <!-- <Layout name="inline"> -->
+      <Button
+        type="red"
+        text="Logout"
+        @click="$router.push('/oauth/logout')"
+      />
+    <!-- </Layout> -->
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Layout from '~/components/layout/Layout.vue'
+import Button from '~/components/entities/Button.vue'
+
 export default {
+  components: {
+    Layout,
+    Button
+  },
   props: {
     username: {
       type: String,
@@ -43,70 +47,33 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.accinfobox {
+.accountinfobox {
+  @include box;
   display: flex;
-  background: #393f55;
-  padding: $box-padding;
-  border-radius: $box-br;
-  margin-bottom: $box-padding;
+  justify-content: space-between;
 
-  & > img {
-    background-color: #00000044;
-    height: 64pt;
-    width: 64pt;
-    border-radius: 99pt;
-    margin-right: $box-padding;
-  }
-
-  .text {
-    flex-grow: 1;
+  .user {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
 
-    .un {
-      color: $color-major;
-      font-family: $font-major;
-      font-size: 20pt;
-    }
-
-    .dm, .st {
-      color: $color-sub;
-      font-family: $font-sub;
-      font-size: 14pt;
-    }
-  }
-
-  .buttons {
-    display: flex;
-
-    a {
-      display: flex;
-      color: $color-major;
-      text-decoration: none;
-      margin: 10pt 10pt 10pt 0;
-      width: 44pt;
-      height: 44pt;
+    img {
+      background-color: $bg-lighter;
+      height: $content-height;
+      width: $content-height;
       border-radius: 99pt;
-      background-color: #00000011;
-      justify-content: center;
-      align-items: center;
-      transition: .2s background-color ease;
+      margin-right: $box-padding;
+    }
 
-      &:hover {
-        &.c-red { background-color: $warning-major; }
-        &.c-green { background-color: $success-major; }
+    .name {
+      font-family: $font-major;
+      font-size: 14pt;
+      color: $color-major;
+    }
 
-        img { opacity: 1; }
-      }
-
-      img {
-        width: 20pt;
-        height: 20pt;
-        color: $color-regular;
-        opacity: .3;
-        transition: .2s opacity ease;
-      }
+    .discrim {
+      font-family: $font-major;
+      font-size: 14pt;
+      color: $color-minor;
     }
   }
 }

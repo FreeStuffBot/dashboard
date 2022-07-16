@@ -22,7 +22,7 @@
             <img src="~/assets/icons/ext_link.svg" alt="ext" title="External Link">
           </div>
         </a>
-        <NuxtLink v-else :to="link.url" class="link" :subpages="link.url !== '/'">
+        <NuxtLink v-else :to="link.url" class="link" :subpages="!hasSubpages(link.url)">
           <div class="icon-wrapper">
             <img
               class="i"
@@ -60,36 +60,11 @@ export default Vue.extend({
           icon: this.$store.state.user.avatarUrl
         },
         {
-          type: this.$store.getters['user/isContributor'] ? 'header' : 'none',
-          name: 'Contributing'
-        },
-        {
           type: this.$store.getters['user/isTranslator'] ? 'page' : 'none',
           name: 'Translating',
           secret: 'You are amazing! Thank you to the moon and back <3',
           url: '/translate',
           icon: '/assets/img/peepolang.png'
-        },
-        // {
-        //   type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
-        //   name: 'Documents',
-        //   secret: 'All sorts of documents and stuff ya know.',
-        //   url: '/documents',
-        //   icon: '/assets/img/peepodetective.png'
-        // },
-        {
-          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
-          name: 'Content Moderation',
-          secret: 'Thank you <3',
-          url: '/content',
-          icon: '/assets/img/peepolove.png'
-        },
-        {
-          type: this.$store.getters['user/isContributor'] ? 'page' : 'none',
-          name: 'Stats',
-          secret: 'Stonks',
-          url: 'https://monitoring.freestuffbot.xyz/',
-          icon: '/assets/img/peepograph.png'
         },
         {
           type: 'header',
@@ -124,6 +99,38 @@ export default Vue.extend({
           icon: '/assets/img/peepostudy.png'
         },
         {
+          type: this.$store.getters['user/isContentMod'] ? 'header' : 'none',
+          name: 'Content Moderation'
+        },
+        {
+          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+          name: 'Publishing',
+          secret: 'FreeStuff',
+          url: '/content/publishing',
+          icon: '/assets/img/peepolove.png'
+        },
+        {
+          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+          name: 'History',
+          secret: 'OldStuff',
+          url: '/content/history',
+          icon: '/assets/img/peepodetective.png'
+        },
+        {
+          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+          name: 'Automation',
+          secret: 'AutoStuff',
+          url: '/content/automation',
+          icon: '/assets/img/peepochill.png'
+        },
+        {
+          type: this.$store.getters['user/isContentMod'] ? 'page' : 'none',
+          name: 'More',
+          secret: 'MoreStuff',
+          url: '/content/more',
+          icon: '/assets/img/peepoking.png'
+        },
+        {
           type: this.$store.getters['user/isAdmin'] ? 'header' : 'none',
           name: 'Administration'
         },
@@ -133,28 +140,24 @@ export default Vue.extend({
           secret: 'Business Time',
           url: '/admin',
           icon: '/assets/img/peepocool.png'
+        },
+        {
+          type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
+          name: 'Stats',
+          secret: 'Stonks',
+          url: 'https://monitoring.freestuffbot.xyz/',
+          icon: '/assets/img/peepograph.png'
         }
-        // {
-        //   type: this.$store.getters['user/isAdmin'] ? 'page' : 'none',
-        //   name: 'Users',
-        //   secret: 'Hehe',
-        //   url: '/admin/users',
-        //   icon: '/assets/img/peepoking.png'
-        // },
-        // {
-        //   type: this.$store.getters['user/apiAccess'] ? 'page' : 'none',
-        //   name: 'Usage',
-        //   secret: 'Your api usage',
-        //   url: '/application/stats',
-        //   icon: '/assets/img/peepobusiness.png'
-        // }
       ]
     }
   },
   methods: {
-    isActive(element: any) {
+    isActive(element: any): boolean {
       if (element.type !== 'page') return false
       return true
+    },
+    hasSubpages(url: string): boolean {
+      return (url === '/')
     }
   }
 })

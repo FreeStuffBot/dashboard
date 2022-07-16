@@ -1,21 +1,9 @@
 <template>
   <Container>
-    <h1>Content Moderation</h1>
-    <p>You stand between the pages. What do you want?</p>
+    <h1>More Content Moderation</h1>
+    <p>These are the secret archives</p>
 
     <Layout name="3static">
-      <Pagelink
-        title="Publishing"
-        text="Create and moderate announcements."
-        icon="emojis/twemoji_mega"
-        to="/content/publishing"
-      />
-      <Pagelink
-        title="View History"
-        text="Show a list of all published products."
-        icon="emojis/twemoji_news"
-        to="/content/history"
-      />
       <Pagelink
         title="Edit Platforms"
         text="Change names, assets, meta info, and more"

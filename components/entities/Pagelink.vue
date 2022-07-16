@@ -53,17 +53,14 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .pagelink {
+  @include box;
   position: relative;
-  display: grid;
-  background-color: $bg-light;
-  padding: $box-padding;
-  border-radius: $box-br;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 0 0 1px #ffffff11 inset;
   gap: $content-padding;
   cursor: pointer;
-  transition: background-color .1s ease-out;
 
   &:hover { background-color: $bg-lighter; }
 }

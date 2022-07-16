@@ -37,13 +37,13 @@
       />
       <Pagelink
         title="Configuration"
-        text="TODO"
+        text="Change the global config and other settings"
         icon="emojis/twemoji_gear"
         to="/admin/config"
       />
       <Pagelink
         title="Network"
-        text="TODO"
+        text="Monitor the infrastructure"
         icon="emojis/twemoji_satellite"
         to="/admin/network"
       />

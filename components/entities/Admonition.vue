@@ -50,16 +50,14 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .rich-admonition {
+  @include box;
   position: relative;
   display: grid;
   grid-template-columns: 15pt 1fr;
   gap: $box-padding;
-  padding: $box-padding;
   font-family: $font-regular;
   font-size: 12pt;
   color: $color-major;
-  border-radius: $box-br;
-  box-shadow: 0 0 0 1px #ffffff11 inset;
 
   span {
     display: block;

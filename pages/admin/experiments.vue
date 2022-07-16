@@ -130,14 +130,11 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .experiment {
+  @include box;
   position: relative;
   display: grid;
-  background-color: $bg-light;
-  padding: $box-padding;
-  border-radius: $box-br;
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 0 0 1px #ffffff11 inset;
   grid-template: auto auto / auto 1fr 1fr;
   grid-template-areas: "icon title rules" "icon desc rules";
   column-gap: $box-padding;
