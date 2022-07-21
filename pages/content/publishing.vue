@@ -1,6 +1,6 @@
 <template>
   <Container :class="{ 'loading-animation-queued': !loadingFinished }">
-    <h1>Publishing</h1>
+    <h1>Content Publishing</h1>
     <div class="shelf-box">
       <div class="box-header">
         <h2>New Announcement</h2>

@@ -273,7 +273,7 @@ export default Vue.extend({
       payload.status = 'approved'
       const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
       if (status === 200)
-        this.$router.push('/content')
+        this.$router.push('/content/publishing')
       else
         openErrorModal(this.$store, status, statusText, data)
     },
@@ -293,7 +293,7 @@ export default Vue.extend({
       payload.status = 'pending'
       const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
       if (status === 200)
-        this.$router.push('/content')
+        this.$router.push('/content/publishing')
       else
         openErrorModal(this.$store, status, statusText, data)
     },
@@ -324,7 +324,7 @@ export default Vue.extend({
       const payload = { status: 'declined' }
       const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
       if (status === 200)
-        this.$router.push('/content')
+        this.$router.push('/content/publishing')
       else
         openErrorModal(this.$store, status, statusText, data)
     },

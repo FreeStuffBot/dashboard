@@ -39,7 +39,7 @@
       :imgurl="avatarUrl"
     />
     
-    <h2>What to do here:</h2>
+    <h2>What to do</h2>
     <Layout name="3static">
       <Pagelink
         title="Translations"

@@ -14,7 +14,7 @@
     <div v-else class="thumb" :style="`background-image: url('${data.data.thumbnails.org}')`" />
     <h3 v-text="data.data.title || '‎'" />
     <span class="status" :style="`--color: ${statusColor}`" v-text="$store.state.lang[data.status]" />
-    <span v-text="$store.state.lang[data.responsible]" />
+    <span v-text="`${$store.state.lang[data.responsible]}, ${data.data.platform}`" />
     <span v-text="localizedChangedText" />
   </div>
 </template>

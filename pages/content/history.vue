@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <h1>CMS Product History</h1>
+    <h1>Announcement History</h1>
     <Layout name="component-flow">
       <Admonition
         v-if="error"

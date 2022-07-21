@@ -14,14 +14,14 @@
       <div>
         <h3>Automated</h3>
         <div v-for="p of automatedPlatforms" class="platform" @click="editPlatform(p)">
-          <img :src="p.assets.icon" alt="Platform icon">
+          <img :src="p.assets.icon || '/assets/img/defaulticon.png'" alt="Platform icon">
           <span v-text="p.name" />
         </div>
       </div>
       <div>
         <h3>Manual</h3>
         <div v-for="p of manualPlatforms" class="platform" @click="editPlatform(p)">
-          <img :src="p.assets.icon" alt="Platform icon">
+          <img :src="p.assets.icon || '/assets/img/defaulticon.png'" alt="Platform icon">
           <span v-text="p.name" />
         </div>
       </div>

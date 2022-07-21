@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <!-- <div class="container">
     <h1>
       Users
       <img
@@ -68,15 +68,41 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+
+  
+  <Container>
+    <h1>Users</h1>
+
+    <Layout v-if="users" name="component-flow">
+      <Admonition v-if="error" type="error" :text="error" />
+
+      <Layout name="$31">
+        <Input v-model="search" type="text" placeholder="Search" />
+        <Button type="green" text="Add User" @click="add()" />
+      </Layout>
+    </Layout>
+  </Container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
+import Container from '~/components/layout/Container.vue'
+import Layout from '~/components/layout/Layout.vue'
+import Admonition from '~/components/entities/Admonition.vue'
+import Input from '~/components/entities/Input.vue'
+import Button from '~/components/entities/Button.vue'
 
 export default Vue.extend({
+  components: {
+    Container,
+    Layout,
+    Admonition,
+    Input,
+    Button
+  },
   transition: 'slide-down',
   async fetch() {
     const { data } = await API.adminGetUsers()
