@@ -25,6 +25,12 @@
         icon="emojis/twemoji_robot"
         to="/admin/apiapps"
       />
+      <Pagelink
+        title="Internal Page"
+        text="TODO"
+        icon="emojis/twemoji_robot"
+        to="/admin/internal"
+      />
     </Layout>
 
     <h2>Infra</h2>

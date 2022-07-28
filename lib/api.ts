@@ -366,4 +366,8 @@ export default class API {
     return this.rawGet('/admin/services')
   }
 
+  public static adminPostInternalCommand(command: string) {
+    return this.rawPost('/admin/internal/command', { command })
+  }
+
 }

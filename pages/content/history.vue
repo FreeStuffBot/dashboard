@@ -44,7 +44,7 @@ export default Vue.extend({
     Button,
     Admonition,
     Layout
-},
+  },
   transition: 'slide-down',
   async fetch() {
     this.loadMore()
@@ -69,7 +69,7 @@ export default Vue.extend({
           found[2].push(item)
         } else {
           this.list.push([ dateIdx, dateTitle, [ item ] ])
-          this.list = this.list.sort(([a], [b]) => (b - a))
+          Vue.set(this, 'list', this.list.sort(([a], [b]) => (b - a)))
         }
       }
     },
