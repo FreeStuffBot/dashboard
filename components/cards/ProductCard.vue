@@ -5,8 +5,8 @@
     :dragged="dragged"
     @dragstart.self="e => passEvent('dragstart', e)"
     @dragend.self="e => passEvent('dragend', e)"
-    @click.left.exact="$router.push(`/content/${data.id}`)"
-    @click.right.exact.prevent="e => passEvent('rightclick', e)"
+    @click.left.exact="e => clicked(e)"
+    @click.right.exact.prevent="passEvent('moveannounce')"
   >
     <div v-if="data.status === 'processing'" class="thumb processing">
       <Icon name="animated/loading_processing" />
@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { openPopup, PopupType } from '../../lib/popups'
 
 export default Vue.extend({
   props: {
@@ -58,8 +59,20 @@ export default Vue.extend({
     }
   },
   methods: {
-    passEvent(name: string, data: any) {
+    passEvent(name: string, data: any = null) {
       this.$emit(name, data)
+    },
+    clicked(e: PointerEvent) {
+      if (e.pointerType === 'mouse') {
+        this.$router.push(`/content/${this.data.id}`)
+      } else {
+        openPopup(this.$store, {
+          type: PopupType.MOBILE_PRODUCT_CARD_ACTION,
+          data: JSON.parse(JSON.stringify(this.data)),
+          doEdit: () => this.$router.push(`/content/${this.data.id}`),
+          doMoveToAnnouncement: () => this.passEvent('moveannounce')
+        })
+      }
     }
   }
 })

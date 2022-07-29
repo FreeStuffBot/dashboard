@@ -66,6 +66,8 @@ export default Vue.extend({
 .admin-network-table {
   width: calc(100% + #{$box-padding} * 2);
   margin: calc(-1 * #{$box-padding});
+  border-bottom: 1px solid $color-border;
+  margin-bottom: $box-padding !important;
 }
 
 .group {

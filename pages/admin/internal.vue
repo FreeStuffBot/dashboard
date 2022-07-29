@@ -1,6 +1,7 @@
 <template>
   <Container>
     <h1>Internal</h1>
+    <h2>Send Command</h2>
     <Layout name="$31">
       <Input v-model="command" />
       <Button type="green" text="Submit" @click="submit()" />

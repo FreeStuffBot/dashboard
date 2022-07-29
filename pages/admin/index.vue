@@ -25,12 +25,6 @@
         icon="emojis/twemoji_robot"
         to="/admin/apiapps"
       />
-      <Pagelink
-        title="Internal Page"
-        text="TODO"
-        icon="emojis/twemoji_robot"
-        to="/admin/internal"
-      />
     </Layout>
 
     <h2>Infra</h2>
@@ -52,6 +46,16 @@
         text="Monitor the infrastructure"
         icon="emojis/twemoji_satellite"
         to="/admin/network"
+      />
+    </Layout>
+
+    <h2>Other</h2>
+    <Layout name="3static">
+      <Pagelink
+        title="Internal"
+        text="TODO"
+        icon="emojis/twemoji_robot"
+        to="/admin/internal"
       />
     </Layout>
   </Container>

@@ -22,6 +22,8 @@ export enum PopupType {
   EDIT_CURRENCY = 3,
   QUESTION = 4,
   FORM = 5,
+
+  MOBILE_PRODUCT_CARD_ACTION = 101,
 }
 
 type PopupHelper = {
@@ -62,6 +64,11 @@ type PopupHelper = {
   }[]
   validate?: (input: string) => string
   callback?: (input: string) => any
+} | {
+  type: PopupType.MOBILE_PRODUCT_CARD_ACTION,
+  data: any,
+  doEdit: () => any,
+  doMoveToAnnouncement: () => any
 }
 
 export type Popup<T extends PopupType> = { type: T } & PopupHelper
@@ -89,7 +96,7 @@ export function openModal(store: any, data: Omit<Popup<PopupType.MODAL>, 'type'>
   store.commit('openPopup', { type: PopupType.MODAL, ...data })
 }
 
-export function openPopup(store: any, data: Popup<any>) {
+export function openPopup(store: any, data: Popup<PopupType>) {
   store.commit('openPopup', data)
 }
 

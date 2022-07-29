@@ -88,8 +88,11 @@ export default Vue.extend({
     gap: var(--space);
   }
   @for $i from 1 through 4 {
+    &[data-layout="$#{$i}a"] { grid-template-columns: #{$i*1fr} auto; }
+
     @for $j from 1 through 4 {
       &[data-layout="$#{$i}#{$j}"] { grid-template-columns: #{$i*1fr} #{$j*1fr}; }
+      &[data-layout="$#{$i}#{$j}a"] { grid-template-columns: #{$i*1fr} #{$j*1fr} auto; }
 
       @for $k from 1 through 4 {
         &[data-layout="$#{$i}#{$j}#{$k}"] { grid-template-columns: #{$i*1fr} #{$j*1fr} #{$k*1fr}; }

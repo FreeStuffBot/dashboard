@@ -27,7 +27,7 @@
           :dragged="currentlyDragging == product.id"
           @dragstart="cardDragStart"
           @dragend="cardDragEnd"
-          @rightclick="moveCardToShelf(product.id, 'announcement', 'pending')"
+          @moveannounce="moveCardToShelf(product.id, 'announcement', 'pending')"
         />
         <span v-if="!products.announcement.length">Drag Items Here</span>
       </div>
@@ -59,7 +59,7 @@
           :dragged="currentlyDragging == product.id"
           @dragstart="cardDragStart"
           @dragend="cardDragEnd"
-          @rightclick="moveCardToShelf(product.id, 'pending', 'announcement')"
+          @moveannounce="moveCardToShelf(product.id, 'pending', 'announcement')"
         />
         <span v-if="!products.pending.length">Drag Items Here</span>
       </div>

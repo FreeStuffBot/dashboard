@@ -18,73 +18,82 @@
         </template> -->
         <template #Table>
           <AdminNetworkTable :data="data" :selected="selected" />
+
+          <Layout name="component-flow">
+            <Layout name="inline">
+              <Button
+                type="light"
+                text="Deselect"
+                @click="deselect()"
+              />
+              <Button
+                type="light"
+                text="Select all"
+                @click="selectAll()"
+              />
+            </Layout>
+            <Layout name="inline">
+              <Button
+                type="green"
+                text="Reload Remote Config"
+                :disabled="sel"
+                @click="command('refetch', [ 'config' ])"
+              />
+              <Button
+                type="green"
+                text="Reload Experiments"
+                :disabled="sel"
+                @click="command('refetch', [ 'experiments' ])"
+              />
+              <Button
+                type="green"
+                text="Reload Languages"
+                :disabled="sel"
+                @click="command('refetch', [ 'cms.languages' ])"
+              />
+              <Button
+                type="green"
+                text="Reload Constants"
+                :disabled="sel"
+                @click="command('refetch', [ 'cms.constants' ])"
+              />
+              <Button
+                type="green"
+                text="Update Product List"
+                :disabled="sel"
+                @click="command('refetch', [ 'api.channel.*' ])"
+              />
+            </Layout>
+            <Layout name="inline">
+              <Button
+                type="red"
+                text="Shutdown"
+                :disabled="sel"
+                @click="command('shutdown')"
+              />
+              <Button
+                type="red"
+                text="Force Shutdown"
+                :disabled="sel"
+                @click="command('__force_shutdown')"
+              />
+            </Layout>
+          </Layout>
         </template>
         <template #Raw>
           <Input :multiline="true" :value="dataString" :editor-heights="[100, 500, 2000]" />
         </template>
+        <template #Edit_Composition>
+          <Layout v-if="config" name="component-flow">
+            <Input v-model="configStr" :multiline="true" :monospace="true" :editor-heights="[ 100, 400, 600 ]" />
+            <span v-if="jsonError" v-text="jsonError" />
+            <Layout name="inline">
+              <Button :type="hasChanges ? 'green' : 'light'" text="Apply" :disabled="!!jsonError" @click="applyComposition()" />
+              <Button v-if="hasChanges" type="red" text="You have unsaved changes!" :lite="true" :disabled="true" />
+            </Layout>
+          </Layout>
+        </template>
       </Tabs>
-
-      <h2>Actions</h2>
-      <Layout name="component-flow">
-        <Layout name="inline">
-          <Button
-            type="light"
-            text="Deselect"
-            @click="deselect()"
-          />
-          <Button
-            type="light"
-            text="Select all"
-            @click="selectAll()"
-          />
-        </Layout>
-        <Layout name="inline">
-          <Button
-            type="green"
-            text="Reload Remote Config"
-            :disabled="sel"
-            @click="command('refetch', [ 'config' ])"
-          />
-          <Button
-            type="green"
-            text="Reload Experiments"
-            :disabled="sel"
-            @click="command('refetch', [ 'experiments' ])"
-          />
-          <Button
-            type="green"
-            text="Reload Languages"
-            :disabled="sel"
-            @click="command('refetch', [ 'cms.languages' ])"
-          />
-          <Button
-            type="green"
-            text="Reload Constants"
-            :disabled="sel"
-            @click="command('refetch', [ 'cms.constants' ])"
-          />
-          <Button
-            type="green"
-            text="Update Product List"
-            :disabled="sel"
-            @click="command('refetch', [ 'api.channel.*' ])"
-          />
-        </Layout>
-        <Layout name="inline">
-          <Button
-            type="red"
-            text="Shutdown"
-            :disabled="sel"
-            @click="command('shutdown')"
-          />
-          <Button
-            type="red"
-            text="Force Shutdown"
-            :disabled="sel"
-            @click="command('__force_shutdown')"
-          />
-        </Layout>
-      </Layout>
     </div>
   </Container>
 </template>
@@ -100,7 +109,7 @@ import Layout from '~/components/layout/Layout.vue'
 import AdminNetworkCards from '~/components/other/AdminNetworkCards.vue'
 import AdminNetworkTable from '~/components/other/AdminNetworkTable.vue'
 import Button from '../../components/entities/Button.vue'
-import { openErrorModal } from '../../lib/popups'
+import { openErrorModal, openInfoDialogue } from '../../lib/popups'
 
 export default Vue.extend({
   components: {
@@ -112,22 +121,31 @@ export default Vue.extend({
     AdminNetworkCards,
     AdminNetworkTable,
     Button
-},
+  },
   transition: 'slide-down',
   async fetch() {
-    const { data, status, statusText } = await API.getAdminServices()
-    if (status !== 200) {
-      this.error = `Error.\nhttp ${status}: ${statusText}\n${data?.error}: ${data?.message}`
-      return
-    }
-
-    this.data = data
+    this.fetchServices()
+    this.fetchConfig()
   },
   data() {
     return {
       data: null as any,
       selected: [] as any[],
-      error: null as any
+      error: null as any,
+      configStr: '',
+      jsonError: '',
+      config: {},
+      orgConfig: ''
+    }
+  },
+  watch: {
+    configStr(val) {
+      try {
+        this.config = JSON.parse(val)
+        this.jsonError = ''
+      } catch (ex) {
+        this.jsonError = ex + ''
+      }
     }
   },
   computed: {
@@ -136,9 +154,37 @@ export default Vue.extend({
     },
     sel(): boolean {
       return !this.selected.length
+    },
+    hasChanges(): boolean {
+      return JSON.stringify(this.config) !== this.orgConfig
     }
   },
   methods: {
+    async fetchServices() {
+      const { data, status, statusText } = await API.getAdminServices()
+      if (status !== 200) {
+        this.error = `Error.\nhttp ${status}: ${statusText}\n${data?.error}: ${data?.message}`
+        return
+      }
+
+      this.data = data
+    },
+    async fetchConfig() {
+      const { data, status, statusText } = await API.getAdminConfig('service-composition')
+
+      if (status !== 200) {
+        this.error = `Error.\nhttp ${status}: ${statusText}\n${data?.error}: ${data?.message}`
+        this.config = {}
+        this.configStr = '{}'
+        this.orgConfig = '{}'
+        return
+      }
+
+      this.error = ''
+      this.config = data
+      this.configStr = JSON.stringify(data, null, 2)
+      this.orgConfig = JSON.stringify(data)
+    },
     deselect() {
       this.selected = []
     },
@@ -152,6 +198,12 @@ export default Vue.extend({
         openErrorModal(this.$store, status, resData.error)
         return
       }
+    },
+    async applyComposition(): Promise<void> {
+      const body = this.config
+      const { status, statusText } = await API.patchAdminConfig('service-composition', body)
+      openInfoDialogue(this.$store, status === 200 ? 'Saved!' : 'Error!', `${status}: ${statusText}`)
+      this.$fetch()
     }
   },
   head() {
@@ -164,5 +216,10 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
+span {
+  color: white;
+  font-family: $font-regular;
+  font-size: 11pt;
+  display: block;
+}
 </style>

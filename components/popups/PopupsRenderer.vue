@@ -1,13 +1,15 @@
 <template>
   <div class="popups" :empty="!active">
     <div class="curtain" :active="active" />
-    <div v-if="popup" class="popup" :active="active" @click.self="close()">
+    <div v-if="popup" class="popup" :active="active" :mobile="popup.type >= 100" @click.self="close()">
       <PopupFrameModal v-if="popup.type === 0" :data="popup" @close="close" />
       <PopupFrameNewProduct v-if="popup.type === 1" :data="popup" @close="close" />
       <PopupFrameEditPlatform v-if="popup.type === 2" :data="popup" @close="close" />
       <PopupFrameEditCurrency v-if="popup.type === 3" :data="popup" @close="close" />
       <PopupFrameQuestion v-if="popup.type === 4" :data="popup" @close="close" />
       <PopupFrameForm v-if="popup.type === 5" :data="popup" @close="close" />
+
+      <PopupFrameProductCardAction v-if="popup.type === 101" :data="popup" @close="close" />
     </div>
   </div>
 </template>
@@ -20,6 +22,7 @@ import PopupFrameEditPlatform from '~/components/popups/PopupFrameEditPlatform.v
 import PopupFrameEditCurrency from '~/components/popups/PopupFrameEditCurrency.vue'
 import PopupFrameQuestion from '~/components/popups/PopupFrameQuestion.vue'
 import PopupFrameForm from '~/components/popups/PopupFrameForm.vue'
+import PopupFrameProductCardAction from './mobile/PopupFrameProductCardAction.vue'
 
 export default Vue.extend({
   components: {
@@ -28,8 +31,9 @@ export default Vue.extend({
     PopupFrameEditPlatform,
     PopupFrameEditCurrency,
     PopupFrameQuestion,
-    PopupFrameForm
-  },
+    PopupFrameForm,
+    PopupFrameProductCardAction
+},
   data() {
     return {
       lastPopup: {} as any
@@ -62,8 +66,12 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.popups[empty] {
-  pointer-events: none;
+.popups {
+  overflow: hidden;
+
+  &[empty] {
+    pointer-events: none;
+  }
 }
 
 .container, .curtain, .popup {
@@ -117,6 +125,22 @@ export default Vue.extend({
     box-shadow:
       0 0 0 1px #ffffff22 inset,
       0 5px 30px #00000033;
+  }
+
+  &[mobile] {
+    place-items: end stretch;
+
+    & > div {
+      width: 100vw;
+      margin-bottom: 0;
+      border-radius: calc($box-br * 2) calc($box-br * 2) 0 0;
+      box-shadow: 0 2px 10px #000000aa;
+    }
+
+    &:not([active]) > div {
+      transform: translateY(100%);
+      box-shadow: 0 5px 30px #00000033;
+    }
   }
 }
 </style>
