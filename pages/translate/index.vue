@@ -35,6 +35,7 @@ import API from '../../lib/api'
 import { Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
+import Input from '~/components/entities/Input.vue'
 import Button from '~/components/entities/Button.vue'
 import Admonition from '~/components/entities/Admonition.vue'
 import LanguageCard from '~/components/cards/LanguageCard.vue'
@@ -109,6 +110,7 @@ export default Vue.extend({
   components: {
     Container,
     Layout,
+    Input,
     Button,
     LanguageCard,
     Admonition
@@ -149,6 +151,9 @@ export default Vue.extend({
   computed: {
     isAdmin(): boolean {
       return this.$store.getters['user/isAdmin']
+    },
+    isTranslator(): boolean {
+      return this.$store.getters['user/isTranslator']
     }
   },
   methods: {

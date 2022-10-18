@@ -42,10 +42,18 @@
     <h2>What to do</h2>
     <Layout name="3static">
       <Pagelink
+        v-if="$store.getters['user/isTranslator']"
+        title="Translations"
+        text="Welcome back! Click here to drive right into the translations page!"
+        icon="emojis/twemoji_speaking_head"
+        to="/translate"
+      />
+      <Pagelink
+        v-else        
         title="Translations"
         text="Want to help translating the bot? You've come to the right place!"
         icon="emojis/twemoji_speaking_head"
-        to="/translate"
+        to="/translate/apply"
       />
       <Pagelink
         v-if="$store.getters['user/apiAccess']"

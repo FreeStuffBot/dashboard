@@ -11,7 +11,7 @@
     </Layout>
 
     <h2>General Information</h2>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" />
       <Input v-model="prod.data.urls.org" label="URL" :error="!prod.data.urls.org" />
       <Layout name="2static">
@@ -26,7 +26,7 @@
     <!--  -->
 
     <h2>Product Details</h2>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input v-model="prod.data.description" label="Description" :multiline="true" :error="!prod.data.description" />
       <Layout name="2static">
         <Input v-model="prod.data.platform" label="Platform" :options="platformOptions" />
@@ -43,8 +43,8 @@
       <label>Old Price</label>
       <label>New Price</label>
     </Layout>
-    <Layout name="component-flow">
-      <Layout name="component-flow" :tight="true">
+    <Layout name="flow">
+      <Layout name="flow" :tight="true">
         <Layout v-for="(price, index) of broker.prices" :key="index" name="$1221" :tight="true">
           <Input v-model="price.currency" :options="currencyOptions" />
           <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" />
@@ -69,7 +69,7 @@
     <!--  -->
 
     <h2>Assets</h2>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input v-model="prod.data.thumbnails.org" label="Thumbnail" placeholder="https://cdn.akamai.steamstatic.com/steam/apps/1172050/header.jpg" :error="!prod.data.thumbnails.org">
         <template #preview>
           <div class="thumbnail-preview" :style="`background-image: url('${prod.data.thumbnails.org}')`" />
@@ -81,7 +81,7 @@
 
     <h2>Metadata</h2>
     <label>Flags</label>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Layout name="3static" :tight="true">
         <Input v-model="broker.flagTrash" type="toggle" placeholder="Trash Game" />
         <Input v-model="broker.flagThirdparty" type="toggle" placeholder="Third Party Provider" />

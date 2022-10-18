@@ -42,7 +42,8 @@ export default Vue.extend({
   data() {
     return {
       authProviders: [
-        { name: 'Discord', icon: 'discord', color: '#5865F2', colorhover: '#707ae6', uri: 'discord' }
+        { name: 'Discord', icon: 'discord', color: '#5865F2', colorhover: '#707ae6', uri: 'discord' },
+        // { name: 'Tude', icon: 'tude', color: '#85ada2', colorhover: '#9bc7bb', uri: 'tude' }
       ]
     }
   },

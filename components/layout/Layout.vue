@@ -77,7 +77,7 @@ export default Vue.extend({
     gap: var(--space);
   }
 
-  &[data-layout="component-flow"] {
+  &[data-layout="flow"] {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space);

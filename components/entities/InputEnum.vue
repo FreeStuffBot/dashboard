@@ -1,7 +1,7 @@
 <template>
   <div class="input-enum">
     <label v-if="label" v-text="label" />
-    <Layout name="component-flow" :tight="true">
+    <Layout name="flow" :tight="true">
       <div v-for="(item, index) in value" :key="index" class="entry">
         <slot
           :value="item"

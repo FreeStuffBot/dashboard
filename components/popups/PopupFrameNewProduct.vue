@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <h1>Fetch Product</h1>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input
         v-model="url"
         label="Product URL"

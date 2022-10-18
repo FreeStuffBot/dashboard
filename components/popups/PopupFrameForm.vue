@@ -13,7 +13,7 @@
       />
     </p>
 
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input
         v-for="input of data.inputs"
         :key="input.id"

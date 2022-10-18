@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <h1 v-text="`Edit ${data.data.name}`" />
-    <Layout v-if="currency" name="component-flow">
+    <Layout v-if="currency" name="flow">
       <h3>General</h3>
       <Layout name="2static">
         <Input v-model="currency.id" label="Id" type="text" :disabled="true" />

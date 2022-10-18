@@ -104,7 +104,7 @@ export default Vue.extend({
       default: false
     },
     options: {
-      type: Array,
+      type: Array<{ value, label }>,
       default: null
     },
     disabled: {

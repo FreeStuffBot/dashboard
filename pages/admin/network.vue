@@ -19,7 +19,7 @@
         <template #Table>
           <AdminNetworkTable :data="data" :selected="selected" />
 
-          <Layout name="component-flow">
+          <Layout name="flow">
             <Layout name="inline">
               <Button
                 type="light"
@@ -84,7 +84,7 @@
           <Input :multiline="true" :value="dataString" :editor-heights="[100, 500, 2000]" />
         </template>
         <template #Edit_Composition>
-          <Layout v-if="config" name="component-flow">
+          <Layout v-if="config" name="flow">
             <Input v-model="configStr" :multiline="true" :monospace="true" :editor-heights="[ 100, 400, 600 ]" />
             <span v-if="jsonError" v-text="jsonError" />
             <Layout name="inline">

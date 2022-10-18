@@ -1,7 +1,7 @@
 <template>
   <Container>
     <h1>Announcement History</h1>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Admonition
         v-if="error"
         type="error"

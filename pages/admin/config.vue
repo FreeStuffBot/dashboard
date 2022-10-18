@@ -1,10 +1,10 @@
 <template>
   <Container>
     <h1>Configuration</h1>
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Tabs v-model="activeTab">
         <template #Visual_Editor>
-          <Layout v-if="config && config.global" name="component-flow">
+          <Layout v-if="config && config.global" name="flow">
             <!-- <Input v-model="config.global.announcement_message_delay" label="Announcement Message Delay (ms)" /> -->
             <Input v-model="configLocal.global.excessiveLogging" type="toggle" placeholder="Enabled" label="Excessive Logging" />
             <InputEnum
@@ -23,7 +23,7 @@
           </Layout>
         </template>
         <template #Text_Editor>
-          <Layout v-if="config" name="component-flow">
+          <Layout v-if="config" name="flow">
             <Admonition v-if="error" type="error" :text="error" />
             <Input v-model="configStr" :multiline="true" :monospace="true" :editor-heights="[ 100, 400, 600 ]" />
             <span v-if="jsonError" v-text="jsonError" />

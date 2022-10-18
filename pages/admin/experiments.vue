@@ -2,7 +2,7 @@
   <Container>
     <h1>Experiments</h1>
 
-    <Layout v-if="list" name="component-flow">
+    <Layout v-if="list" name="flow">
       <Admonition v-if="error" type="error" :text="error" />
 
       <Layout name="$211">

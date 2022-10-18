@@ -2,7 +2,7 @@
   <Container>
     <h1>CMS Platforms</h1>
 
-    <Layout v-if="items" name="component-flow">
+    <Layout v-if="items" name="flow">
       <PlatformCard
         v-for="item of items"
         :key="item.id"

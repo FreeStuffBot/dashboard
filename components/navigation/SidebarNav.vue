@@ -60,10 +60,10 @@ export default Vue.extend({
           icon: this.$store.state.user.avatarUrl
         },
         {
-          type: this.$store.getters['user/isTranslator'] ? 'page' : 'none',
+          type: 'page',
           name: 'Translating',
           secret: 'You are amazing! Thank you to the moon and back <3',
-          url: '/translate',
+          url: this.$store.getters['user/isTranslator'] ? '/translate' : '/translate/apply',
           icon: '/assets/img/peepolang.png'
         },
         {

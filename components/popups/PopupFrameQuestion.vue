@@ -13,7 +13,7 @@
       />
     </p>
 
-    <Layout name="component-flow">
+    <Layout name="flow">
       <Input
         v-model="output"
         :label="data.label"

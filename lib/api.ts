@@ -9,6 +9,13 @@ export type lineRoute = { project: string, bucket: string, line: string, languag
 
 export type ErrorData = { error: string }
 
+export type PostTranslateApplicationBody = {
+  language: string
+  userSince: string
+  whyThem: string
+  whereFrom: string
+}
+
 export default class API {
 
   public static readonly API_HOST = () => {
@@ -132,6 +139,18 @@ export default class API {
   }
 
   //
+
+  public static getTranslateApplicationStatus() {
+    return this.rawGet('/translations/application-status')
+  }
+
+  public static postTranslateApplication(payload: PostTranslateApplicationBody) {
+    return this.rawPost('/translations/apply', payload)
+  }
+
+  public static getLanguagesPreview() {
+    return this.rawGet('/translations/languages-preview')
+  }
 
   public static getLanguageList() {
     return this.rawGet('/translations/languages')
@@ -318,20 +337,20 @@ export default class API {
 
   //
 
-  public static adminGetTopClients() {
-    return this.rawGet('/admin/topclients')
-  }
-
   public static adminGetUsers() {
     return this.rawGet('/admin/users')
   }
-
-  public static adminGetUser(id: string) {
-    return this.rawGet(`/admin/users/${id}`)
+  
+  public static adminPostUser(data: any) {
+    return this.rawPost('/admin/users', data)
   }
 
-  public static adminPostUsers(data: any) {
-    return this.rawPost('/admin/users', data)
+  public static adminPatchUser(id: string, data: any) {
+    return this.rawPatch(`/admin/users/${id}`, data)
+  }
+
+  public static adminDeleteUser(id: string) {
+    return this.rawDelete(`/admin/users/${id}`)
   }
 
   public static adminPostExperiment(data: any) {

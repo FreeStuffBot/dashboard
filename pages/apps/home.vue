@@ -42,7 +42,7 @@
       <!-- <h2><Icon name="webhook" /> Event Webhook</h2> -->
       <h2>Event Webhooks</h2>
       <!-- <div class="spacer small" /> -->
-      <Layout name="component-flow">
+      <Layout name="flow">
         <Input
           v-model="data.webhookUrl"
           :disabled="!webhookEdit"

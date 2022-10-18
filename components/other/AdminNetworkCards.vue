@@ -1,6 +1,6 @@
 <template>
   <div class="admin-network-cards">
-    <Layout name="component-flow">
+    <Layout name="flow">
       <div
         v-for="group of data"
         :key="group.name"

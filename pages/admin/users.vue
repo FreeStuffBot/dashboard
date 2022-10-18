@@ -74,13 +74,33 @@
   <Container>
     <h1>Users</h1>
 
-    <Layout v-if="users" name="component-flow">
+    <Layout v-if="users" name="flow">
       <Admonition v-if="error" type="error" :text="error" />
 
       <Layout name="$31">
         <Input v-model="search" type="text" placeholder="Search" />
         <Button type="green" text="Add User" @click="add()" />
       </Layout>
+
+      <div class="list">
+        <div
+          v-for="user of users.filter(searchFilter)"
+          :key="user._id"
+          class="user"
+        >
+          <img :src="user.avatar" alt="User Avatar" >
+          <span class="name">{{user.name}}</span>
+          <div class="scopes">
+            <span
+              v-for="scope of user.scope"
+              :key="scope"
+              :style="`--color: ${(scope.split('.')[0].split('').reduce((prev, curr) => (prev + curr.charCodeAt(0)), 0) / Math.PI % 1) * 360}`"
+              @click="search = scope.startsWith('translate') ? (langs[scope.split('.')[1]] || scope) : scope"
+              v-text="scope"
+            />
+          </div>
+        </div>
+      </div>
     </Layout>
   </Container>
 </template>
@@ -101,8 +121,9 @@ export default Vue.extend({
     Layout,
     Admonition,
     Input,
-    Button
-  },
+    Button,
+    Container
+},
   transition: 'slide-down',
   async fetch() {
     const { data } = await API.adminGetUsers()
@@ -115,7 +136,8 @@ export default Vue.extend({
     return {
       users: [],
       langs: {} as any,
-      search: ''
+      search: '',
+      error: ''
     }
   },
   computed: {
@@ -126,7 +148,7 @@ export default Vue.extend({
   methods: {
     searchFilter(user: any) {
       if (this.search === '') return true
-      if (user.display.toLowerCase().includes(this.search.toLowerCase())) return true
+      if (user.name.toLowerCase().includes(this.search.toLowerCase())) return true
       if (user.scope.find((s: string) => s.toLowerCase().includes(this.search.toLowerCase()))) return true
       for (const key in this.langs) {
         if (this.langs[key].toLowerCase().includes(this.search.toLowerCase())) {
@@ -214,41 +236,54 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-span {
-  color: white;
-  font-family: $font-regular;
-  font-size: 11pt;
-  display: block;
-
-  &.warn {
-    color: $warning-major;
-    font-family: $font-header;
-  }
-}
-
-h1 img {
-  height: 11pt;
-  opacity: .4;
-  padding: 3px;
-  margin: 0 0 0 3px;
-  cursor: pointer;
-
-  &:hover { opacity: .7; }
-}
-
-input {
-  border-radius: $content-br;
-  background-color: $bg-light;
-  border: none;
-  padding: 5pt 8pt;
-  font-size: 11pt;
-  font-family: $font-regular;
-  color: $color-regular;
-  margin-top: 10pt;
-  margin-right: 5pt;
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: $box-padding;
 }
 
 .user {
+  @include box;
+  display: flex;
+  flex-direction: column;
+  gap: $content-padding;
+  align-items: center;
+
+  img {
+    width: 32pt;
+    height: 32pt;
+    border-radius: 99pt;
+    background-color: $bg-lighter;
+    overflow: hidden;
+  }
+
+  .name {
+    color: $color-major;
+    font-family: $font-major;
+    font-size: 11pt;
+    text-align: center;
+  }
+
+  .scopes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3pt;
+
+    span {
+      font-size: 8pt;
+      text-transform: uppercase;
+      border-radius: 999pt;
+      background-color: hsla(var(--color), 90%, 80%, .2);
+      color: hsla(var(--color), 90%, 80%, 1);
+      padding: 3pt 8pt;
+      font-family: $font-major;
+      cursor: pointer;
+    }
+  }
+}
+
+.user22 {
   background-color: $bg-light;
   border-radius: $box-br;
   margin-top: calc(#{$box-padding} / 2);
