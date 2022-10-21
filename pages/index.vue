@@ -38,6 +38,12 @@
       :subtext="email || 'yo'"
       :imgurl="avatarUrl"
     />
+
+    <h2 v-if="allNotifications.length">Notifications</h2>
+    <NotificationsListBox
+      v-if="allNotifications.length"
+      :notifications="allNotifications"
+    />
     
     <h2>What to do</h2>
     <Layout name="3static">
@@ -94,6 +100,7 @@ import Admonition from '~/components/entities/Admonition.vue'
 import AccountInfoBox from '~/components/boxes/AccountInfoBox.vue'
 import Pagelink from '../components/entities/Pagelink.vue'
 import Layout from '../components/layout/Layout.vue'
+import NotificationsListBox from '../components/boxes/NotificationsListBox.vue'
 
 export default Vue.extend({
   components: {
@@ -101,7 +108,8 @@ export default Vue.extend({
     Admonition,
     AccountInfoBox,
     Pagelink,
-    Layout
+    Layout,
+    NotificationsListBox
 },
   transition: 'slide-down',
   data() {

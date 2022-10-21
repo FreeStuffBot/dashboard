@@ -26,7 +26,10 @@ export const state = () => ({
   locale: '',
   mfa_enabled: false,
   scope: [ ],
-  guilds: [ ]
+  guilds: [ ],
+  allNotifications: [ ],
+  readNotifications: [ ],
+  unreadNotifications: [ ],
 })
 
 export const mutations = {
@@ -43,8 +46,19 @@ export const mutations = {
       ? `https://cdn.discordapp.com/avatars/${state.id}/${state.avatar}.png`
       : `https://cdn.discordapp.com/embed/avatars/${state.discriminator % 5}.png`
 
+    state.readNotifications = data.notifications.filter(n => n.readAt)
+    state.unreadNotifications = data.notifications.filter(n => !n.readAt)
+    state.allNotifications = [ ...state.unreadNotifications, ...state.readNotifications ]
+
     if (!state.guilds) return
     updateGuilds(state, state.guilds)
+  },
+  markNotificationAsRead(state, id) {
+    const idx = state.unreadNotifications.findIndex(n => n.id === id)
+    if (idx < 0) return
+    const notif = state.unreadNotifications.splice(idx, 1)[0]
+    state.readNotifications.push(notif)
+    notif.readAt = Date.now()
   },
   updateGuilds
 }

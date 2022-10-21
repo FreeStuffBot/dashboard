@@ -6,16 +6,21 @@
       <Button text="Tutorial" icon="info" type="light" @click="howto()" />
       <Button text="Credits" icon="crown" type="light" @click="credits()" />
       <Button text="Keyboard Shortcuts" icon="keyboard" type="light" @click="keyboardShortcuts()" />
-      <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" />
+      <!-- <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" /> -->
     </Layout>
 
-    <br>
-    <Admonition
-      type="warning"
-      text="Translations are currently a bit broken. We are aware and working on a fix!"
-    />
+    <div v-if="isAdmin && pendingApplicationsCount">
+      <h2>Applications</h2>
+      <Pagelink
+        :title="pendingApplicationsCount === 1 ? '1 Application' : `${pendingApplicationsCount} Applications`"
+        text="Click here to review"
+        icon="emojis/twemoji_news"
+        to="/translate/applications"
+      />
+    </div>
 
-    <h2>Languages</h2>
+    <h2 v-if="isAdmin">All Languages</h2>
+    <h2 v-else>Your Languages</h2>
     <div class="langlist">
       <LanguageCard
         v-for="(e, i) of list"
@@ -39,6 +44,7 @@ import Input from '~/components/entities/Input.vue'
 import Button from '~/components/entities/Button.vue'
 import Admonition from '~/components/entities/Admonition.vue'
 import LanguageCard from '~/components/cards/LanguageCard.vue'
+import Pagelink from '../../components/entities/Pagelink.vue'
 
 const popups: Record<string, Popup<PopupType.MODAL>> = {
   howto: {
@@ -113,8 +119,9 @@ export default Vue.extend({
     Input,
     Button,
     LanguageCard,
-    Admonition
-  },
+    Admonition,
+    Pagelink
+},
   transition: 'slide-down',
   async fetch() {
     const editable = this.$store.getters['user/languagesInTranslationScope']
@@ -135,7 +142,14 @@ export default Vue.extend({
         return e
       })
       .filter((e: any) => e._index >= 0)
+      .filter((e: any) => this.isAdmin || e._editable)
       .sort((a: any, b: any) => ((a._index + 1) * (a._editable ? 1 : 100)) - (b._index + 1) * (b._editable ? 1 : 100))
+
+    if (this.isAdmin) {
+      const { data, status } = await API.getTranslateApplications({ countOnly: true })
+      if (status === 200)
+        this.pendingApplicationsCount = data.count
+    }
 
     // eslint-disable-next-line nuxt/no-timing-in-fetch-data
     setTimeout(() => (this.loadingFinished = true), 10)
@@ -143,6 +157,7 @@ export default Vue.extend({
   data() {
     return {
       lang: this.$store.state.lang,
+      pendingApplicationsCount: 0,
       list: [] as any[],
       maxProgress: 0,
       loadingFinished: false

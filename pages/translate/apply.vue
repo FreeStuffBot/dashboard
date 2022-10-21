@@ -5,7 +5,10 @@
     <p>Please apply below and we'll get back to you in no time!</p>
     
     <h2>Your Application</h2>
-    <div v-if="applied">
+    <div v-if="applied === null">
+      <p>Loading...</p>
+    </div>
+    <div v-else-if="applied === true">
       <p v-if="!applicationDeclined">Your application was received but we did not have time to review it yet, please check back later!</p>
       <Admonition
         v-else
@@ -91,7 +94,9 @@ export default Vue.extend({
       this.languageSelection = langsRes.data.map(l => ({ value: l._id, label: l.lang_name }))
     }
 
-    if (appRes.status !== 404) {
+    if (appRes.status === 404) {
+      this.applied = false
+    } else {
       this.applied = true
       if (appRes.status !== 200)
         this.applicationDeclined = appRes.data.message
@@ -99,7 +104,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      applied: false,
+      applied: null,
       applicationDeclined: '',
       languages: [],
       languageSelection: [],

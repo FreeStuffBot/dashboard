@@ -9,14 +9,6 @@
 <script lang="ts">
 import Vue from 'vue'
 
-/**
- * **TYPES**
- * - warning
- * - error
- * - success
- * - info
- * - default
- */
 export default Vue.extend({
   props: {
     title: {

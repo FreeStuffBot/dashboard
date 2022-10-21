@@ -141,11 +141,20 @@ export default class API {
   //
 
   public static getTranslateApplicationStatus() {
-    return this.rawGet('/translations/application-status')
+    return this.rawGet('/translations/applications/@me')
+  }
+  
+  public static postTranslateApplication(payload: PostTranslateApplicationBody) {
+    return this.rawPost('/translations/applications', payload)
   }
 
-  public static postTranslateApplication(payload: PostTranslateApplicationBody) {
-    return this.rawPost('/translations/apply', payload)
+  public static getTranslateApplications(options: { countOnly?: boolean, declined?: boolean }) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/translations/applications?${query}`)
+  }
+
+  public static patchTranslateApplication(id: string, data: { accept: boolean, reason?: string }) {
+    return this.rawPatch(`/translations/applications/${id}`, data)
   }
 
   public static getLanguagesPreview() {
@@ -297,6 +306,12 @@ export default class API {
 
   public static postScrapeStore(store: any) {
     return this.rawPost(`/content/scrape/${store}`)
+  }
+
+  //
+
+  public static postNotificationRead(notification: string) {
+    return this.rawPost(`/notifications/${notification}/read`)
   }
 
   //
