@@ -88,6 +88,7 @@ export default Vue.extend({
 
 .rich-button {
   display: inline-flex;
+  user-select: none;
 
   &[disabled] {
     pointer-events: none;

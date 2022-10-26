@@ -1,126 +1,189 @@
 <template>
-  <div v-if="data" class="container">
-    <h1 v-if="data._index == -1">
-      Editing language descriptions
-    </h1>
-    <h1 v-else>
-      Translating {{ data.lang_name_en.charAt(0).toUpperCase() + data.lang_name_en.slice(1) }}
-    </h1>
-    <div v-if="!editable" class="readonly">
-      Readonly View
-    </div>
-    <div class="progress">
-      <span class="title">Progress: {{ Math.round(progress / dataEn._lines.length * 100) }}%</span>
-      <span v-if="progress != dataEn._lines.length" class="desc">{{ progress }} / {{ dataEn._lines.length }} lines done!</span>
-      <span v-else class="desc">WOHOOO! YOU'RE DONE!</span>
-      <div class="bar">
-        <div class="inner" :style="`--progress: ${progress / dataEn._lines.length * 100}%`" />
-      </div>
-    </div>
-    <div class="editor">
-      <div class="top">
-        <button v-tippy="{delay: [500, 0]}" content="Moves back one line<br>Ctrl + Shift + Enter" @click="editorMove(-1)">
-          Previous
-        </button>
-        <input v-model="editor.cursor" type="number" min="0">
-        <select v-model="editor.cursor">
-          <option
-            v-for="(key, i) of dataEn._lines"
-            :key="i"
-            :value="i"
-            v-text="key"
-          />
-        </select>
-        <button v-tippy="{delay: [500, 0]}" :class="{approved}" content="Moves forward one line<br>Ctrl + Enter" @click="editorMove(1)">
-          Next
-        </button>
-      </div>
-      <div class="description" v-text="dataDescriptions[currentKey] || 'No description provided.'" />
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <div class="orgtext" v-html="dataEn[currentKey] && dataEn[currentKey].split('<').join('&lt;&ZeroWidthSpace;').split('>').join('&ZeroWidthSpace;&gt;').split('\n').join('<span pilcrow>&#182;</span><br>') || ''" />
-      <textarea
-        id="lang-editor-input"
-        v-model="data[currentKey]"
-        class="translation"
-        type="text"
-        :disabled="!editable"
-        :style="`direction: ${editor.rtl ? 'rtl' : 'ltr'}`"
-        @keyup.ctrl.shift.enter.exact.prevent="editorMove(-1)"
-        @keyup.ctrl.enter.exact.prevent="editorMove(1)"
-        @keydown.ctrl.s.exact.prevent="submitChanges()"
-        @keydown.ctrl.q.exact.prevent="clone()"
-        @keydown.ctrl.z.exact.prevent="undo()"
-        @keydown.ctrl.b.exact.prevent="clear()"
-        @keydown.ctrl.d.exact.prevent="skipToNextUnfinished()"
+  <Container>
+    <Admonition v-if="error" type="error" v-text="error" />
+    <p v-else-if="!dataLang" v-text="'Loading...'" />
+    <Layout name="flow" v-else class="container">
+      <h1 v-text="(dataLang._index === -1)
+        ? 'Editing language descriptions'
+        : `Translating ${dataLang.lang_name_en.charAt(0).toUpperCase() + dataLang.lang_name_en.slice(1)}`"
       />
-      <div class="buttons">
-        <span v-if="issues[currentKey]" class="issues present" v-text="issues[currentKey]" />
-        <span v-else-if="Object.keys(issues).length" class="issues found" @click="skipToNextUnfinished(true)" v-text="Object.keys(issues).length + (Object.keys(issues).length == 1 ? ' issue.' : ' issues.')" />
-        <span v-else class="issues">No issues.</span>
 
-        <button v-if="data[currentKey] != dataOrg[currentKey]" v-tippy="{delay: [500, 0]}" content="Reverts your changes to<br>the last saved ones<br>Ctrl + Z" :disabled="!editable" @click="undo()">
-          Undo
-        </button>
-        <button v-tippy="{delay: [500, 0]}" content="Copies the English text<br>Ctrl + Q" :disabled="!editable" @click="clone()">
-          Clone
-        </button>
-        <button v-tippy="{delay: [500, 0]}" content="Clears the translation<br>Ctrl + B" :disabled="!editable" @click="clear()">
-          Clear
-        </button>
-        <span class="div">&bull;</span>
-        <button v-tippy="{delay: [500, 0]}" content="Toggles between LTR and RTL" @click="editor.rtl = !editor.rtl" v-text="editor.rtl ? 'LTR' : 'RTL'" />
-        <button v-tippy="{delay: [500, 0]}" content="Skips forward to the next<br>untranslated or flawed line<br>Ctrl + D" @click="skipToNextUnfinished()">
-          Forward
-        </button>
+      <Admonition v-if="!editable" type="warning" text="Readonly View" />
+
+      <Layout name="$1141">
+        <Button
+          type="light"
+          text="Back"
+          @click="editorMove(-1)"
+        />
+        <Input
+          type="number"
+          v-model="editor.cursor"
+          :numMin="0"
+          :numMax="keys.length - 1"
+        />
+        <Input
+          type="select"
+          :options="keys.map((label, value) => ({ value, label }))"
+          v-model="editor.cursor"
+        />
+        <Button
+          type="green"
+          text="Next"
+          @click="editorMove(1)"
+        />
+      </Layout>
+
+      <Layout name="flow" class="context">
+        <label>Original Text</label>
+        <div class="org">
+          <span
+            v-for="line, i of currentOrg.split('\n')"
+            :key="i"
+            v-text="line"
+          />
+        </div>
+        <div class="descr">
+          <span v-text="dataDescr[currentKey] || '(No description provided)'" />
+        </div>
+        <hr>
+        <label>Current Translation</label>
+        <div class="lang">
+          <span
+            v-for="line, i of currentLang.split('\n')"
+            :key="i"
+            v-text="line"
+          />
+        </div>
+      </Layout>
+
+      <div class="comments-wrapper">
+        <div class="comments-ghost" :visible="!currentSuggestions" />
+        <Layout name="flow" class="comments" :visible="!!currentSuggestions">
+          <label>Your Suggestion</label>
+          <Input
+            type=""
+            :multiline="true"
+            :placeholder="currentLang"
+            v-model="dataCurrent[currentKey]"
+          />
+          <Layout name="2dynamic">
+            <Layout name="inline">
+              <Button
+                type="blue" icon="material/download"
+                v-tippy content="Copy Original Text"
+                :disabled="currentOrg === dataCurrent[currentKey]"
+                @click="cloneOrg()"
+              />
+              <Button
+                type="blue" icon="material/content_copy"
+                v-tippy content="Copy Current Translation"
+                :disabled="currentLang === dataCurrent[currentKey]"
+                @click="cloneLang()"
+              />
+              <Button
+                type="blue" icon="material/delete"
+                v-tippy content="Clear Input"
+                :disabled="!dataCurrent[currentKey]"
+                @click="clear()"
+              />
+            </Layout>
+
+            <Button
+              type="green"
+              text="Submit"
+            />
+          </Layout>
+
+          <div
+            v-for="suggestion of currentSuggestions"
+            class="suggestion"
+          >
+            <div class="inner" :data-active="suggestion.active">
+              <div class="vote">
+                <div :data-upvote="suggestion.selfUpvoted" @click="voteComment(suggestion, 1)">
+                  <Icon name="material/arrow_up" />
+                </div>
+                <div :data-downvote="suggestion.selfDownvoted" @click="voteComment(suggestion, -1)">
+                  <Icon name="material/arrow_down" />
+                </div>
+              </div>
+              <div class="information">
+                <img :src="suggestion.user.icon" alt="">
+                <span v-if="suggestion.upvotes === undefined" class="user" v-text="suggestion.user.name" />
+                <span v-else class="user" v-text="`${suggestion.user.name} (${suggestion.upvotes}/-${suggestion.downvotes})`" />
+                <div class="text">
+                  <span
+                    v-for="line, i of suggestion.text.split('\n')"
+                    :key="i"
+                    v-text="line"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Layout>
       </div>
-    </div>
-    <div v-if="editable" class="box">
-      <button v-tippy="{delay: [500, 0]}" generic small content="Press this to save your changes.<br>Please don't spam this button, you don't need to press this after every single line!<br>(Like seriously. Don't spam pls, thx.)<br>Ctrl + S" @click="submitChanges()">
-        Submit Changes
-      </button>
-    </div>
-  </div>
-  <div v-else>
-    <span>Loading or language not found!</span>
-  </div>
+    </Layout>
+  </Container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Swal from 'sweetalert2'
 import API from '../../lib/api'
+import Admonition from '../../components/entities/Admonition.vue'
+import Container from '../../components/layout/Container.vue'
+import Layout from '../../components/layout/Layout.vue'
+import Button from '../../components/entities/Button.vue'
+import Input from '../../components/entities/Input.vue'
+import { throwStatement } from '@babel/types'
 
 export default Vue.extend({
+  components: {
+    Admonition,
+    Container,
+    Layout,
+    Button,
+    Input
+},
   transition: 'slide-down',
   async fetch() {
-    const data = (await API.getLanguage(this.$route.params.lang)).data as { [key: string]: string }
-    const dataEn = (await API.getLanguage('en-US')).data as { [key: string]: string }
-    const dataDescriptions = (await API.getLanguage('descriptions')).data as { [key: string]: string }
-
-    if (data._id) {
-      this.data = JSON.parse(JSON.stringify(data))
-      this.dataOrg = JSON.parse(JSON.stringify(data))
+    const res = await Promise.all([
+      API.getLanguage(this.$route.params.lang),
+      API.getLanguage('@origin'),
+      API.getLanguage('@descriptions')
+    ])
+    for (const r of res) {
+      if (r.status === 200) continue
+      this.error = `Error http ${r.status} (${r.statusText}): ${r.data?.message}`
+      return
     }
-    if (dataEn._id) {
-      this.dataEn = dataEn
-      this.dataEn._lines = Object.keys(dataEn).filter((k: string) => {
-        if (k.startsWith('_')) return false
-        if (data._id.startsWith('en')) return true
-        return !dataDescriptions[k]?.startsWith('NO_TRANSLATION')
-      })
-    }
-    if (dataDescriptions._id)
-      this.dataDescriptions = dataDescriptions
 
-    this.findIssues()
+    const dataLang: Record<string, string> = res[0].data
+    const dataOrg: Record<string, string> = res[1].data
+    const dataDescr: Record<string, string> = res[2].data
+
+    this.dataLang = JSON.parse(JSON.stringify(dataLang))
+    this.dataOrg = dataOrg
+    this.dataDescr = dataDescr
+    this.keys = Object.keys(dataOrg).filter((k: string) => {
+      if (k.startsWith('_')) return false
+      if (dataLang._id.startsWith('en')) return true
+      if (dataDescr[k]?.startsWith('NO_TRANSLATION')) return false
+      return true
+    })
+
+    this.loadSuggestions()
   },
   data() {
     return {
-      data: undefined as any,
-      dataOrg: undefined as any,
-      dataEn: undefined as any,
-      dataDescriptions: undefined as any,
-      issues: {} as {[key: string]: string},
+      error: '',
+      dataLang: undefined as any,
+      dataOrg: {},
+      dataDescr: {},
+      dataCurrent: {},
+      suggestions: {},
+      keys: [],
       editor: {
         cursor: 0,
         rtl: false
@@ -129,105 +192,69 @@ export default Vue.extend({
   },
   computed: {
     currentKey() {
-      // @ts-ignore
-      return this.dataEn._lines[this.editor.cursor] || ''
+      return this.keys[this.editor.cursor] || ''
+    },
+    currentOrg() {
+      return this.dataOrg[this.currentKey] || ''
+    },
+    currentLang() {
+      return this.dataLang[this.currentKey] || ''
+    },
+    currentSuggestions() {
+      return this.suggestions[this.currentKey] || null
     },
     approved() {
-      // @ts-ignore
-      return !!this.data[this.currentKey] // && this.data[this.currentKey] != this.dataEn[this.currentKey];
+      return !!this.dataLang[this.currentKey] // && this.data[this.currentKey] != this.dataOrg[this.currentKey];
     },
     progress() {
-      // @ts-ignore
-      return this.dataEn._lines.filter((key: string) => this.data[key]).length
+      return this.keys.filter((key: string) => this.dataLang[key]).length
     },
     editable() {
       const editable = this.$store.getters['user/languagesInTranslationScope']
       return editable.includes('*') || editable.includes(this.$route.params.lang)
     }
   },
+  watch: {
+    'editor.cursor'(val: number) {
+      if (this.suggestions[this.currentKey]) return
+      setTimeout((self) => {
+        if (self.editor.cursor !== val) return
+        this.loadSuggestions()
+      }, 600, this)
+    }
+  },
   methods: {
     editorMove(direction: number) {
       this.editor.cursor = parseInt(this.editor.cursor + '', 10) + direction
-      const max = this.dataEn._lines.length
+      const max = this.keys.length
       while (this.editor.cursor < 0) this.editor.cursor += max
       while (this.editor.cursor >= max) this.editor.cursor -= max
       // eslint-disable-next-line no-unused-expressions
       document.getElementById('lang-editor-input')?.focus()
-      this.findIssues()
     },
-    undo() {
-      Vue.set(this.data, this.currentKey, this.dataOrg[this.currentKey])
+    cloneLang() {
+      Vue.set(this.dataCurrent, this.currentKey, this.dataLang[this.currentKey])
     },
-    clone() {
-      Vue.set(this.data, this.currentKey, this.dataEn[this.currentKey])
+    cloneOrg() {
+      Vue.set(this.dataCurrent, this.currentKey, this.dataOrg[this.currentKey])
     },
     clear() {
-      Vue.set(this.data, this.currentKey, '')
+      Vue.set(this.dataCurrent, this.currentKey, '')
     },
-    skipToNextUnfinished(issuesOnly = false) {
-      this.findIssues()
-      const found = (position: number) => {
-        this.editor.cursor = position
-        // eslint-disable-next-line no-unused-expressions
-        document.getElementById('lang-editor-input')?.focus()
-      }
-      for (let i = 1; i <= this.dataEn._lines.length; i++) {
-        let position = parseInt(this.editor.cursor + '', 10) + i
-        if (position >= this.dataEn._lines.length) position -= this.dataEn._lines.length
-        if (this.issues[this.dataEn._lines[position]]) return found(position)
-        if (issuesOnly) continue
-        if (this.dataEn._lines[position] && !this.data[this.dataEn._lines[position]]) return found(position)
-      }
+    async loadSuggestions() {
+      const res = await API.getTranslationComments(this.$route.params.lang, this.currentKey)
+      if (res.status === 200)
+        Vue.set(this.suggestions, this.currentKey, res.data)
     },
-    async submitChanges() {
-      try { this.findIssues() } catch (ex) { console.error(ex) }
-      const payload = {} as any
-      for (const key of this.dataEn._lines) {
-        if (this.data[key] !== this.dataOrg[key])
-          payload[key] = this.data[key].split('​').join('') // replace zwd with nothing
-      }
+    async voteComment(suggestion: any, value: number) {
+      if (value > 0 && suggestion.selfUpvoted) value = 0
+      else if (value < 0 && suggestion.selfDownvoted) value = 0
 
-      if (!Object.keys(payload).length) {
-        Swal.fire({
-          title: 'Oh.',
-          text: 'No changes found.',
-          icon: 'info',
-          confirmButtonColor: '#3e9e71',
-          confirmButtonText: 'Okay'
-        })
-        return
-      }
+      const res = await API.patchTranslationCommentVote(suggestion.id, value)
+      if (res.status !== 200) return console.error(res)
 
-      const doIt = await Swal.fire({
-        title: 'Submit changes?',
-        text: "If your language is already approved and visible within the bot's settings, your changes might go live at any point in time.",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3e9e71',
-        confirmButtonText: 'Submit'
-      })
-
-      if (doIt.value) {
-        const { data } = await API.patchLanguage(this.data._id, payload)
-        console.log(data)
-        this.$fetch()
-      }
-    },
-    findIssues() {
-      const issuesAt: {[key: string]: string} = {}
-      const variablesTest = (str: string, org: string) => {
-        const variablesUsed = Array.from(str.matchAll(/{\w+}/g)).map(e => e[0])
-        if (variablesUsed.filter(e => !org.includes(e)).length) console.log(str)
-        return !!variablesUsed.filter(e => !org.includes(e)).length
-      };
-      (Object.values(this.dataEn._lines) as string[]).forEach((key) => {
-        const value = this.data[key]
-        if (/  +/.test(value)) issuesAt[key] = 'Double Space'
-        else if (variablesTest(value + '', this.dataEn[key])) issuesAt[key] = 'Invalid Variable'
-        else if (/\] \(/.test(value)) issuesAt[key] = 'Invalid Space Between Link URL & Text'
-      })
-      this.issues = issuesAt
-      return issuesAt
+      suggestion.selfUpvoted = (value > 0)
+      suggestion.selfDownvoted = (value < 0)
     }
   },
   head() {
@@ -240,245 +267,209 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-span {
-  color: white;
-  font-family: $font-regular;
-  font-size: 11pt;
-  display: block;
+.context, .comments {
+  @include box;
 
-  &.title {
+  .descr span {
+    font-family: $font-major;
+    font-size: 10pt;
     color: $color-major;
-    font-family: $font-major;
-    font-size: 12pt;
   }
 
-  &.desc {
-    color: $color-sub;
-    font-family: $font-sub;
-    font-size: 11pt;
-  }
-}
-
-h1 {
-  margin-bottom: $box-padding;
-}
-
-.progress {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: "text1 text2" "bar bar";
-  row-gap: calc($box-padding / 2);
-  background: $bg-light;
-  padding: $box-padding;
-  border-radius: $box-br;
-  margin-bottom: $box-padding;
-
-  .title { grid-area: text1; }
-
-  .desc {
-    grid-area: text2;
-    text-align: right;
+  label {
+    margin-bottom: calc($content-padding * -1);
   }
 
-  .bar {
-    grid-area: bar;
-    width: 100%;
-    height: 12pt;
-    margin-bottom: 2pt;
-    background-color: #00000044;
-    border-radius: 99px;
-    overflow: hidden;
-
-    .inner {
-      height: 100%;
-      width: var(--progress);
-      border-radius: 99px;
-      background-image: linear-gradient(90deg, #9833ac, #6c96fe);
-    }
-  }
-}
-
-.editor {
-  display: flex;
-  flex-direction: column;
-  background: #393f55;
-  padding: $box-padding;
-  border-radius: $box-br;
-  margin-bottom: $box-padding;
-
-  & > div {
-    display: block;
-  }
-
-  .top {
-    display: grid;
-    grid-template-columns: 1fr 1fr 4fr 1fr;
-    column-gap: 10pt;
-    padding-bottom: $box-padding;
-    margin-bottom: calc(#{$box-padding} / 2);
-    border-bottom: 1px solid #00000044;
-
-    button {
-      padding: 8pt;
-      border-radius: calc($box-br / 3);
-      border: none;
-      background-color: #7e89b1;
-      color: $color-header;
-      font-family: $font-major;
-      cursor: pointer;
-
-      &:hover { background-color: #919eca; }
-
-      &.approved {
-        background-color: #48a270;
-
-        &:hover { background-color: #5cb484; }
-      }
-    }
-
-    input {
-      display: inline-block;
-      width: calc(100% - 20pt);
-      margin: 0;
-      padding: 8pt 10pt;
-      border-radius: calc($box-br / 3);
-      border: none;
-      font-family: monospace;
-      font-size: 12pt;
-      color: $color-regular;
-      background-color: #00000022;
-    }
-
-    select {
-      padding: 8pt 10pt;
-      border-radius: calc($box-br / 3);
-      border: none;
-      font-family: monospace;
-      font-size: 12pt;
-      color: $color-regular;
-      background-color: #00000022;
-      width: 370px;
-
-      option { background-color: #31374a; }
-    }
-  }
-
-  & > .description {
-    margin-top: calc(#{$box-padding} / 2);
-    padding: 0 5pt 10pt 5pt;
-      border-radius: calc($box-br / 3);
-    border: none;
-    font-family: $font-regular;
-    font-size: 11pt;
-    color: $color-regular;
-    // background-color: #00000022;
-  }
-
-  & > .orgtext {
-    margin-top: calc(#{$box-padding} / 2);
-    padding: 8pt 10pt;
-      border-radius: calc($box-br / 3);
-    border: none;
-    font-family: $font-regular;
-    font-size: 12pt;
-    color: $color-regular;
-    background-color: #00000022;
-  }
-
-  & > textarea {
-    margin-top: calc(#{$box-padding} / 2);
-    padding: 8pt 10pt;
-      border-radius: calc($box-br / 3);
-    border: none;
-    font-family: $font-major;
-    font-size: 12pt;
-    color: #151515;
-    background-color: #e4d7e4;
-    box-shadow: 0 5px 7px -6px black;
-    resize: vertical;
-    min-height: 14pt;
-    max-height: 200pt;
-
-    &:disabled {
-      cursor: not-allowed;
-      box-shadow: none;
-      color: #434343;
-    }
-  }
-
-  .buttons {
-    margin-top: $box-padding;
-    width: 100%;
+  .org, .lang {
+    padding: $box-padding;
+    border-radius: $content-br;
+    background-color: $bg-lighter;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    border: none;
+    outline: none;
+    font-family: $font-regular;
+    font-size: 11pt;
+    color: $color-major;
+    resize: vertical;
+    counter-reset: lineNr 0;
 
-    span.issues {
-      flex-grow: 1;
-      opacity: .4;
+    span {
+      font-family: $font-regular;
+      font-size: 11pt;
+      color: $color-major;
 
-      &.present {
-        opacity: 1;
-        color: $warning-major;
-        font-family: $font-major;
-      }
-
-      &.found {
-        opacity: .6;
-        cursor: pointer;
-      }
-    }
-
-    span.div {
-      margin-left: 6pt;
-      font-size: 26pt;
-      opacity: .2;
-      line-height: 14pt;
-      transform: translateY(-1pt);
-    }
-
-    button {
-      padding: 6pt 10pt;
-      border-radius: calc($box-br / 3);
-      border: none;
-      background-color: #7e89b1;
-      color: $color-header;
-      font-family: $font-major;
-      cursor: pointer;
-      margin-left: 6pt;
-
-      &:hover {
-        background-color: #919eca;
-      }
-
-      &:disabled {
-        pointer-events: none;
-        opacity: .5;
+      &:not(:first-child:last-child)::before {
+        counter-increment: lineNr;
+        content: counter(lineNr);
+        color: $color-minor;
+        font-family: monospace;
+        padding-right: 1em;
       }
     }
   }
 }
 
-.box {
-  // background: $bg-light;
-  // padding: $box-padding;
-  // border-radius: $box-br;
-  margin-top: 50px;
+.comments-wrapper {
+  display: grid;
 
-  button {
-    --bg: #{$bg-darker};
-    --bg-hov: #{$success-major};
-    --color: #{$color-major};
-  }
+  & > * { grid-area: 1 / 1; }
 }
 
-.readonly {
-  background: #d6d4462a;
-  border: 1px solid #d6d446;
-  padding: $box-padding;
+.comments-ghost {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  opacity: 0;
   border-radius: $box-br;
-  margin-bottom: $box-padding;
-  font-family: $font-major;
-  color: #d6d446;
+  background-color: #ffffff05;
+  border: 1px solid #ffffff03;
+  transition: opacity .4s ease;
+  overflow: hidden;
+  pointer-events: none;
+
+  &[visible] {
+    opacity: 1;
+    transition: opacity 0s linear;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 300%;
+    transform: translateX(-100%) rotate(20deg);
+    background-image: linear-gradient(
+      90deg,
+      rgba(#fff, 0) 0,
+      rgba(#fff, 0.02) 20%,
+      rgba(#fff, 0.08) 60%,
+      rgba(#fff, 0)
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+.comments {
+  @include box;
+  opacity: 0;
+  transition: opacity 0s linear;
+  margin-bottom: 10vh;
+  
+  &[visible] {
+    opacity: 1;
+    transition: opacity .4s ease;
+  }
+
+  .suggestion {
+    margin: calc(-1 * $box-padding);
+    margin-top: 0;
+    padding: calc($box-padding / 3);
+    border-top: 1px solid $color-border;
+    
+    .inner {
+      display: flex;
+      padding: calc($box-padding / 3 * 2);
+      gap: $box-padding;
+      border-radius: $content-br;
+      border: 2px solid transparent;
+
+      &[data-active] {
+        border-color: $color-green;
+      }
+    }
+
+    .vote {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: -4pt;
+
+      & > div {
+        width: 18pt;
+        height: 18pt;
+        color: $color-regular;
+        cursor: pointer;
+        padding: 4pt;
+        background-color: #ffffff00;
+        transition: background-color .1s ease;
+        border-radius: 3pt;
+
+        &[data-upvote] {
+          color: $color-green;
+          background-color: $color-green-20;
+        }
+
+        &[data-downvote] {
+          color: $color-orange;
+          background-color: $color-orange-20;
+        }
+
+        &:hover {
+          background-color: $bg-lighter;
+        }
+
+        & > * {
+          width: 18pt;
+          height: 18pt;
+          color: inherit;
+        }
+      }
+    }
+
+    .information {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 4pt;
+      row-gap: 6pt;
+      align-items: center;
+
+      img {
+        grid-area: 1 / 1;
+        width: 18pt;
+        height: 18pt;
+        border-radius: 999pt;
+      }
+
+      .user {
+        grid-area: 1 / 2;
+        font-family: $font-major;
+        font-size: 9pt;
+        color: $color-major;
+      }
+
+      .text {
+        grid-area: 2 / 1 / 2 / span 2;
+        font-family: $font-regular;
+        font-size: 11pt;
+        color: $color-regular;
+
+        span {
+          display: block;
+          min-height: 1em;
+        }
+      }
+    }
+  }
+}
+
+hr {
+  background-color: $color-border;
+  width: calc(100% + 2 * $box-padding);
+  height: 1px;
+  display: block;
+  border: none;
+  margin: 0 0 0 calc($box-padding * -1);
 }
 
 </style>

@@ -169,12 +169,12 @@ export default class API {
     return this.rawGet(`/translations/languages/${id}`)
   }
 
-  public static patchLanguage(id: string, data: any) {
-    return this.rawPatch(`/translate/language/${id}`, data)
+  public static patchTranslationCommentVote(id: string, vote: number) {
+    return this.rawPatch(`/translations/comments/${id}`, { vote })
   }
 
-  public static putLanguage(id: string, data: any) {
-    return this.rawPut(`/translate/language/${id}`, data)
+  public static getTranslationComments(lang: string, line: string) {
+    return this.rawGet(`/translations/comments/${lang}/${line}`)
   }
 
   //

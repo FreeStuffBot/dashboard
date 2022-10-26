@@ -100,6 +100,7 @@ export default Vue.extend({
     }
   }
   &[data-layout="$1221"] { grid-template-columns: 1fr 2fr 2fr 1fr; }
+  &[data-layout="$1141"] { grid-template-columns: 1fr 1fr 4fr 1fr; }
 
 
   @media screen and (max-width: $res-tablet-width) {

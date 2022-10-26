@@ -37,12 +37,16 @@
           <p v-text="`${lang['lang_' + app.language]} (${app.language})`" />
         </div>
         <div>
-          <label>User since</label>
+          <label>How did you end here</label>
+          <p v-text="app.whereFrom" />
+        </div>
+        <div>
+          <label>Using FreeStuff since</label>
           <p v-text="app.userSince" />
         </div>
         <div>
-          <label>How did you end here</label>
-          <p v-text="app.whereFrom" />
+          <label>Discord Account Age</label>
+          <p v-text="getAccountAge(app)" />
         </div>
         <div>
           <label>Why you</label>
@@ -109,6 +113,13 @@ export default Vue.extend({
         openInfoDialogue(this.$store, 'Awesome!', 'Thanks for your application! We\'ll check it out and get back to you soon!\nPlease do not ask team members about the status of your application, this does not speed anything up.')
         this.applied = true
         return
+      }
+    },
+    getAccountAge(app: any): string {
+      try {
+        return new Date(Number(BigInt(app.id) >> 22n) + 1420070400000).toLocaleDateString()
+      } catch (ex) {
+        return 'unknown'
       }
     },
     async accept(app: any) {
