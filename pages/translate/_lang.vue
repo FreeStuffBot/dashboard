@@ -92,6 +92,8 @@
             <Button
               type="green"
               text="Submit"
+              :disabled="!dataCurrent[currentKey]"
+              @click="submitSuggestion()"
             />
           </Layout>
 
@@ -120,6 +122,16 @@
                   />
                 </div>
               </div>
+              <div
+                class="approve"
+                :data-approve="suggestion.approved"
+                :data-editable="maintaining"
+                v-tippy
+                :content="maintaining ? 'Approve / Lock in' : 'Approved'"
+                @click="approveComment(suggestion)"
+              >
+                <Icon :name="suggestion.approved ? 'material/lock' : 'material/lock_open'" />
+              </div>
             </div>
           </div>
         </Layout>
@@ -136,7 +148,7 @@ import Container from '../../components/layout/Container.vue'
 import Layout from '../../components/layout/Layout.vue'
 import Button from '../../components/entities/Button.vue'
 import Input from '../../components/entities/Input.vue'
-import { throwStatement } from '@babel/types'
+import { openConfirmDialogue } from '../../lib/popups'
 
 export default Vue.extend({
   components: {
@@ -212,6 +224,10 @@ export default Vue.extend({
     editable() {
       const editable = this.$store.getters['user/languagesInTranslationScope']
       return editable.includes('*') || editable.includes(this.$route.params.lang)
+    },
+    maintaining() {
+      const maintaining = this.$store.getters['user/languagesInMaintainerScope']
+      return maintaining.includes('*') || maintaining.includes(this.$route.params.lang)
     }
   },
   watch: {
@@ -250,11 +266,53 @@ export default Vue.extend({
       if (value > 0 && suggestion.selfUpvoted) value = 0
       else if (value < 0 && suggestion.selfDownvoted) value = 0
 
-      const res = await API.patchTranslationCommentVote(suggestion.id, value)
+      const res = await API.patchTranslationCommentVote(suggestion.id, { vote: value })
       if (res.status !== 200) return console.error(res)
 
       suggestion.selfUpvoted = (value > 0)
       suggestion.selfDownvoted = (value < 0)
+    },
+    async approveComment(suggestion: any) {
+      const newStatus = !suggestion.approved
+      const res = await API.patchTranslationCommentVote(suggestion.id, { approve: newStatus })
+      if (res.status !== 200) return console.error(res)
+
+      for (const sug of this.currentSuggestions)
+        sug.approved = false
+
+      suggestion.approved = newStatus
+    },
+    async submitSuggestion() {
+      const text = this.dataCurrent[this.currentKey]
+      if (!text) return
+
+      const alreadySuggested = this.currentSuggestions
+        .find(sug => {
+          const author = sug.id.split(':')[2]
+          return author === this.$store.state.user.id
+        })
+
+      if (alreadySuggested) {
+        const confirmed = await openConfirmDialogue(
+          this.$store,
+          alreadySuggested.active
+            ? 'Your current suggestion is used'
+            : 'You have already suggested something',
+          alreadySuggested.active
+            ? 'You can still suggest something different, but your current one will remain as created by an anonymous user. Your new suggestion will start with no upvotes. Do you wish to continue?'
+            : 'You can still change your suggestion but doing so will reset it\'s upvotes. Do you wish to continue?'
+        )
+        if (!confirmed) return
+      }
+
+      const res = await API.postTranslationComment(
+        this.$route.params.lang,
+        this.currentKey,
+        text
+      )
+      if (res.status !== 200) return console.error(res)
+
+      this.$fetch()
     }
   },
   head() {
@@ -433,6 +491,7 @@ export default Vue.extend({
       column-gap: 4pt;
       row-gap: 6pt;
       align-items: center;
+      flex-grow: 1;
 
       img {
         grid-area: 1 / 1;
@@ -458,6 +517,41 @@ export default Vue.extend({
           display: block;
           min-height: 1em;
         }
+      }
+    }
+
+    .approve {
+      width: 18pt;
+      height: 100%;
+      color: $color-regular;
+      cursor: pointer;
+      margin: -4pt;
+      padding: 4pt;
+      background-color: #ffffff00;
+      transition: background-color .1s ease;
+      border-radius: 3pt;
+
+      &[data-approve] {
+        color: $color-green;
+        background-color: $color-green-20;
+      }
+
+      &:not([data-editable]) {
+        cursor: default;
+
+        &:not([data-approve]) {
+          display: none;
+        }
+      }
+
+      &[data-editable]:hover {
+        background-color: $bg-lighter;
+      }
+
+      & > * {
+        width: 18pt;
+        height: 18pt;
+        color: inherit;
       }
     }
   }

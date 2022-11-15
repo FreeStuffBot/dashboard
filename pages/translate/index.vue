@@ -2,11 +2,16 @@
   <Container :class="{ 'loading-animation-queued': !loadingFinished }">
     <h1>Translating</h1>
 
-    <Layout name="inline">
-      <Button text="Tutorial" icon="info" type="light" @click="howto()" />
-      <Button text="Credits" icon="crown" type="light" @click="credits()" />
-      <Button text="Keyboard Shortcuts" icon="keyboard" type="light" @click="keyboardShortcuts()" />
-      <!-- <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" /> -->
+    <Layout name="flow">
+      <Layout name="inline">
+        <Button text="Tutorial" icon="info" type="light" @click="howto()" />
+        <Button text="Credits" icon="crown" type="light" @click="credits()" />
+        <Button text="Keyboard Shortcuts" icon="keyboard" type="light" @click="keyboardShortcuts()" />
+      </Layout>
+      <Admonition
+        type="info"
+        text="Keyboard shortcuts are currently disabled. We are working on bringing them back asap!"
+      />
     </Layout>
 
     <div v-if="isAdmin && pendingApplicationsCount">
@@ -180,28 +185,6 @@ export default Vue.extend({
     },
     keyboardShortcuts() {
       this.$store.commit('openPopup', popups.shortcuts)
-    },
-    async addLanguage() {
-      const { value } = await Swal.fire({
-        title: 'Insert Language',
-        html: `
-          <label for="swal-input1">Lang Code</label>
-          <input id="swal-input1" class="swal2-input" placeholder="en-US">
-          <label for="swal-input2">English Name</label>
-          <input id="swal-input2" class="swal2-input" value="">
-        `,
-        preConfirm() {
-          return [
-            (document.getElementById('swal-input1') as HTMLInputElement).value,
-            (document.getElementById('swal-input2') as HTMLInputElement).value
-          ]
-        }
-      })
-      if (!value) return
-
-      const { data } = await API.putLanguage(value[0], { name: value[1] })
-      this.$fetch()
-      Swal.fire({ text: data })
     }
   },
   head() {
