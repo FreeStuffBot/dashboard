@@ -181,6 +181,10 @@ export default class API {
     return this.rawPost(`/translations/comments/${lang}/${line}`, { text })
   }
 
+  public static postLanguageLine(data: { key: string, english: string, description?: string }) {
+    return this.rawPost('/translations/lines', data)
+  }
+
   //
 
   public static getProductList(options: { offset?: number, limit?: number, queryName?: 'pending' | 'published' } = {}) {

@@ -13,7 +13,20 @@
               add="Add User"
               default-value="123456789"
             >
-              <template slot-scope="{ value, update, remove }">
+              <template v-slot="{ value, update, remove }">
+                <Layout name="$1a" :tight="true">
+                  <Input v-model="value" @input="update" />
+                  <Button text="X" type="light" @click="remove" />
+                </Layout>
+              </template>
+            </InputEnum>
+            <InputEnum
+              v-model="configLocal.global.ciTokens"
+              label="CI Tokens"
+              add="Add Token"
+              default-value="secret"
+            >
+              <template v-slot="{ value, update, remove }">
                 <Layout name="$1a" :tight="true">
                   <Input v-model="value" @input="update" />
                   <Button text="X" type="light" @click="remove" />
@@ -90,9 +103,9 @@ export default Vue.extend({
       // error parsing json
       jsonError: '',
       // compiled config object
-      config: {},
+      config: {} as any,
       // copy of the config object to be used for the visual editor
-      configLocal: {},
+      configLocal: {} as any,
       // stringified copy of the config for detecting changes
       orgConfig: ''
     }
