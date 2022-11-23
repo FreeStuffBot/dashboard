@@ -1,8 +1,8 @@
 <template>
   <Container>
     <h1>Translating FreeStuff</h1>
-    <p>Hey you! Are you interested in translating FreeStuff into your native language?</p>
-    <p>Please apply below and we'll get back to you in no time!</p>
+    <p>Hey you! Are you interested in translating FreeStuff into your native language? Please apply below and we'll get back to you in no time!</p>
+    <p>Your native language is not shown? Contact us and we'll be happy to add it. Please note that we are currently only hosting languages that Discord itself supports.</p>
     
     <h2>Your Application</h2>
     <div v-if="applied === null">
