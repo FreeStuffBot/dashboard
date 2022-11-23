@@ -52,6 +52,10 @@
           <label>Why you</label>
           <p v-text="app.whyThem" />
         </div>
+        <div>
+          <label>Discord User Id</label>
+          <p v-text="app.id" />
+        </div>
       </div>
     </Layout>
   </Container>
