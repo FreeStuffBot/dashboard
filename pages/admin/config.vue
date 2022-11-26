@@ -34,20 +34,6 @@
               </template>
             </InputEnum>
             <InputEnum
-              v-model="configLocal.global.telegramChannels"
-              label="Telegram Announcements Channels"
-              add="Add Channel"
-              :default-value="{chatId: '@freestuff_dev_606026', locale: 'en-US'}"
-            >
-              <template v-slot="{ value, update, remove }">
-                <Layout name="$31a" :tight="true">
-                  <Input v-model="value.chatId" @input="(chatId) => update({chatId, locale: value.locale})" />
-                  <Input v-model="value.locale" @input="(locale) => update({chatId: value.chatId, locale})" />
-                  <Button text="X" type="light" @click="remove" />
-                </Layout>
-              </template>
-            </InputEnum>
-            <InputEnum
               v-model="configLocal.global.ciTokens"
               label="CI Tokens"
               add="Add Token"
