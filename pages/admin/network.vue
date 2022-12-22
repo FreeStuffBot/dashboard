@@ -88,7 +88,7 @@ import Layout from '~/components/layout/Layout.vue'
 import AdminNetworkCards from '~/components/other/AdminNetworkCards.vue'
 import AdminNetworkTable from '~/components/other/AdminNetworkTable.vue'
 import Button from '../../components/entities/Button.vue'
-import { openErrorModal, openFormDialogue, openInfoDialogue } from '../../lib/popups'
+import { openConfirmDialogue, openErrorModal, openFormDialogue, openInfoDialogue } from '../../lib/popups'
 
 export default Vue.extend({
   components: {
@@ -228,6 +228,10 @@ export default Vue.extend({
             enum: arg.enum
           }))
         })
+        if (!data) return
+      } else {
+        const yes = await openConfirmDialogue(this.$store, `Run ${command.name}?`, command.description)
+        if (!yes) return
       }
 
       const { data: resData, status } = await API.postAdminServicesCommand({ receivers: this.selected, name, data })
