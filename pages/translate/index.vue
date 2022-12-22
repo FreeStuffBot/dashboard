@@ -2,11 +2,22 @@
   <Container :class="{ 'loading-animation-queued': !loadingFinished }">
     <h1>Translating</h1>
 
-    <Layout name="inline">
-      <Button text="Tutorial" icon="info" type="light" @click="howto()" />
-      <Button text="Credits" icon="crown" type="light" @click="credits()" />
-      <Button text="Keyboard Shortcuts" icon="keyboard" type="light" @click="keyboardShortcuts()" />
-      <!-- <Button text="Add Language" icon="admin" type="green" @click="addLanguage()" /> -->
+    <Layout name="flow">
+      <Layout name="inline">
+        <Button text="Tutorial" icon="info" type="light" @click="howto()" />
+        <Button text="Credits" icon="crown" type="light" @click="credits()" />
+        <Button text="Keyboard Shortcuts" icon="keyboard" type="light" @click="keyboardShortcuts()" />
+        <Button v-if="isAdmin" text="Add Line" icon="admin" type="green" @click="addline()" />
+      </Layout>
+      <Admonition
+        v-if="adminAddLineInfo !== null"
+        :type="adminAddLineInfo ? 'error' : 'success'"
+        :text="adminAddLineInfo || 'Successfully added one line!'"
+      />
+      <Admonition
+        type="info"
+        text="Keyboard shortcuts are currently disabled. We are working on bringing them back asap!"
+      />
     </Layout>
 
     <div v-if="isAdmin && pendingApplicationsCount">
@@ -37,7 +48,7 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
-import { Popup, PopupType } from '../../lib/popups'
+import { openFormDialogue, Popup, PopupType } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Input from '~/components/entities/Input.vue'
@@ -141,7 +152,7 @@ export default Vue.extend({
         }
         return e
       })
-      .filter((e: any) => e._index >= 0)
+      .filter((e: any) => this.isAdmin || e._index >= 0)
       .filter((e: any) => this.isAdmin || e._editable)
       .sort((a: any, b: any) => ((a._index + 1) * (a._editable ? 1 : 100)) - (b._index + 1) * (b._editable ? 1 : 100))
 
@@ -160,7 +171,8 @@ export default Vue.extend({
       pendingApplicationsCount: 0,
       list: [] as any[],
       maxProgress: 0,
-      loadingFinished: false
+      loadingFinished: false,
+      adminAddLineInfo: null
     }
   },
   computed: {
@@ -181,27 +193,20 @@ export default Vue.extend({
     keyboardShortcuts() {
       this.$store.commit('openPopup', popups.shortcuts)
     },
-    async addLanguage() {
-      const { value } = await Swal.fire({
-        title: 'Insert Language',
-        html: `
-          <label for="swal-input1">Lang Code</label>
-          <input id="swal-input1" class="swal2-input" placeholder="en-US">
-          <label for="swal-input2">English Name</label>
-          <input id="swal-input2" class="swal2-input" value="">
-        `,
-        preConfirm() {
-          return [
-            (document.getElementById('swal-input1') as HTMLInputElement).value,
-            (document.getElementById('swal-input2') as HTMLInputElement).value
-          ]
-        }
+    async addline() {
+      const data = await openFormDialogue(this.$store, {
+        title: 'Add line',
+        inputs: [
+          { id: 'key', type: 'text', label: 'key', placeholder: 'line_key_format' },
+          { id: 'english', type: 'text', label: 'English Translation', placeholder: 'This is cool' },
+          { id: 'description', type: 'text', label: 'Description (optional)', placeholder: 'It is not!' }
+        ]
       })
-      if (!value) return
-
-      const { data } = await API.putLanguage(value[0], { name: value[1] })
-      this.$fetch()
-      Swal.fire({ text: data })
+      if (!data?.key) return
+      
+      const { data: resData, status, statusText } = await API.postLanguageLine(data)
+      if (status === 200) this.adminAddLineInfo = false
+      else this.adminAddLineInfo = `http ${status} (${statusText}): ${JSON.stringify(resData)}`
     }
   },
   head() {

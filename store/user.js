@@ -15,6 +15,7 @@ function updateGuilds(state, guilds) {
 //
 
 export const state = () => ({
+  id: '',
   username: '',
   avatar: '',
   avatarUrl: '',
@@ -84,5 +85,9 @@ export const getters = {
   languagesInTranslationScope(state) {
     if (state.scope.includes('admin')) return [ '*' ]
     return state.scope.filter(e => e.startsWith('translate')).map(e => e.substr('translate.'.length))
+  },
+  languagesInMaintainerScope(state) {
+    if (state.scope.includes('admin')) return [ '*' ]
+    return state.scope.filter(e => e.startsWith('langmain')).map(e => e.substr('langmain.'.length))
   }
 }

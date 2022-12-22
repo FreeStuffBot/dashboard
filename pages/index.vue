@@ -26,12 +26,6 @@
       ]"
     /> -->
 
-    <Admonition
-      type="info"
-      text="This dashboard is still in development. Please report any bugs over on our Discord Server."
-    />
-
-    <h2>Your Account</h2>
     <AccountInfoBox
       :username="username"
       :discrim="`#${discriminator}`"

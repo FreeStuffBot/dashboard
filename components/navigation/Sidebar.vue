@@ -59,7 +59,7 @@ section {
     padding: calc(#{$box-outer-padding} / 2);
     margin: calc(-1 * #{$box-outer-padding} / 2);
     margin-bottom: 0;
-    border-radius: $box-br;
+    border-radius: 999pt;
     box-shadow: 0 0 0 1px #ffffff11 inset;
 
     img {

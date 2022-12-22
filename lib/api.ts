@@ -169,12 +169,20 @@ export default class API {
     return this.rawGet(`/translations/languages/${id}`)
   }
 
-  public static patchTranslationCommentVote(id: string, vote: number) {
-    return this.rawPatch(`/translations/comments/${id}`, { vote })
+  public static patchTranslationCommentVote(id: string, data: { vote: number } | { approve: boolean }) {
+    return this.rawPatch(`/translations/comments/${id}`, data)
   }
 
   public static getTranslationComments(lang: string, line: string) {
     return this.rawGet(`/translations/comments/${lang}/${line}`)
+  }
+
+  public static postTranslationComment(lang: string, line: string, text: string) {
+    return this.rawPost(`/translations/comments/${lang}/${line}`, { text })
+  }
+
+  public static postLanguageLine(data: { key: string, english: string, description?: string }) {
+    return this.rawPost('/translations/lines', data)
   }
 
   //
