@@ -1,7 +1,6 @@
 <template>
   <Container>
-    <h1>Network</h1>refresh every 30 seconds
-
+    <h1>Network</h1>
 
     <Admonition v-if="error" type="error" :text="error" />
     <p v-else-if="!data">
@@ -114,8 +113,18 @@ export default Vue.extend({
       configStr: '',
       jsonError: '',
       config: {},
-      orgConfig: ''
+      orgConfig: '',
+      reloadTimer: null
     }
+  },
+  mounted() {
+    if (this.reloadTimer)
+      clearInterval(this.reloadTimer)
+    this.reloadTimer = setInterval(self => self.$fetch(), 30000, this)
+  },
+  beforeDestroy() {
+    if (this.reloadTimer)
+      clearInterval(this.reloadTimer)
   },
   watch: {
     configStr(val) {

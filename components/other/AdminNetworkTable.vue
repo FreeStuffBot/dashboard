@@ -122,6 +122,7 @@ h3 {
   display: flex;
   align-items: center;
   height: 100%;
+  gap: 4pt;
 
   span {
     background-color: $color-blue-20;
