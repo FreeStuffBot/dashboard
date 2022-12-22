@@ -14,14 +14,19 @@
     </p>
 
     <Layout name="flow">
-      <Input
+      <div
         v-for="input of data.inputs"
         :key="input.id"
-        v-model="output[input.id]"
-        :type="input.type"
-        :label="input.label"
-        :placeholder="input.placeholder"
-      />
+      >
+        <RichInput
+          v-model="output[input.id]"
+          :type="input.type"
+          :label="input.label"
+          :placeholder="input.placeholder"
+          :array="input.array"
+          :enums="input.enum"
+        />
+      </div>
 
       <Admonition v-if="error" type="error" :text="error" />
 
@@ -45,14 +50,14 @@
 import Vue from 'vue'
 import Layout from '~/components/layout/Layout.vue'
 import Button from '~/components/entities/Button.vue'
-import Input from '~/components/entities/Input.vue'
+import RichInput from '~/components/entities/RichInput.vue'
 import Admonition from '~/components/entities/Admonition.vue'
 
 export default Vue.extend({
   components: {
     Layout,
     Button,
-    Input,
+    RichInput,
     Admonition
   },
   props: {

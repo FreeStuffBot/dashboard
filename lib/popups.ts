@@ -58,9 +58,10 @@ type PopupHelper = {
   text?: string
   inputs: {
     id: string
-    type: 'text' | 'multiline' | 'toggle'
+    type: 'text' | 'multiline' | 'toggle' | 'number'
     label?: string
     placeholder?: string
+    array?: boolean
   }[]
   validate?: (input: string) => string
   callback?: (input: string) => any

@@ -34,48 +34,27 @@
             </Layout>
             <Layout name="inline">
               <Button
+                v-for="cmd of commandsInSelection"
+                :key="cmd.name"
                 type="green"
-                text="Reload Remote Config"
-                :disabled="sel"
-                @click="command('refetch', [ 'config' ])"
+                :text="cmd.name"
+                :content="cmd.description"
+                @click="command(cmd.name)"
+                v-tippy
               />
               <Button
-                type="green"
-                text="Reload Experiments"
-                :disabled="sel"
-                @click="command('refetch', [ 'experiments' ])"
-              />
-              <Button
-                type="green"
-                text="Reload Languages"
-                :disabled="sel"
-                @click="command('refetch', [ 'cms.languages' ])"
-              />
-              <Button
-                type="green"
-                text="Reload Constants"
-                :disabled="sel"
-                @click="command('refetch', [ 'cms.constants' ])"
-              />
-              <Button
-                type="green"
-                text="Update Product List"
-                :disabled="sel"
-                @click="command('refetch', [ 'api.channel.*' ])"
-              />
-            </Layout>
-            <Layout name="inline">
-              <Button
+                v-if="!commandsInSelection.length && selected.length"
                 type="red"
-                text="Shutdown"
-                :disabled="sel"
-                @click="command('shutdown')"
+                :disabled="true"
+                :lite="true"
+                text="Selected services do not support commands"
               />
               <Button
-                type="red"
-                text="Force Shutdown"
-                :disabled="sel"
-                @click="command('__force_shutdown')"
+                v-else-if="!commandsInSelection.length"
+                type="green"
+                :disabled="true"
+                :lite="true"
+                text="Select a service for options"
               />
             </Layout>
           </Layout>
@@ -109,7 +88,7 @@ import Layout from '~/components/layout/Layout.vue'
 import AdminNetworkCards from '~/components/other/AdminNetworkCards.vue'
 import AdminNetworkTable from '~/components/other/AdminNetworkTable.vue'
 import Button from '../../components/entities/Button.vue'
-import { openErrorModal, openInfoDialogue } from '../../lib/popups'
+import { openErrorModal, openFormDialogue, openInfoDialogue } from '../../lib/popups'
 
 export default Vue.extend({
   components: {
@@ -157,6 +136,45 @@ export default Vue.extend({
     },
     hasChanges(): boolean {
       return JSON.stringify(this.config) !== this.orgConfig
+    },
+    commandsInSelection(): any[] {
+      const allServices = this.data.flatMap(group => group.services)
+      const instances = allServices
+        .filter(s => this.selected.includes(s.id))
+        .flatMap(s => s.found)
+      for (const service of allServices) {
+        for (const instance of service.found) {
+          if (instances.some(i => i.id === instance.id))
+            continue
+          if (this.selected.includes(instance.id))
+            instances.push(instance)
+        }
+      }
+      const commands = []
+      for (const instance of instances) {
+        if (!instance.info?.commands) continue
+        for (const command of instance.info.commands) {
+          if (commands.some(c => c.name === command.name))
+            continue
+          commands.push(command)
+        }
+      }
+      return commands
+    },
+    allCommands(): any[] {
+      const instances = this.data
+        .flatMap(group => group.services)
+        .flatMap(s => s.found)
+      const commands = []
+      for (const instance of instances) {
+        if (!instance.info?.commands) continue
+        for (const command of instance.info.commands) {
+          if (commands.some(c => c.name === command.name))
+            continue
+          commands.push(command)
+        }
+      }
+      return commands
     }
   },
   methods: {
@@ -191,7 +209,27 @@ export default Vue.extend({
     selectAll() {
       this.selected = this.data.flatMap(g => g.services.map(s => s.id))
     },
-    async command(name: string, data?: any) {
+    async command(name: string) {
+      const command = this.allCommands.find(c => c.name === name)
+
+      let data = {}
+      if (command.arguments?.length) {
+        data = await openFormDialogue(this.$store, {
+          title: `Command ${command.name}`,
+          text: command.description,
+          inputs: command.arguments.map(arg => ({
+            id: arg.name,
+            type: (arg.type === 'boolean') ? 'toggle'
+              : (arg.type === 'number') ? 'number'
+              : 'text',
+            label: arg.name,
+            placeholder: arg.description,
+            array: arg.array,
+            enum: arg.enum
+          }))
+        })
+      }
+
       const { data: resData, status } = await API.postAdminServicesCommand({ receivers: this.selected, name, data })
 
       if (status !== 200) {

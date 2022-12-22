@@ -1,91 +1,68 @@
 <template>
-  <div class="input">
-    <label
-      v-if="label || error"
-      :for="'dynamic-input-' + uid"
-      :data-error="!!error"
-      v-text="label ? `${label}${(error && typeof error === 'string') ? ` • ${error}` : ''}` : error"
-    />
-    <div
-      v-if="preview"
-      class="preview"
-      :data-error="!!error"
-    >
-      <slot name="preview" />
-    </div>
-    <div
-      class="inner"
-      :data-multiline="multiline"
-      :data-disabled="disabled"
-      :data-inline="inline"
-      :data-error="!!error"
-      :data-type="type"
-      :data-value="!!value"
-      :data-preview="!!preview"
-    >
-      <div
-        v-if="type === 'toggle'"
-        class="toggle"
-        :data-state="!!value"
-        tabindex="0"
-        @click="update(!value)"
-        @keydown.enter.prevent="update(!value)"
+  <div class="rich-input">
+    <div v-if="enums">
+      <label v-text="label" />
+      <Layout
+        name="$11"
+        :tight="true"
       >
-        <Icon :name="value ? 'toggle-on' : 'toggle-off'" />
-        <span v-text="placeholder" />
-      </div>
-      <textarea
-        v-else-if="multiline"
-        :id="'dynamic-input-' + uid"
-        ref="input"
-        :disabled="disabled"
-        :placeholder="placeholder"
-        :monospace="monospace"
-        :value="value"
-        :style="editorHeightsCss"
-        @input="update()"
-        @blur="e => $emit('blur', e)"
-      />
-      <select
-        v-else-if="options"
-        :id="'dynamic-input-' + uid"
-        ref="input"
-        :disabled="disabled"
-        :placeholder="placeholder"
-        :value="value"
-        @input="update()"
-        @blur="e => $emit('blur', e)"
-      >
-        <option
-          v-for="option of options"
-          :key="option.value"
-          :value="option.value"
-          v-text="option.label"
+        <Input
+          v-for="opt of enums"
+          :key="opt"
+          type="toggle"
+          :placeholder="opt"
+          :value="enumIncluded(opt)"
+          @input="clickEnum(opt)"
         />
-      </select>
-      <input
-        v-else
-        :id="'dynamic-input-' + uid"
-        ref="input"
-        :type="type"
-        :disabled="disabled"
-        :min="numMin"
-        :max="numMax"
-        :step="numStep"
-        :placeholder="placeholder"
-        :monospace="monospace"
-        :value="value"
-        @input="update()"
-        @blur="e => $emit('blur', e)"
-      >
+      </Layout>
     </div>
+    <InputEnum
+      v-else-if="array"
+      :value="value"
+      @input="data => update(data)"
+      :label="label"
+      add="Add"
+    >
+      <template slot-scope="{ value, update, remove }">
+        <Layout name="$1a" :tight="true">
+          <Input v-model="value" :type="type" :placeholder="placeholder" @input="update" />
+          <Button text="X" type="light" @click="remove" />
+        </Layout>
+      </template>
+    </InputEnum>
+    <Input
+      v-else
+      :value="value"
+      @input="data => update(data)"
+      :placeholder="placeholder"
+      :label="label"
+      :type="type"
+      :multiline="multiline"
+      :options="options"
+      :disabled="disabled"
+      :inline="inline"
+      :monospace="monospace"
+      :numMin="numMin"
+      :numMax="numMax"
+      :numStep="numStep"
+      :editorHeights="editorHeights"
+      :error="error"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import Input from './Input.vue'
+import InputEnum from './InputEnum.vue'
+import Button from './Button.vue'
 
 export default Vue.extend({
+  components: {
+    Input,
+    InputEnum,
+    Button
+  },
   props: {
     placeholder: {
       type: String,
@@ -135,6 +112,14 @@ export default Vue.extend({
       type: Number,
       default: 1
     },
+    array: {
+      type: Boolean,
+      default: false
+    },
+    enums: {
+      type: [ String ],
+      default: null
+    },
     editorHeights: {
       type: Array, // min, default, max
       default: undefined
@@ -144,34 +129,34 @@ export default Vue.extend({
       default: false
     }
   },
-  data() {
-    return {
-      uid: ''
-    }
-  },
-  computed: {
-    preview(): boolean {
-      return !!(this.$slots as any).preview
-    },
-    editorHeightsCss(): string {
-      if (!this.editorHeights) return ''
-      const heights = this.editorHeights.map(h => (typeof h === 'number' ? `${h}pt` : h))
-      return `min-height: ${heights[0]}; height: ${heights[1]}; max-height: ${heights[2]}`
-    }
-  },
-  mounted() {
-    this.uid = Math.floor(Math.random() * 0xFFFFFFFF).toString(16)
-  },
   methods: {
     update(value?: any) {
       this.$emit('input', value ?? (this.$refs.input as any)?.value)
+    },
+    clickEnum(opt: string) {
+      if (!this.array) {
+        this.update(opt)
+        return
+      }
+
+      if (!this.value) this.value = []
+      if (this.value.includes(opt))
+        this.value.splice(this.value.indexOf(opt), 1)
+      else
+        this.value.push(opt)
+      this.update(this.value)
+    },
+    enumIncluded(opt: string) {
+      if (this.array)
+        return this.value?.includes(opt)
+      return this.value === opt
     }
   }
 })
 </script>
 
 <style scoped lang="scss">
-.input .inner {
+.rich-input .inner {
   @include a11y-hover;
 
   display: flex;
