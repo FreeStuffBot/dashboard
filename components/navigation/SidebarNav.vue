@@ -90,6 +90,20 @@ export default Vue.extend({
           icon: "material/translate"
         },
         {
+          type: "page",
+          name: "Billing",
+          secret: "Money money money",
+          url: "/billing",
+          icon: "material/payments"
+        },
+        {
+          type: "page",
+          name: "FreeStuff Premium",
+          secret: "Very cool",
+          url: "/premium",
+          icon: "premium"
+        },
+        {
           type: "header",
           name: "FreeStuff API"
         },

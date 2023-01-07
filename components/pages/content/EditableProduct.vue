@@ -38,14 +38,14 @@
     <!--  -->
 
     <h2>Pricing</h2>
-    <Layout name="$1221" :tight="true">
+    <Layout name="1221" :tight="true">
       <label>Currency</label>
       <label>Old Price</label>
       <label>New Price</label>
     </Layout>
     <Layout name="flow">
       <Layout name="flow" :tight="true">
-        <Layout v-for="(price, index) of broker.prices" :key="index" name="$1221" :tight="true">
+        <Layout v-for="(price, index) of broker.prices" :key="index" name="1221" :tight="true">
           <Input v-model="price.currency" :options="currencyOptions" />
           <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" />
           <Input v-model="price.newValue" type="number" :num-min="0" :num-step="0.01" />

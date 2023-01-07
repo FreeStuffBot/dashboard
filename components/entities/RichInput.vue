@@ -3,7 +3,7 @@
     <div v-if="enums">
       <label v-text="label" />
       <Layout
-        name="$11"
+        name="11"
         :tight="true"
       >
         <Input
@@ -24,7 +24,7 @@
       add="Add"
     >
       <template slot-scope="{ value, update, remove }">
-        <Layout name="$1a" :tight="true">
+        <Layout name="1a" :tight="true">
           <Input v-model="value" :type="type" :placeholder="placeholder" @input="update" />
           <Button text="X" type="light" @click="remove" />
         </Layout>

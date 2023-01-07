@@ -5,7 +5,7 @@
     <Layout v-if="list" name="flow">
       <Admonition v-if="error" type="error" :text="error" />
 
-      <Layout name="$211">
+      <Layout name="211">
         <Input v-model="search" type="text" placeholder="Search" />
         <Button type="green" text="Add Experim..." @click="add()" />
         <Button type="light" text="Rule Docs" @click="rulesDocs()" />

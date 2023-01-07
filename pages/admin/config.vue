@@ -14,7 +14,7 @@
               default-value="123456789"
             >
               <template v-slot="{ value, update, remove }">
-                <Layout name="$1a" :tight="true">
+                <Layout name="1a" :tight="true">
                   <Input v-model="value" @input="update" />
                   <Button text="X" type="light" @click="remove" />
                 </Layout>
@@ -27,7 +27,7 @@
               default-value="secret"
             >
               <template v-slot="{ value, update, remove }">
-                <Layout name="$1a" :tight="true">
+                <Layout name="1a" :tight="true">
                   <Input v-model="value" @input="update" />
                   <Button text="X" type="light" @click="remove" />
                 </Layout>

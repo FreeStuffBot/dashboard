@@ -31,12 +31,21 @@ h3 {
   padding: 0;
 }
 
+hr {
+  width: 100%;
+  height: 1px;
+  margin: $box-padding 0;
+  display: block;
+  border: none;
+  background-color: $color-border;
+}
+
 p {
   color: $color-regular;
   font-family: $font-regular;
   font-size: 12pt;
 
-  a {
+  a[href] {
     display: inline-block;
     margin: calc($box-padding / 3) calc($box-padding / 2) calc($box-padding / 3) 0;
     font-family: $font-major;

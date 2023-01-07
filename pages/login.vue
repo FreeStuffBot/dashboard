@@ -15,6 +15,7 @@
             Continue with {{ provider.name }}
           </span>
         </a>
+        <p>This website uses cookies. By logging in through any of the methods above, you acklowledge and accept FreeStuff's <a href="//freestuffbot.xyz/privacy" target="_blank">Privacy Policy</a> and <a href="//freestuffbot.xyz/terms" target="_blank">Terms of Service</a>, and thereby use of cookies.</p>
       </div>
     </div>
     <div v-else-if="$store.state.loginStatus === 'disconnected'">
@@ -43,6 +44,7 @@ export default Vue.extend({
     return {
       authProviders: [
         { name: 'Discord', icon: 'discord', color: '#5865F2', colorhover: '#707ae6', uri: 'discord' },
+        // { name: 'Github', icon: 'github', color: '#673281', colorhover: '#8a4da8', uri: 'github' },
         // { name: 'Tude', icon: 'tude', color: '#85ada2', colorhover: '#9bc7bb', uri: 'tude' }
       ]
     }
@@ -72,9 +74,29 @@ h1 {
   margin-bottom: 20pt;
 }
 
+.container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .login-with {
   margin-top: 10pt;
   width: 300px;
+}
+
+p {
+  margin-top: 50pt;
+  color: $color-minor;
+  font-family: $font-regular;
+  font-size: 10pt;
+
+  a {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 
 .auth-button {
@@ -87,6 +109,7 @@ h1 {
   background-color: var(--c);
   border: 4px solid var(--c);
   cursor: pointer;
+  box-sizing: border-box;
   transition: background-color .1s ease
             , border-color .1s ease;
   box-shadow: 0 2px 10px #00000011;

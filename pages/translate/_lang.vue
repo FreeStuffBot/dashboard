@@ -10,7 +10,7 @@
 
       <Admonition v-if="!editable" type="warning" text="Readonly View" />
 
-      <Layout name="$1141">
+      <Layout name="1141">
         <Button
           type="light"
           text="Back"

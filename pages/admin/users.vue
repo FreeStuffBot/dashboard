@@ -77,7 +77,7 @@
     <Layout v-if="users" name="flow">
       <Admonition v-if="error" type="error" :text="error" />
 
-      <Layout name="$31">
+      <Layout name="31">
         <Input v-model="search" type="text" placeholder="Search" />
         <Button type="green" text="Add User" @click="add()" />
       </Layout>
