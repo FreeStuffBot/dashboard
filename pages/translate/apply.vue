@@ -3,6 +3,11 @@
     <h1>Translating FreeStuff</h1>
     <p>Hey you! Are you interested in translating FreeStuff into your native language? Please apply below and we'll get back to you in no time!</p>
     <p>Your native language is not shown? Contact us and we'll be happy to add it. Please note that we are currently only hosting languages that Discord itself supports.</p>
+
+    <Admonition
+      text="Please make sure to join our Discord server prior to applying. We use this space for communication between translators and the team. If you are not part of our Discord server your application will be denied. https://freestuffbot.xyz/discord"
+      type="info"
+    />
     
     <h2>Your Application</h2>
     <div v-if="applied === null">
