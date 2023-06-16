@@ -2,8 +2,8 @@
   <div class="accountinfobox">
     <div class="user">
       <img :src="imgurl" alt="Profile Picture">
-      <span class="name" v-text="username" />
-      <span class="discrim" v-text="discrim" />
+      <span class="dispname" v-text="dispname" />
+      <span class="username" v-text="username" />
     </div>
 
     <!-- <Layout name="inline"> -->
@@ -26,11 +26,11 @@ export default {
     Button
   },
   props: {
-    username: {
+    dispname: {
       type: String,
       required: true
     },
-    discrim: {
+    username: {
       type: String,
       required: true
     },
@@ -53,8 +53,10 @@ export default {
   justify-content: space-between;
 
   .user {
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr;
 
     img {
       background-color: $bg-lighter;
@@ -62,18 +64,19 @@ export default {
       width: $content-height;
       border-radius: 99pt;
       margin-right: $box-padding;
+      grid-row: 1 / span 2;
     }
 
-    .name {
+    .dispname {
       font-family: $font-major;
       font-size: 14pt;
       color: $color-major;
     }
 
-    .discrim {
+    .username {
       font-family: $font-major;
-      font-size: 14pt;
-      color: $color-minor;
+      font-size: 12pt;
+      color: $color-sub;
     }
   }
 }

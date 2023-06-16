@@ -33,7 +33,7 @@ export default Vue.extend({
     return {
       navlinks: [
         {
-          name: this.$store.state.user.username,
+          name: this.$store.state.user.global_name,
           url: '/',
           icon: this.$store.state.user.avatarUrl
         },

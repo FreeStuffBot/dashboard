@@ -76,7 +76,7 @@ export default Vue.extend({
         },
         {
           type: "page",
-          name: this.$store.state.user.username,
+          name: this.$store.state.user.global_name,
           secret: "Nice pfp",
           url: "/",
           icon: this.$store.state.user.avatarUrl,

@@ -1,5 +1,11 @@
 <template>
-  <div v-if="prod">
+  <div v-if="processing">
+    <h1>Processing...</h1>
+    <Admonition type="info" icon="animated/loading_processing" text="This product is being processed, please wait a few seconds." />
+    <h2>What does this mean?</h2>
+    <p>The product info is currently getting populated with additional information such as generated thumbnails, proxy urls and other currencies.</p>
+  </div>
+  <div v-else-if="prod" :data-editdisabled="!editable">
     <h1 v-text="prod.data.title || ':)'" />
 
     <Layout name="inline">
@@ -7,19 +13,20 @@
         type="light"
         text="Fetch Manually"
         @click="fetchManually()"
+        :disabled="!editable"
       />
     </Layout>
 
     <h2>General Information</h2>
     <Layout name="flow">
-      <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" />
-      <Input v-model="prod.data.urls.org" label="URL" :error="!prod.data.urls.org" />
+      <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" :disabled="!editable" />
+      <Input v-model="prod.data.urls.org" label="URL" :error="!prod.data.urls.org" :disabled="!editable" />
       <Layout name="2static">
-        <Input v-model="prod.data.type" label="Type" :options="dropdowns.type" :error="prod.data.type === 'unknown'" />
-        <Input v-model="prod.data.kind" label="Kind" :options="dropdowns.kind" :error="prod.data.kind === 'other'" />
+        <Input v-model="prod.data.type" label="Type" :options="dropdowns.type" :error="prod.data.type === 'unknown'" :disabled="!editable" />
+        <Input v-model="prod.data.kind" label="Kind" :options="dropdowns.kind" :error="prod.data.kind === 'other'" :disabled="!editable" />
       </Layout>
       <Layout name="2static">
-        <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :num-min="new Date().toISOString().split('T')[0]+'T00:00'" :num-step="60" />
+        <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :num-min="new Date().toISOString().split('T')[0]+'T00:00'" :num-step="60" :disabled="!editable" />
       </Layout>
     </Layout>
 
@@ -27,12 +34,13 @@
 
     <h2>Product Details</h2>
     <Layout name="flow">
-      <Input v-model="prod.data.description" label="Description" :multiline="true" :error="!prod.data.description" />
+      <Input v-model="prod.data.description" label="Description" :multiline="true" :error="!prod.data.description" :disabled="!editable" />
       <Layout name="2static">
-        <Input v-model="prod.data.platform" label="Platform" :options="platformOptions" />
-        <Input v-model="broker.rating" label="Rating (0-100)" type="number" :num-min="0" :num-max="100" />
+        <Input v-model="prod.data.platform" label="Platform" :options="platformOptions" :disabled="!editable" />
+        <Input v-model="broker.rating" label="Rating (0-100)" type="number" :num-min="0" :num-max="100" :disabled="!editable" />
       </Layout>
-      <Input v-model="broker.tags" label="Tags (Comma Separated)" placeholder="Single Player, Co-Op, wait that doesnt make sense" />
+      <Input v-model="broker.tags" label="Tags (Comma Separated)" placeholder="Single Player, Co-Op, wait that doesnt make sense" :disabled="!editable" />
+      <Input v-model="prod.data.copyright" label="Copyright" placeholder="Some Company Inc." :disabled="!editable" />
     </Layout>
 
     <!--  -->
@@ -46,13 +54,14 @@
     <Layout name="flow">
       <Layout name="flow" :tight="true">
         <Layout v-for="(price, index) of broker.prices" :key="index" name="1221" :tight="true">
-          <Input v-model="price.currency" :options="currencyOptions" />
-          <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" />
-          <Input v-model="price.newValue" type="number" :num-min="0" :num-step="0.01" />
+          <Input v-model="price.currency" :options="currencyOptions" :disabled="!editable" />
+          <Input v-model="price.oldValue" type="number" :num-min="0" :num-step="0.01" :disabled="!editable" />
+          <Input v-model="price.newValue" type="number" :num-min="0" :num-step="0.01" :disabled="!editable" />
           <Button
             type="light"
             text="Remove"
             @click="clickRemovePrice(index)"
+            :disabled="!editable"
           />
         </Layout>
       </Layout>
@@ -62,6 +71,7 @@
           type="green"
           text="Add Currency"
           @click="clickAddPrice()"
+          :disabled="!editable"
         />
       </Layout>
     </Layout>
@@ -70,7 +80,7 @@
 
     <h2>Assets</h2>
     <Layout name="flow">
-      <Input v-model="prod.data.thumbnails.org" label="Thumbnail" placeholder="https://cdn.akamai.steamstatic.com/steam/apps/1172050/header.jpg" :error="!prod.data.thumbnails.org">
+      <Input v-model="prod.data.thumbnails.org" label="Thumbnail" placeholder="https://cdn.akamai.steamstatic.com/steam/apps/1172050/header.jpg" :error="!prod.data.thumbnails.org" :disabled="!editable">
         <template #preview>
           <div class="thumbnail-preview" :style="`background-image: url('${prod.data.thumbnails.org}')`" />
         </template>
@@ -80,24 +90,48 @@
     <!--  -->
 
     <h2>Metadata</h2>
-    <label>Flags</label>
     <Layout name="flow">
-      <Layout name="3static" :tight="true">
-        <Input v-model="broker.flagTrash" type="toggle" placeholder="Trash Game" />
-        <Input v-model="broker.flagThirdparty" type="toggle" placeholder="Third Party Provider" />
-        <Input v-model="broker.flagPermanent" type="toggle" placeholder="Permanent Change" />
-        <Input v-model="broker.flagStaffPick" type="toggle" placeholder="Staff Pick" />
-      </Layout>
-      <Input v-model="prod.data.notice" label="Notice (Optional)" :multiline="true" />
-      <div v-if="prod.data.platform === 'steam'">
-        <Input v-model="prod.data.platformMeta.steamSubids" label="Steam Subids (Comma Separated)" placeholder="12345, 6789" />
+      <div>
+        <label>Flags</label>
+        <Layout name="3static" :tight="true">
+          <Input v-model="broker.flagTrash" type="toggle" placeholder="Trash Game" :disabled="!editable" />
+          <Input v-model="broker.flagThirdparty" type="toggle" placeholder="Third Party Provider" :disabled="!editable" />
+          <Input v-model="broker.flagPermanent" type="toggle" placeholder="Permanent Change" :disabled="!editable" />
+          <Input v-model="broker.flagStaffPick" type="toggle" placeholder="Staff Pick" :disabled="!editable" />
+        </Layout>
       </div>
+
+      <div>
+        <label>Meta Entries</label>
+        <Layout name="flow" :tight="true">
+          <Layout v-for="(kv, index) of prod.data.meta" :key="index" name="241" :tight="true">
+            <Input v-model="kv.key" type="string" placeholder="steam.subids" :disabled="!editable" />
+            <Input v-model="kv.value" type="string" placeholder="1234, 15231, 4881" :disabled="!editable" />
+            <Button
+              type="light"
+              text="Remove"
+              @click="prod.data.meta.splice(index, 1)"
+              :disabled="!editable"
+            />
+          </Layout>
+        </Layout>
+      </div>
+
+      <Layout name="inline">
+        <Button
+          type="green"
+          text="Add Entry"
+          @click="prod.data.meta.push({ key: '', value: '' })"
+          :disabled="!editable"
+        />
+      </Layout>
+
+      <Input v-model="prod.data.notice" label="Notice (Optional)" :multiline="true" :disabled="!editable" />
     </Layout>
 
     <!--  -->
 
-    <h2>The Bottom</h2>
-    <Layout name="inline">
+    <div v-if="prod.status === 'pending'" class="bottom">
       <Button
         type="green"
         text="Save as Approved"
@@ -113,7 +147,15 @@
         text="Decline"
         @click="clickDecline"
       />
-    </Layout>
+    </div>
+    <div v-else-if="prod.status === 'approved'" class="bottom">
+      <p>This product is approved. Mark as Pending to edit.</p>
+      <Button
+        type="light"
+        text="Mark as Pending"
+        @click="clickSaveDraft(true)"
+      />
+    </div>
   </div>
 </template>
 
@@ -125,6 +167,7 @@ import { openDismissableModal, openErrorModal, openModal, Popup, PopupType } fro
 import Layout from '~/components/layout/Layout.vue'
 import Input from '~/components/entities/Input.vue'
 import Button from '~/components/entities/Button.vue'
+import Admonition from '../../entities/Admonition.vue'
 
 const dropdowns = {
   kind: [
@@ -150,8 +193,9 @@ export default Vue.extend({
   components: {
     Layout,
     Input,
-    Button
-  },
+    Button,
+    Admonition
+},
   props: {
     product: {
       type: Object,
@@ -171,7 +215,8 @@ export default Vue.extend({
         rating: 0,
         prices: [] as any[]
       },
-      dropdowns
+      dropdowns,
+      processing: false
     }
   },
   computed: {
@@ -186,6 +231,9 @@ export default Vue.extend({
         value: curr.code,
         label: curr.code?.toUpperCase()
       }))
+    },
+    editable(): boolean {
+      return this.prod.status === 'pending'
     }
   },
   watch: {
@@ -271,13 +319,16 @@ export default Vue.extend({
     async saveAndApprove(): Promise<void> {
       const payload = this.compileChanges()
       payload.status = 'approved'
+      this.processing = true
       const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
-      if (status === 200)
+      if (status === 200) {
         this.$router.push('/content/publishing')
-      else
+      } else {
         openErrorModal(this.$store, status, statusText, data)
+        this.processing = false
+      }
     },
-    clickSaveDraft(): void {
+    clickSaveDraft(stayOnPage = false): void {
       openDismissableModal(
         this.$store,
         {
@@ -285,17 +336,22 @@ export default Vue.extend({
           text: 'This will save the changes and mark the product as pending. This way other content mods will know to look over the data before publishing it.\nPressing continue will dismiss this popup and never show it again.'
         },
         Dismissables.CMS_SAVE_DRAFT_INFO,
-        this.saveDraft
+        () => this.saveDraft(stayOnPage)
       )
     },
-    async saveDraft(): Promise<void> {
+    async saveDraft(stayOnPage = false): Promise<void> {
       const payload = this.compileChanges()
       payload.status = 'pending'
       const { status, statusText, data } = await API.patchProduct(this.$route.params.id, payload)
-      if (status === 200)
-        this.$router.push('/content/publishing')
-      else
+      if (status === 200) {
+        if (stayOnPage)
+          this.$emit('fetch')
+        else
+          this.$router.push('/content/publishing')
+      }
+      else {
         openErrorModal(this.$store, status, statusText, data)
+      }
     },
     clickDecline(): void {
       const clickOkay = () => {
@@ -357,5 +413,37 @@ export default Vue.extend({
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.bottom {
+  position: sticky;
+  bottom: 0;
+  background-color: #000000cc;
+  backdrop-filter: blur(10px);
+  color: white;
+  width: calc(100% + $box-padding * 2);
+  margin-top: $box-padding;
+  padding: $box-padding;
+  box-sizing: border-box;
+  border-radius: $box-br;
+  border: 1px solid $bg-light;
+  transform: translate(calc($box-padding * -1), $box-padding);
+  display: flex;
+  gap: $content-padding;
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .usericons {
+    width: $content-height;
+    flex-shrink: 0;
+  }
+
+  p {
+    flex-grow: 1;
+    font-family: $font-major;
+    text-align: center;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <h1>{{ greeting }}, {{ username }} 👋</h1>
+    <h1>{{ greeting }}, {{ global_name }} 👋</h1>
 
     <!-- <h2>Your Subscription:</h2>
     <SubBox
@@ -27,8 +27,8 @@
     /> -->
 
     <AccountInfoBox
+      :dispname="global_name"
       :username="username"
-      :discrim="`#${discriminator}`"
       :subtext="email || 'yo'"
       :imgurl="avatarUrl"
     />

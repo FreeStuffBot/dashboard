@@ -28,6 +28,7 @@
         class="toggle"
         :data-state="!!value"
         tabindex="0"
+        :data-disabled="!!disabled"
         @click="update(!value)"
         @keydown.enter.prevent="update(!value)"
       >
@@ -164,6 +165,7 @@ export default Vue.extend({
   },
   methods: {
     update(value?: any) {
+      if (this.disabled) return
       this.$emit('input', value ?? (this.$refs.input as any)?.value)
     }
   }
@@ -318,6 +320,11 @@ input, textarea, select {
     font-size: 12pt;
     color: inherit;
     user-select: none;
+  }
+
+  &[data-disabled] {
+    opacity: .8;
+    cursor: not-allowed;
   }
 }
 

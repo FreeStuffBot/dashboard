@@ -17,6 +17,7 @@ function updateGuilds(state, guilds) {
 export const state = () => ({
   id: '',
   username: '',
+  global_name: '',
   avatar: '',
   avatarUrl: '',
   discriminator: '',
