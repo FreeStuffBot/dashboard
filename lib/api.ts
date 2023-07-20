@@ -153,7 +153,7 @@ export default class API {
     return this.rawGet(`/translations/applications?${query}`)
   }
 
-  public static patchTranslateApplication(id: string, data: { accept: boolean, reason?: string }) {
+  public static patchTranslateApplication(id: string, data: { action: 'accept' | 'decline' | 'dismiss', reason?: string }) {
     return this.rawPatch(`/translations/applications/${id}`, data)
   }
 

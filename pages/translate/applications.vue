@@ -30,6 +30,11 @@
               type="red"
               @click="decline(app)"
             />
+            <Button
+              text="X"
+              type="light"
+              @click="dismiss(app)"
+            />
           </Layout>
         </div>
         <div>
@@ -127,7 +132,7 @@ export default Vue.extend({
       }
     },
     async accept(app: any) {
-      await API.patchTranslateApplication(app.id, { accept: true })
+      await API.patchTranslateApplication(app.id, { action: 'accept' })
       this.$fetch()
     },
     async decline(app: any) {
@@ -139,7 +144,11 @@ export default Vue.extend({
         'You stinky, sorry :/'
       )
       if (reason === null) return
-      await API.patchTranslateApplication(app.id, { accept: false, reason })
+      await API.patchTranslateApplication(app.id, { action: 'decline', reason })
+      this.$fetch()
+    },
+    async dismiss(app: any) {
+      await API.patchTranslateApplication(app.id, { action: 'dismiss' })
       this.$fetch()
     }
   },
