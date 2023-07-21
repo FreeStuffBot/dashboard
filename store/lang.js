@@ -26,6 +26,7 @@ export const state = () => ({
   other: 'Other',
   game: 'Game',
   dlc: 'DLC',
+  loot: 'Loot (Ingame Content)',
   software: 'Other Software',
   art: 'Digital Art',
   ost: 'Original Soundtrack',

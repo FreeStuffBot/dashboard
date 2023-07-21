@@ -173,6 +173,7 @@ const dropdowns = {
   kind: [
     { value: 'game', label: 'Game' },
     { value: 'dlc', label: 'DLC' },
+    { value: 'loot', label: 'Loot (Ingame Content)' },
     { value: 'software', label: 'General Software' },
     { value: 'art', label: 'Artwork (Digital)' },
     { value: 'ost', label: 'OST / Soundtrack' },
