@@ -84,7 +84,7 @@ export default Vue.extend({
   },
   transition: 'slide-down',
   async fetch() {
-    const { data, status } = await API.getProductList({ queryName: 'pending' })
+    const { data, status } = await API.getProductList({ amount: 50, queryName: 'pending' })
     if (status !== 200) return // TODO SHOW ERROR
 
     for (const product of data)

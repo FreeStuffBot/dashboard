@@ -187,7 +187,7 @@ export default class API {
 
   //
 
-  public static getProductList(options: { offset?: number, limit?: number, queryName?: 'pending' | 'published' } = {}) {
+  public static getProductList(options: { offset?: number, amount?: number, queryName?: 'pending' | 'published' } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/products?${query}`)
   }
@@ -213,7 +213,7 @@ export default class API {
     return this.rawPost('/content/announcements', data)
   }
 
-  public static getPlatformList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+  public static getPlatformList(options: { offset?: number, amount?: number, queryName?: string } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/platforms?${query}`)
   }
@@ -230,7 +230,7 @@ export default class API {
     return this.rawDelete(`/content/platforms/${id}`)
   }
 
-  public static getCurrencyList(options: { offset?: number, limit?: number, queryName?: string } = {}) {
+  public static getCurrencyList(options: { offset?: number, amount?: number, queryName?: string } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/currencies?${query}`)
   }

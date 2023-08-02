@@ -22,12 +22,15 @@
       <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" :disabled="!editable" />
       <Input v-model="prod.data.urls.org" label="URL" :error="!prod.data.urls.org" :disabled="!editable" />
       <Layout name="2static">
-        <Input v-model="prod.data.type" label="Type" :options="dropdowns.type" :error="prod.data.type === 'unknown'" :disabled="!editable" />
-        <Input v-model="prod.data.kind" label="Kind" :options="dropdowns.kind" :error="prod.data.kind === 'other'" :disabled="!editable" />
-      </Layout>
-      <Layout name="2static">
         <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :num-min="new Date().toISOString().split('T')[0]+'T00:00'" :num-step="60" :disabled="!editable" />
+        <Input v-model="prod.data.kind" label="Kind (Don't use)" :options="dropdowns.kind" :error="prod.data.kind === 'other'" :disabled="!editable" />
       </Layout>
+      <Radio
+        label="Type"
+        :disabled="!editable"
+        :options="dropdowns.type"
+        v-model="prod.data.type"
+      />
     </Layout>
 
     <!--  -->
@@ -168,6 +171,7 @@ import Layout from '~/components/layout/Layout.vue'
 import Input from '~/components/entities/Input.vue'
 import Button from '~/components/entities/Button.vue'
 import Admonition from '../../entities/Admonition.vue'
+import Radio from '../../entities/Radio.vue'
 
 const dropdowns = {
   kind: [
@@ -181,11 +185,11 @@ const dropdowns = {
     { value: 'other', label: 'Other' }
   ],
   type: [
-    { value: 'keep', label: 'Free to keep' },
-    { value: 'timed', label: 'Free to play (weekend)' },
+    { value: 'keep', label: 'Free to keep / 100% off' },
+    { value: 'timed', label: 'Free to play / weekend (timed)' },
+    { value: 'other', label: 'DLCs and More (other)' },
     { value: 'prime', label: 'Included in Prime' },
     { value: 'gamepass', label: 'Included in GamePass' },
-    { value: 'other', label: 'Other' },
     { value: 'debug', label: 'Debug (Don\'t use)' }
   ]
 }
@@ -195,8 +199,9 @@ export default Vue.extend({
     Layout,
     Input,
     Button,
-    Admonition
-},
+    Admonition,
+    Radio,
+  },
   props: {
     product: {
       type: Object,
