@@ -12,6 +12,7 @@
     </div>
     <EditableProduct v-else-if="component === 'editable'" :product="prod" @fetch="$fetch" />
     <ProcessingProduct v-else-if="component === 'processing'" :product="prod" @update="update" />
+    <PublishedProduct v-else-if="component === 'published'" :product="prod" @fetch="$fetch" />
     <div v-else>
       <p>This product has an unknown status. Could not render view.</p>
     </div>
@@ -25,14 +26,16 @@ import Container from '~/components/layout/Container.vue'
 import EditableProduct from '~/components/pages/content/EditableProduct.vue'
 import ProcessingProduct from '~/components/pages/content/ProcessingProduct.vue'
 import Admonition from '~/components/entities/Admonition.vue'
+import PublishedProduct from '../../components/pages/content/PublishedProduct.vue'
 
 export default Vue.extend({
   components: {
     Container,
     EditableProduct,
     ProcessingProduct,
-    Admonition
-  },
+    Admonition,
+    PublishedProduct
+},
   transition: 'slide-down',
   async fetch() {
     const { status, statusText, data } = await API.getProduct(this.$route.params.id)
@@ -57,6 +60,7 @@ export default Vue.extend({
         case 'pending': return 'editable'
         case 'approved': return 'editable'
         case 'processing': return 'processing'
+        case 'published': return 'published'
         default: return ''
       }
     }

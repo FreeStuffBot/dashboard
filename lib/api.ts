@@ -213,6 +213,11 @@ export default class API {
     return this.rawPost('/content/announcements', data)
   }
 
+  public static getAnnouncementHistory(options: { offset?: number, amount?: number } = {}) {
+    const query = Object.entries(options).map(kv => kv.join('=')).join('&')
+    return this.rawGet(`/content/announcements/history?${query}`)
+  }
+
   public static getPlatformList(options: { offset?: number, amount?: number, queryName?: string } = {}) {
     const query = Object.entries(options).map(kv => kv.join('=')).join('&')
     return this.rawGet(`/content/platforms?${query}`)

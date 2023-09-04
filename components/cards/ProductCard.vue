@@ -16,12 +16,14 @@
     <span class="status" :style="`--color: ${statusColor}`" v-text="$store.state.lang[data.status]" />
     <span v-text="`${$store.state.lang[data.responsible]}, ${data.data.platform}`" />
     <span v-text="localizedChangedText" />
+    <span class="fsuri" v-text="idToFsuri(data.id, 'P')" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { openPopup, PopupType } from '../../lib/popups'
+import { idToFsuri } from '~/lib/utils'
 
 export default Vue.extend({
   props: {
@@ -59,6 +61,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    idToFsuri,
     passEvent(name: string, data: any = null) {
       this.$emit(name, data)
     },
@@ -147,6 +150,17 @@ span {
     color: var(--color);
     font-family: $font-major;
     text-transform: capitalize;
+  }
+
+  &.fsuri {
+    width: fit-content;
+    background-color: $bg-lighter;
+    border: 1px solid $color-border;
+    padding: 2pt 4pt;
+    border-radius: 999pt;
+    font-size: 9pt;
+    font-family: $font-major;
+    margin-top: 8pt;
   }
 }
 
