@@ -14,7 +14,6 @@
       <Input v-model="platform.description" label="Description" type="text" />
       <Layout name="2static">
         <Input v-model="platform.enabledDefault" label="User Settings" type="toggle" placeholder="Enabled by Default" />
-        <Input v-model="platform.autoPublish" label="Content Moderation" type="toggle" placeholder="Publish Automatically" />
       </Layout>
 
       <h3>Assets</h3>
@@ -29,8 +28,20 @@
         </template>
       </Input>
 
-      <h3>Internal</h3>
-      <Input v-model="platform.gibuRef" label="Gibu API Reference" type="text" />
+      <h3>Automation</h3>
+      <Input
+        v-model="platform.scoutInterval"
+        label="Scout Interval"
+        type="text"
+        :options="[
+          { value: 'never', label: 'never' },
+          { value: '3h', label: '3h' },
+          { value: '6h', label: '6h' },
+          { value: '12h', label: '12h' },
+          { value: '24h', label: '24h' },
+        ]"
+      />
+      <Input v-model="platform.autoPublish" label="Once Found..." type="toggle" placeholder="Publish Automatically" />
 
       <Admonition v-if="error" type="error" :text="error" />
 
