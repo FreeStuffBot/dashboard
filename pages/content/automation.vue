@@ -12,7 +12,7 @@
     <h2>Platforms</h2>
     <Admonition v-if="error" type="error" :text="error" />
     <div class="platform-table">
-      <div v-for="p of platforms" class="platform">
+      <div v-for="p,i of platforms" class="platform" :data-next-gap="i < platforms.length-1 && (platforms[i+1].id-p.id > 1)">
         <div class="name" @click="editPlatform(p)">
           <img :src="p.assets.icon || '/assets/img/defaulticon.png'" alt="Platform icon">
           <span v-text="p.name" />
@@ -45,6 +45,7 @@ import Pagelink from '~/components/entities/Pagelink.vue'
 import Button from '../../components/entities/Button.vue'
 import { openPopup, Popup, PopupType } from '../../lib/popups'
 import API from '../../lib/api'
+import { platform } from 'os'
 
 
 export default Vue.extend({
@@ -128,6 +129,10 @@ export default Vue.extend({
     
     &:not(:last-child) {
       border-bottom: 1px solid $bg-light;
+    }
+
+    &[data-next-gap] {
+      border-color: $color-border;
     }
 
     & > * {
