@@ -14,6 +14,7 @@
       <Input v-model="platform.description" label="Description" type="text" />
       <Layout name="2static">
         <Input v-model="platform.enabledDefault" label="User Settings" type="toggle" placeholder="Enabled by Default" />
+        <Input v-model="platform.userFilterable" label="UI Visibility" type="toggle" placeholder="User Filterable" />
       </Layout>
 
       <h3>Assets</h3>
