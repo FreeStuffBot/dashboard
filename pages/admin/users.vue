@@ -15,7 +15,7 @@
           v-for="user of users.filter(searchFilter)"
           :key="user._id"
           class="user"
-          @click="clickUser(user)"
+          @click.self="clickUser(user)"
         >
           <img :src="user.avatar" alt="User Avatar" >
           <span class="name">{{user.name}}</span>
@@ -186,6 +186,7 @@ export default Vue.extend({
     border-radius: 99pt;
     background-color: $bg-lighter;
     overflow: hidden;
+    pointer-events: none;
   }
 
   .name {
@@ -196,6 +197,7 @@ export default Vue.extend({
     width: 140pt;
     overflow: hidden;
     word-break: break-all;
+    pointer-events: none;
   }
 
   .scopes {
@@ -211,59 +213,6 @@ export default Vue.extend({
       background-color: hsla(var(--color), 90%, 80%, .2);
       color: hsla(var(--color), 90%, 80%, 1);
       padding: 3pt 8pt;
-      font-family: $font-major;
-      cursor: pointer;
-    }
-  }
-}
-
-.user22 {
-  background-color: $bg-light;
-  border-radius: $box-br;
-  margin-top: calc(#{$box-padding} / 2);
-  padding: $box-padding;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: "img name" "img scope";
-  grid-column-gap: $box-padding;
-
-  & > img {
-    grid-area: img;
-    width: 42pt;
-    height: 42pt;
-    border-radius: 999pt;
-  }
-
-  .name {
-    font-size: 14pt;
-    font-family: $font-major;
-    color: $color-major;
-    grid-area: name;
-
-    img {
-      height: 11pt;
-      opacity: .4;
-      padding: 0;
-      margin: 0 0 0 0;
-      cursor: pointer;
-
-      &:hover { opacity: .7; }
-    }
-  }
-
-  .scopes {
-    margin-top: 5pt;
-    grid-area: scope;
-
-    .scope {
-      display: inline-block;
-      border-radius: 999pt;
-      background-color: hsla(var(--color), 90%, 80%, .2);
-      color: hsla(var(--color), 90%, 80%, 1);
-      padding: 2pt 8pt;
-      margin-top: 4pt;
-      margin-right: 4pt;
-      font-size: 11pt;
       font-family: $font-major;
       cursor: pointer;
     }
