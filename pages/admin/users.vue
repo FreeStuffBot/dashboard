@@ -1,76 +1,4 @@
-<template>
-  <!-- <div class="container">
-    <h1>
-      Users
-      <img
-        id="reloadbutton"
-        v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
-        src="~/assets/icons/reload.svg"
-        alt="Reload"
-        content="Refresh Data"
-        @click.prevent="$fetch()"
-      >
-    </h1>
-    <div class="buttons">
-      <input
-        v-model="search"
-        type="text"
-      >
-      <button
-        generic
-        small
-        class="b3"
-        @click="add()"
-      >
-        Add User
-      </button>
-    </div>
-    <div class="list">
-      <div
-        v-for="user of users.filter(searchFilter)"
-        :key="user._id"
-        class="user"
-      >
-        <img
-          :src="(user.data && user.data.avatar)
-            ? `https://cdn.discordapp.com/avatars/${user.data.id}/${(user.data.avatar)}.png`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png'"
-          alt="User Avatar"
-        >
-        <span class="name">
-          {{ (user.data && user.data.username) ? (user.display === user.data.username ? user.display : `${user.data.username} (${user.display})`) : user.display }}
-          <img
-            id="editbutton"
-            v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
-            src="~/assets/icons/settings.svg"
-            alt="Edit"
-            content="Edit"
-            @click.prevent="editUser(user._id)"
-          >
-          <img
-            id="editbutton"
-            v-tippy="{delay: [500, 0], arrow : true, arrowType : 'round', animation : 'vertical', duration: 100, theme: 'black'}"
-            src="~/assets/icons/ext_link.svg"
-            alt="Geoloc"
-            content="Geoloc"
-            @click.prevent="geoloc(user._id)"
-          >
-        </span>
-        <div class="scopes">
-          <div
-            v-for="scope in user.scope"
-            :key="scope"
-            class="scope"
-            :style="`--color: ${(scope.split('.')[0].split('').reduce((prev, curr) => (prev + curr.charCodeAt(0)), 0) / Math.PI % 1) * 360}`"
-            @click="search = scope.startsWith('translate') ? (langs[scope.split('.')[1]] || scope) : scope"
-            v-text="scope"
-          />
-        </div>
-      </div>
-    </div>
-  </div> -->
-
-  
+<template>  
   <Container>
     <h1>Users</h1>
 
@@ -87,6 +15,7 @@
           v-for="user of users.filter(searchFilter)"
           :key="user._id"
           class="user"
+          @click="clickUser(user)"
         >
           <img :src="user.avatar" alt="User Avatar" >
           <span class="name">{{user.name}}</span>
@@ -109,6 +38,7 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
+import { openFormDialogue } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Admonition from '~/components/entities/Admonition.vue'
@@ -121,8 +51,7 @@ export default Vue.extend({
     Layout,
     Admonition,
     Input,
-    Button,
-    Container
+    Button
 },
   transition: 'slide-down',
   async fetch() {
@@ -189,35 +118,32 @@ export default Vue.extend({
       this.$fetch()
       this.search = value[1] as string
     },
-    async editUser(userid: string) {
-      const user = this.users.find((u: any) => u._id === userid) as any
+    async clickUser(user: any) {
       if (!user) return
-      const { value } = await Swal.fire({
-        title: `Edit ${user.display}`,
-        html: `
-          <label for="swal-input1">Display Name</label>
-          <input id="swal-input1" class="swal2-input" value="${user.display}">
-          <label for="swal-input2">Scope</label>
-          <input id="swal-input2" class="swal2-input" value="${user.scope.join(', ')}">
-          <label for="swal-input3">Delete? Type "yes" below.</label>
-          <input id="swal-input3" class="swal2-input" value="no">
-        `,
-        preConfirm() {
-          return [
-            (document.getElementById('swal-input1') as HTMLInputElement).value,
-            (document.getElementById('swal-input2') as HTMLInputElement).value.split(/(?: *, *)|(?: +,? *)|(?: *,? +)/),
-            (document.getElementById('swal-input3') as HTMLInputElement).value.toLowerCase() === 'yes'
-          ]
-        }
+
+      const data = await openFormDialogue(this.$store, {
+        title: `Edit ${user.name}`,
+        inputs: [
+          {
+            id: 'display',
+            label: 'Display Name',
+            type: 'text',
+            initial: user.display
+          },
+          {
+            id: 'scope',
+            label: 'Scope (comma seperated)',
+            type: 'text',
+            initial: user.scope.join(', ')
+          }
+        ]
       })
 
-      if (!value) return
+      if (!data) return
 
-      await API.adminPostUsers({
-        id: userid,
-        display: value[0],
-        scope: value[1],
-        delete: value[2]
+      await API.adminPatchUser(user.id, {
+        display: data.data || undefined,
+        scope: data.scope ? data.scope.split(',').map(s => s.trim()) : undefined
       })
 
       this.$fetch()
@@ -248,6 +174,11 @@ export default Vue.extend({
   flex-direction: column;
   gap: $content-padding;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $bg-lighter;
+  }
 
   img {
     width: 32pt;
@@ -262,6 +193,9 @@ export default Vue.extend({
     font-family: $font-major;
     font-size: 11pt;
     text-align: center;
+    width: 140pt;
+    overflow: hidden;
+    word-break: break-all;
   }
 
   .scopes {
