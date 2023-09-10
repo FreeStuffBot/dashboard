@@ -232,4 +232,9 @@ export default Vue.extend({
   }
 }
 
+@media screen and (max-width: $res-mobile-width) {
+  .list {
+    grid-template-columns: 1fr;
+  }  
+}
 </style>
