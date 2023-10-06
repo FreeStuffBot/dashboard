@@ -21,6 +21,19 @@
               </template>
             </InputEnum>
             <InputEnum
+              v-model="configLocal.global.telegramAdmins"
+              label="Telegram Bot Admins"
+              add="Add User"
+              default-value="123456789"
+            >
+              <template v-slot="{ value, update, remove }">
+                <Layout name="$1a" :tight="true">
+                  <Input v-model="value" @input="update" />
+                  <Button text="X" type="light" @click="remove" />
+                </Layout>
+              </template>
+            </InputEnum>
+            <InputEnum
               v-model="configLocal.global.ciTokens"
               label="CI Tokens"
               add="Add Token"
