@@ -20,7 +20,7 @@
     <h2>General Information</h2>
     <Layout name="flow">
       <Input v-model="prod.data.title" label="Title" :error="!prod.data.title" :disabled="!editable" />
-      <Input v-model="prod.data.urls.org" label="URL" :error="!prod.data.urls.org" :disabled="!editable" />
+      <Input v-model="broker.url" label="URL" :error="!broker.url" :disabled="!editable" />
       <Layout name="2static">
         <Input v-model="broker.until" type="datetime-local" :label="broker.until ? 'Until' : 'Until (hidden)'" :num-min="new Date().toISOString().split('T')[0]+'T00:00'" :num-step="60" :disabled="!editable" />
         <Input v-model="prod.data.kind" label="Kind (Don't use)" :options="dropdowns.kind" :error="prod.data.kind === 'other'" :disabled="!editable" />
@@ -39,7 +39,7 @@
     <Layout name="flow">
       <Input v-model="prod.data.description" label="Description" :multiline="true" :error="!prod.data.description" :disabled="!editable" />
       <Layout name="2static">
-        <Input v-model="prod.data.platform" label="Platform" :options="platformOptions" :disabled="!editable" />
+        <Input v-model="prod.data.store" label="Store" :options="storeOptions" :disabled="!editable" />
         <Input v-model="broker.rating" label="Rating (0-100)" type="number" :num-min="0" :num-max="100" :disabled="!editable" />
       </Layout>
       <Input v-model="broker.tags" label="Tags (Comma Separated)" placeholder="Single Player, Co-Op, wait that doesnt make sense" :disabled="!editable" />
@@ -83,9 +83,9 @@
 
     <h2>Assets</h2>
     <Layout name="flow">
-      <Input v-model="prod.data.thumbnails.org" label="Thumbnail" placeholder="https://cdn.akamai.steamstatic.com/steam/apps/1172050/header.jpg" :error="!prod.data.thumbnails.org" :disabled="!editable">
+      <Input v-model="broker.thumbnail" label="Thumbnail" placeholder="https://cdn.akamai.steamstatic.com/steam/apps/1172050/header.jpg" :error="!broker.thumbnail" :disabled="!editable">
         <template #preview>
-          <div class="thumbnail-preview" :style="`background-image: url('${prod.data.thumbnails.org}')`" />
+          <div class="thumbnail-preview" :style="`background-image: url('${broker.thumbnail}')`" />
         </template>
       </Input>
     </Layout>
@@ -219,14 +219,16 @@ export default Vue.extend({
         flagStaffPick: false,
         tags: '',
         rating: 0,
-        prices: [] as any[]
+        prices: [] as any[],
+        thumbnail: '',
+        url: ''
       },
       dropdowns,
       processing: false
     }
   },
   computed: {
-    platformOptions(): any[] {
+    storeOptions(): any[] {
       return this.$store.state.content.platforms.map((plat: any) => ({
         value: plat.code,
         label: plat.name
@@ -271,6 +273,8 @@ export default Vue.extend({
       this.broker.tags = this.prod.data.tags.join(', ') || ''
       this.broker.rating = ~~((this.prod.data.rating || 0) * 100)
       this.broker.prices = this.prod.data.prices
+      this.broker.thumbnail = this.prod.data.images.find(i => (i.flags & 16))?.url
+      this.broker.url = this.prod.data.urls.find(i => (i.flags & 1))?.url
 
       for (const price of this.broker.prices) {
         price.oldValue = (price.oldValue / 100)
@@ -305,7 +309,13 @@ export default Vue.extend({
         price.oldValue = Math.round(parseFloat(price.oldValue + '') * 100)
         price.newValue = Math.round(parseFloat(price.newValue + '') * 100)
       }
-
+      const thumbnailImage = this.prod.data.images.find(i => (i.flags & 16))
+      if (thumbnailImage) thumbnailImage.url = this.broker.thumbnail
+      else this.prod.data.images.push({ url: this.broker.thumbnail, flags: 16, priority: 10 })
+      const orgUrl = this.prod.data.urls.find(i => (i.flags & 1))
+      if (orgUrl) orgUrl.url = this.broker.url
+      else this.prod.data.urls.push({ url: this.broker.url, flags: 1, priority: 10 })
+      
       return { data }
     },
     clickRemovePrice(index: number): void {

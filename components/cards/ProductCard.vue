@@ -11,7 +11,7 @@
     <div v-if="data.status === 'processing'" class="thumb processing">
       <Icon name="animated/loading_processing" />
     </div>
-    <div v-else class="thumb" :style="`background-image: url('${data.data.thumbnails.org}')`" />
+    <div v-else class="thumb" :style="`background-image: url('${data.data.images ? data.data.images[0].url : ''}')`" />
     <h3 v-text="data.data.title || '‎'" />
     <span class="status" :style="`--color: ${statusColor}`" v-text="$store.state.lang[data.status]" />
     <span v-text="`${$store.state.lang[data.responsible]}, ${data.data.platform}`" />
