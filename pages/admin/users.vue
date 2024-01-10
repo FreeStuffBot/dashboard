@@ -15,6 +15,7 @@
           v-for="user of users.filter(searchFilter)"
           :key="user._id"
           class="user"
+          @click.self="clickUser(user)"
         >
           <img :src="user.avatar" alt="User Avatar" >
           <span class="name">{{user.name}}</span>
@@ -37,6 +38,7 @@
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 import API from '../../lib/api'
+import { openFormDialogue } from '../../lib/popups'
 import Container from '~/components/layout/Container.vue'
 import Layout from '~/components/layout/Layout.vue'
 import Admonition from '~/components/entities/Admonition.vue'
@@ -49,8 +51,7 @@ export default Vue.extend({
     Layout,
     Admonition,
     Input,
-    Button,
-    Container
+    Button
 },
   transition: 'slide-down',
   async fetch() {
@@ -117,35 +118,32 @@ export default Vue.extend({
       this.$fetch()
       this.search = value[1] as string
     },
-    async editUser(userid: string) {
-      const user = this.users.find((u: any) => u._id === userid) as any
+    async clickUser(user: any) {
       if (!user) return
-      const { value } = await Swal.fire({
-        title: `Edit ${user.display}`,
-        html: `
-          <label for="swal-input1">Display Name</label>
-          <input id="swal-input1" class="swal2-input" value="${user.display}">
-          <label for="swal-input2">Scope</label>
-          <input id="swal-input2" class="swal2-input" value="${user.scope.join(', ')}">
-          <label for="swal-input3">Delete? Type "yes" below.</label>
-          <input id="swal-input3" class="swal2-input" value="no">
-        `,
-        preConfirm() {
-          return [
-            (document.getElementById('swal-input1') as HTMLInputElement).value,
-            (document.getElementById('swal-input2') as HTMLInputElement).value.split(/(?: *, *)|(?: +,? *)|(?: *,? +)/),
-            (document.getElementById('swal-input3') as HTMLInputElement).value.toLowerCase() === 'yes'
-          ]
-        }
+
+      const data = await openFormDialogue(this.$store, {
+        title: `Edit ${user.name}`,
+        inputs: [
+          {
+            id: 'display',
+            label: 'Display Name',
+            type: 'text',
+            initial: user.display
+          },
+          {
+            id: 'scope',
+            label: 'Scope (comma seperated)',
+            type: 'text',
+            initial: user.scope.join(', ')
+          }
+        ]
       })
 
-      if (!value) return
+      if (!data) return
 
-      await API.adminPostUsers({
-        id: userid,
-        display: value[0],
-        scope: value[1],
-        delete: value[2]
+      await API.adminPatchUser(user.id, {
+        display: data.data || undefined,
+        scope: data.scope ? data.scope.split(',').map(s => s.trim()) : undefined
       })
 
       this.$fetch()
@@ -176,6 +174,11 @@ export default Vue.extend({
   flex-direction: column;
   gap: $content-padding;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $bg-lighter;
+  }
 
   img {
     width: 32pt;
@@ -183,6 +186,7 @@ export default Vue.extend({
     border-radius: 99pt;
     background-color: $bg-lighter;
     overflow: hidden;
+    pointer-events: none;
   }
 
   .name {
@@ -190,6 +194,10 @@ export default Vue.extend({
     font-family: $font-major;
     font-size: 11pt;
     text-align: center;
+    width: 140pt;
+    overflow: hidden;
+    word-break: break-all;
+    pointer-events: none;
   }
 
   .scopes {
@@ -211,59 +219,6 @@ export default Vue.extend({
   }
 }
 
-.user22 {
-  background-color: $bg-light;
-  border-radius: $box-br;
-  margin-top: calc(#{$box-padding} / 2);
-  padding: $box-padding;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: "img name" "img scope";
-  grid-column-gap: $box-padding;
-
-  & > img {
-    grid-area: img;
-    width: 42pt;
-    height: 42pt;
-    border-radius: 999pt;
-  }
-
-  .name {
-    font-size: 14pt;
-    font-family: $font-major;
-    color: $color-major;
-    grid-area: name;
-
-    img {
-      height: 11pt;
-      opacity: .4;
-      padding: 0;
-      margin: 0 0 0 0;
-      cursor: pointer;
-
-      &:hover { opacity: .7; }
-    }
-  }
-
-  .scopes {
-    margin-top: 5pt;
-    grid-area: scope;
-
-    .scope {
-      display: inline-block;
-      border-radius: 999pt;
-      background-color: hsla(var(--color), 90%, 80%, .2);
-      color: hsla(var(--color), 90%, 80%, 1);
-      padding: 2pt 8pt;
-      margin-top: 4pt;
-      margin-right: 4pt;
-      font-size: 11pt;
-      font-family: $font-major;
-      cursor: pointer;
-    }
-  }
-}
-
 .buttons {
   button {
     margin-right: 5pt;
@@ -277,4 +232,9 @@ export default Vue.extend({
   }
 }
 
+@media screen and (max-width: $res-mobile-width) {
+  .list {
+    grid-template-columns: 1fr;
+  }  
+}
 </style>

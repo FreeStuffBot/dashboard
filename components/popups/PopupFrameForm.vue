@@ -87,6 +87,11 @@ export default Vue.extend({
     sync() {
       this.error = ''
       this.output = {}
+
+      for (const value of this.data.inputs) {
+        if (value.initial !== undefined)
+          this.output[value.id] = value.initial
+      }
     },
     submit() {
       this.error = this.data.validate?.(this.output)

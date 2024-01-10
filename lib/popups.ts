@@ -62,6 +62,7 @@ type PopupHelper = {
     label?: string
     placeholder?: string
     array?: boolean
+    initial?: string | boolean | number
   }[]
   validate?: (input: string) => string
   callback?: (input: string) => any
