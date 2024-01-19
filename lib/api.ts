@@ -422,7 +422,7 @@ export default class API {
   }
 
   public static adminGetJobrun(id: string) {
-    return this.rawGet(`/admin/jobruns/${id}`)
+    return this.rawGet(`/admin/jobruns/${id}?amount=100`)
   }
 
 }
