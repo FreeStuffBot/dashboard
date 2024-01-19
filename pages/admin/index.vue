@@ -57,6 +57,12 @@
         icon="emojis/twemoji_robot"
         to="/admin/internal"
       />
+      <Pagelink
+        title="Jobruns"
+        text="Tracing"
+        icon="emojis/twemoji_news"
+        to="/admin/jobruns"
+      />
     </Layout>
   </Container>
 </template>

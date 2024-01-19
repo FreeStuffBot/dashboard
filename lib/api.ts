@@ -417,4 +417,12 @@ export default class API {
     return this.rawPost('/admin/internal/command', { command })
   }
 
+  public static adminGetJobruns() {
+    return this.rawGet('/admin/jobruns')
+  }
+
+  public static adminGetJobrun(id: string) {
+    return this.rawGet(`/admin/jobruns/${id}`)
+  }
+
 }
