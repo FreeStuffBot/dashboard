@@ -101,6 +101,7 @@
           <Input v-model="broker.flagThirdparty" type="toggle" placeholder="Third Party Provider" :disabled="!editable" />
           <Input v-model="broker.flagPermanent" type="toggle" placeholder="Permanent Change" :disabled="!editable" />
           <Input v-model="broker.flagStaffPick" type="toggle" placeholder="Staff Pick" :disabled="!editable" />
+          <Input v-model="broker.flagFirstpartyExclusive" type="toggle" placeholder="First Party Exclusive" :disabled="!editable" />
         </Layout>
       </div>
 
@@ -217,6 +218,7 @@ export default Vue.extend({
         flagThirdparty: false,
         flagPermanent: false,
         flagStaffPick: false,
+        flagFirstpartyExclusive: false,
         tags: '',
         rating: 0,
         prices: [] as any[],
@@ -270,6 +272,7 @@ export default Vue.extend({
       this.broker.flagThirdparty = !!(this.prod.data.flags & 2)
       this.broker.flagPermanent = !!(this.prod.data.flags & 4)
       this.broker.flagStaffPick = !!(this.prod.data.flags & 8)
+      this.broker.flagFirstpartyExclusive = !!(this.prod.data.flags & 16)
       this.broker.tags = this.prod.data.tags.join(', ') || ''
       this.broker.rating = ~~((this.prod.data.rating || 0) * 100)
       this.broker.prices = this.prod.data.prices
@@ -304,6 +307,7 @@ export default Vue.extend({
       if (this.broker.flagThirdparty) data.flags |= (1 << 1)
       if (this.broker.flagPermanent) data.flags |= (1 << 2)
       if (this.broker.flagStaffPick) data.flags |= (1 << 3)
+      if (this.broker.flagFirstpartyExclusive) data.flags |= (1 << 4)
       data.prices = this.broker.prices
       for (const price of this.broker.prices) {
         price.oldValue = Math.round(parseFloat(price.oldValue + '') * 100)
