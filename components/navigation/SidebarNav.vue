@@ -86,7 +86,8 @@ export default Vue.extend({
           type: "page",
           name: "Translating",
           secret: "You are amazing! Thank you to the moon and back <3",
-          url: this.$store.getters["user/isTranslator"] ? "/translate" : "/translate/apply",
+          url: "https://translations.tude.club/projects/freestuff/",
+          // url: this.$store.getters["user/isTranslator"] ? "/translate" : "/translate/apply",
           icon: "material/translate"
         },
         // {
